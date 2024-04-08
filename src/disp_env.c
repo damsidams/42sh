@@ -17,7 +17,7 @@ bool no_env(char **env)
     if (my_strstrlen(env) == 0)
         return true;
     for (int i = 0; env[i]; i++) {
-        equal_sep = my_str_to_word_array(env[i], "=");
+        equal_sep = my_pimp_str_to_wa(env[i], "=");
         if (my_strcmp(equal_sep[0], "PATH") == 0 &&
             my_strlen(equal_sep[1]) != 0) {
             free_str_array(equal_sep);

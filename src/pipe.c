@@ -17,7 +17,7 @@
 char **get_pipe_cmds(char *cmd)
 {
     char *cmd_cpy = my_strdup(cmd);
-    char **pipe_sep = my_strtok_to_word_array(cmd_cpy, "|");
+    char **pipe_sep = my_pimp_str_to_wa(cmd_cpy, "|");
 
     if (my_strstrlen(pipe_sep) == 1) {
         free(cmd_cpy);
@@ -38,7 +38,7 @@ static void exec_last_cmd(char **cmd_args, shell_info *my_shell, int *pipefd)
 
 static void exec_pipe(char **args, shell_info *my_shell, int i, int *pipefd)
 {
-    char **cmd_args = my_strtok_to_word_array(args[i], " ");
+    char **cmd_args = my_pimp_str_to_wa(args[i], " ");
 
     if (i == my_strstrlen(args) - 1)
         exec_last_cmd(cmd_args, my_shell, pipefd);

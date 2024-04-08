@@ -10,6 +10,9 @@
     #define MY_H
     #include <stdbool.h>
 
+    #define OUT -1
+    #define IN 1
+
 int my_putchar(char);
 int my_putchar_err(char);
 int my_isneg(int nb);
@@ -61,5 +64,6 @@ char **my_str_array_dup_ban_str(char **array, char *str);
 void free_triple_array(char ***array);
 void my_free_n_str(int nb_of_str, ...);
 bool my_char_in_str(char c, char *str);
+char **my_pimp_str_to_wa(char *str, char *delim);
 
 #endif /*MY_H*/

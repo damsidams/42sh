@@ -132,7 +132,7 @@ bool valid_redirect(char **cmds)
     char **cmds_cpy = my_str_array_dup(cmds);
 
     for (int i = 0; cmds_cpy[i]; i++) {
-        space_sep = my_strtok_to_word_array(cmds_cpy[i], " ");
+        space_sep = my_pimp_str_to_wa(cmds_cpy[i], " ");
         if (no_command(space_sep, cmds_cpy))
             return false;
         if (!file_exist(space_sep)) {

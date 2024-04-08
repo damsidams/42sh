@@ -65,7 +65,7 @@ char ***get_all_cmd(char ***all_cmds, char **args)
     for (int i = 0; i <= num_cmds; i++)
         all_cmds[i] = NULL;
     for (int i = 0; args_cpy[i]; i++)
-        all_cmds[i] = my_strtok_to_word_array(args_cpy[i], " ");
+        all_cmds[i] = my_pimp_str_to_wa(args_cpy[i], " ");
     free_str_array(args_cpy);
     return all_cmds;
 }
@@ -88,7 +88,7 @@ char **get_args(shell_info *my_shell)
     if (!user_input || no_cmd(user_input))
         return NULL;
     if (my_strlen(user_input) != 0)
-        args = my_str_to_word_array(user_input, ";");
+        args = my_pimp_str_to_wa(user_input, ";");
     if (my_strcmp(args[0], "exit") == 0) {
         mini_printf("exit\n");
         my_shell->exit_shell = true;

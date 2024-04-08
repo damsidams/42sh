@@ -77,7 +77,7 @@ static char **get_paths(char **env)
         return NULL;
     while (env[i] && my_strncmp(env[i], "PATH", 4) != 0)
         i++;
-    return my_str_to_word_array(env[i], ":=");
+    return my_pimp_str_to_wa(env[i], ":=");
 }
 
 static void cmd_not_found(char **args, shell_info *my_shell,
@@ -147,7 +147,7 @@ void command_handling(shell_info *my_shell, char **args)
 
 static void exec_no_pipe(char *cmd, shell_info *my_shell)
 {
-    char **args = my_strtok_to_word_array(cmd, " \t");
+    char **args = my_pimp_str_to_wa(cmd, " \t");
 
     command_handling(my_shell, args);
 }

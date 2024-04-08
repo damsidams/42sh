@@ -6,6 +6,8 @@
 ## It should perform the following actions:
 ##
 
+CC	=	gcc
+
 SRC	=	my_showmem.c				\
 		my_str_isalpha.c			\
 		my_strncat.c				\
@@ -55,7 +57,7 @@ SRC	=	my_showmem.c				\
 		my_open_file.c				\
 		my_getnbr_size.c			\
 		mini_printf.c				\
-
+		my_str_to_word_class_array.c	\
 
 OBJ	=	$(SRC:.c=.o)
 

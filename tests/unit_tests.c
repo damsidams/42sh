@@ -5,6 +5,7 @@
 ** unit_tests.c
 */
 
+#include "../include/shell.h"
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
 
@@ -12,4 +13,10 @@ void redirect_all_std(void)
 {
     cr_redirect_stdout();
     cr_redirect_stderr();
+}
+
+Test(unit_test, file_size)
+{
+    cr_assert_eq(get_file_size("src/main.c"), 248);
+    cr_assert_eq(get_file_size("not existing file"), OPEN_ERROR);
 }

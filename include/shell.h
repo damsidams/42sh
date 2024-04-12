@@ -44,4 +44,13 @@ bool valid_redirect(char **cmds);
 char *get_user_input(shell_info *my_shell);
 bool no_env(char **env);
 
+// --> save xommands
+int add_command_to_save(char const *cmd);
+char **get_array_from_prev_cmd(char *current_cmd);
+
+// --> file
+int get_file_size(char const *filename);
+int open_apend(char const *filename);
+int read_open(char const *filename);
+
 #endif /* MINISHELL_1 */

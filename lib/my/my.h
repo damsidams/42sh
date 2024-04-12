@@ -65,5 +65,6 @@ void free_triple_array(char ***array);
 void my_free_n_str(int nb_of_str, ...);
 bool my_char_in_str(char c, char *str);
 char **my_pimp_str_to_wa(char *str, char *delim);
+char **my_strstrcpy(char **dest, char **src);
 
 #endif /*MY_H*/

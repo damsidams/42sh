@@ -19,3 +19,4 @@ lib/my/libmy.a
 vgcore*
 test
 open_error
+*#

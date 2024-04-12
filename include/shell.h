@@ -5,10 +5,16 @@
 ** minishell1.h
 */
 
-#ifndef MINISHELL_1
-    #define MINISHELL_1
+#ifndef SHELL
+    #define SHELL
+
+    #include "struct.h"
+
     #define ERROR_EXIT 84
+    #define ERROR 84
     #define SUCCESS_EXIT 0
+    #define SUCCESS 0
+    #define SYS_ERROR -1
     #define DEFAULT_SUCCESS_COLOR "green"
     #define DEFAULT_ERROR_COLOR "red"
     #define SIMPLE_REDIRECT_OUTPUT ">"
@@ -16,7 +22,7 @@
     #define PIPE "|"
     #define SIMPLE_REDIRECT_INPUT "<"
     #define DOUBLE_REDIRECT_INPUT "<<"
-    #include "struct.h"
+    #define HISTORIC_FILENAME "bonus/save.txt"
 
 int my_sh(char **env);
 void disp_env(char **args, shell_info *my_shell);

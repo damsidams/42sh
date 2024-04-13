@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "my.h"
-#include "minishell1.h"
+#include "shell.h"
 #include "struct.h"
 
 static int end_shell(shell_info *my_shell)

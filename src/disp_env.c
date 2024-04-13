@@ -6,7 +6,7 @@
 */
 
 #include <stddef.h>
-#include "minishell1.h"
+#include "shell.h"
 #include "my.h"
 #include "struct.h"
 

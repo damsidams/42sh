@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "minishell1.h"
+#include "shell.h"
 #include "my.h"
 #include "struct.h"
 

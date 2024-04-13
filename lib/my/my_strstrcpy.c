@@ -6,6 +6,8 @@
 ** Returns NULL is error else the dest array
 */
 
+#include <stdlib.h>
+#include <stddef.h>
 #include "my.h"
 
 char **my_strstrcpy(char **dest, char **src)

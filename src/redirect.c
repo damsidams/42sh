@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "minishell1.h"
+#include "shell.h"
 #include "my.h"
 
 static void simple_output_redirect(char **args, shell_info *my_shell, int i)

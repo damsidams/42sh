@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include "struct.h"
 #include "my.h"
-#include "minishell1.h"
+#include "shell.h"
 
 void disp_color_help(void)
 {

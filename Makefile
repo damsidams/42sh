@@ -17,7 +17,17 @@ SRC	=	src/main.c					\
 		src/set_color.c				\
 		src/my_sh.c
 
-UT_SRC	=	tests/unit_tests.c
+UT_SRC	=	tests/unit_tests.c	\
+		src/disp_env.c				\
+		src/unsetenv.c				\
+		src/cd.c					\
+		src/pipe.c					\
+		src/user_input.c			\
+		src/command_handling.c		\
+		src/redirect.c				\
+		src/setenv.c				\
+		src/set_color.c				\
+		src/my_sh.c
 
 OBJ	=	$(SRC:.c=.o)
 
@@ -35,7 +45,7 @@ LIBNAME	=	libmy.a
 
 CS_CLEAN = *.log
 
-UT_BIN	=	ut
+UT_BIN	=	unit_test
 
 UT_FLAGS	=	--coverage -lcriterion
 
@@ -49,18 +59,19 @@ NAME	=	mysh
 
 RM	=	rm -f
 
+all:	lib $(NAME)
 
-all:	lib	$(NAME)
+lib:
+	$(MAKE) -C lib/my
 
 $(NAME):	$(OBJ)
-	$(MAKE) -C lib/my
-	$(CC) -o $(NAME) $(CFLAGS) $(OBJ) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
 
-clean	:
+clean:
 	$(MAKE) clean -C lib/my
 	$(RM) $(OBJ)
 
-fclean	:	clean
+fclean:	clean
 	$(RM) $(NAME) $(TNAME) lib/my/$(LIBNAME)
 	$(RM) $(NAME)
 	$(RM) $(CS_CLEAN)
@@ -68,10 +79,10 @@ fclean	:	clean
 	$(RM) $(UT_BIN)
 	$(RM) $(VAL_CLEAN)
 
-re	:	fclean all
+re:	fclean all
 
-valgrind : CFLAGS += -g3
-valgrind : re
+valgrind: CFLAGS += -g3
+valgrind: re
 
 asan:	CC	=	clang -fsanitize=address
 asan:	CFLAGS += -g3
@@ -85,15 +96,15 @@ coding_style:	fclean
 	cat $(CS_REPORT)
 	make fclean  > /dev/null 2>&1
 
-tests_run:	fclean re
-	gcc -o $(UT_BIN) $(UT_SRC) -I include/ -L . -lhashtable $(UT_FLAGS)
+tests_run:	fclean lib
+	$(CC) -I include/ -L ./lib/my -o $(UT_BIN) $(UT_SRC) $(UT_FLAGS) -lmy
 	./$(UT_BIN)
 
 coverage:
 	gcovr --exclude tests/ --exclude src/useful_funcs
 
 .PHONY	:
-	all	clean fclean re debug $(NAME) coding_style tests_run coverage
+	all	lib clean fclean re debug $(NAME) coding_style tests_run coverage
 
 .SILENT :
-	all	clean fclean re debug $(NAME) coding_style tests_run coverage
+	coding_style

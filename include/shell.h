@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2023
 ** B-PSU-200-PAR-2-1-minishell1-nicolas.nunney
 ** File description:
-** minishell1.h
+** shell.h
 */
 
 #ifndef SHELL

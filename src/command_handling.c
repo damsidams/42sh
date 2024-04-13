@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include "my.h"
-#include "minishell1.h"
+#include "shell.h"
 #include "struct.h"
 
 static void disp_err_message(char *command)

@@ -7,7 +7,7 @@ a.out
 tests/
 tester/
 mysh
-unit_tests*
+unit_test*
 src/*.gc*
 *.gcna
 *.gcdo

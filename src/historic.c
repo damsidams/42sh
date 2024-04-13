@@ -7,11 +7,13 @@
 
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "shell.h"
 
 int add_command_to_save(char const *cmd)
 {
-    int fd = open_command_file(HISTORIC_FILENAME);
+    int fd = open_append(HISTORIC_FILENAME);
 
     if (fd == ERROR)
         return ERROR;
@@ -41,14 +43,14 @@ static char **add_command_to_end(char *buffer, char *cmd)
         return NULL;
     final_array = malloc(sizeof(char *) * (my_strstrlen(file_by_line) + 2));
     if (final_array == NULL) {
-        free_strarray(file_by_line);
+        free_str_array(file_by_line);
         perror("add command to end malloc");
         return NULL;
     }
     final_array = my_strstrcpy(final_array, file_by_line);
     final_array[my_strstrlen(file_by_line)] = my_strdup(cmd);
     final_array[my_strstrlen(file_by_line) + 1] = NULL;
-    fre_strarray(file_by_line);
+    free_str_array(file_by_line);
     return final_array;
 }
 
@@ -60,7 +62,7 @@ char **get_array_from_prev_cmd(char *current_cmd)
     int chars_read = 0;
 
     if (fd == ERROR || file_size <= 0)
-        return ERROR;
+        return NULL;
     buffer = malloc(sizeof(char) * (file_size + 1));
     if (buffer == NULL) {
         close(fd);

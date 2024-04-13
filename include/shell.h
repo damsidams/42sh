@@ -9,6 +9,7 @@
     #define SHELL
 
     #include "struct.h"
+    #include "my.h"
 
     #define ERROR_EXIT 84
     #define ERROR 84
@@ -50,7 +51,7 @@ char **get_array_from_prev_cmd(char *current_cmd);
 
 // --> file
 int get_file_size(char const *filename);
-int open_apend(char const *filename);
+int open_append(char const *filename);
 int read_open(char const *filename);
 
 #endif /* MINISHELL_1 */

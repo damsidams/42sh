@@ -15,7 +15,9 @@ SRC	=	src/main.c					\
 		src/redirect.c				\
 		src/setenv.c				\
 		src/set_color.c				\
-		src/my_sh.c
+		src/my_sh.c	\
+		src/files.c	\
+		src/historic.c	\
 
 UT_SRC	=	tests/unit_tests.c	\
 		src/disp_env.c				\
@@ -27,7 +29,9 @@ UT_SRC	=	tests/unit_tests.c	\
 		src/redirect.c				\
 		src/setenv.c				\
 		src/set_color.c				\
-		src/my_sh.c
+		src/my_sh.c	\
+		src/file.c	\
+		src/historic.c	\
 
 OBJ	=	$(SRC:.c=.o)
 
@@ -96,7 +100,7 @@ coding_style:	fclean
 	cat $(CS_REPORT)
 	make fclean  > /dev/null 2>&1
 
-tests_run:	fclean lib
+tests_run:
 	$(CC) -I include/ -L ./lib/my -o $(UT_BIN) $(UT_SRC) $(UT_FLAGS) -lmy
 	./$(UT_BIN)
 

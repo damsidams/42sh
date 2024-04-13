@@ -5,6 +5,9 @@
 ** Functions related to file handling
 */
 
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <fcntl.h>
 #include "shell.h"
 
@@ -47,8 +50,8 @@ int read_open(char const *filename)
     if (fd == SYS_ERROR) {
         perror(err_msg);
         free(err_msg);
-        return ERROR;
+        return OPEN_ERROR;
     }
     free(err_msg);
-    return ERROR;
+    return fd;
 }

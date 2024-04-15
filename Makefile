@@ -16,7 +16,7 @@ SRC	=	src/main.c					\
 		src/setenv.c				\
 		src/set_color.c				\
 		src/my_sh.c	\
-		src/files.c	\
+		src/file.c	\
 		src/historic.c	\
 
 UT_SRC	=	tests/unit_tests.c	\
@@ -41,7 +41,7 @@ CFLAGS	=	-Wall -Wextra
 
 CPPFLAGS	=	-I include/
 
-LDFLAGS =	-L./lib/my
+LDFLAGS =	-L./lib/my/
 
 LDLIBS	=	-lmy
 
@@ -63,10 +63,10 @@ NAME	=	mysh
 
 RM	=	rm -f
 
-all:	lib $(NAME)
+all:	libb $(NAME)
 
-lib:
-	$(MAKE) -C lib/my
+libb:
+	$(MAKE) all -C lib/my
 
 $(NAME):	$(OBJ)
 	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
@@ -76,7 +76,8 @@ clean:
 	$(RM) $(OBJ)
 
 fclean:	clean
-	$(RM) $(NAME) $(TNAME) lib/my/$(LIBNAME)
+	$(MAKE) fclean -C lib/my/
+	$(RM) $(NAME) $(TNAME)
 	$(RM) $(NAME)
 	$(RM) $(CS_CLEAN)
 	$(RM) $(UT_CLEAN)
@@ -107,8 +108,8 @@ tests_run:
 coverage:
 	gcovr --exclude tests/ --exclude src/useful_funcs
 
-.PHONY	:
-	all	lib clean fclean re debug $(NAME) coding_style tests_run coverage
+.PHONY:
+	all libb clean fclean re debug coding_style tests_run coverage
 
 .SILENT :
 	coding_style

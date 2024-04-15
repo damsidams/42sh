@@ -11,6 +11,39 @@
 #include <unistd.h>
 #include "shell.h"
 
+static int get_line_nb(char **lines)
+{
+    char *line = NULL;
+    int nb = 0;
+
+    if (lines == NULL)
+        return -1;
+    line = lines[my_strstrlen(lines) - 1];
+    nb = my_special_getnbr(line);
+    free_str_array(lines);
+    return nb;
+}
+
+static int get_previous_cmd_num(void)
+{
+    int fd = read_open(HISTORIC_FILENAME);
+    char *buffer = NULL;
+    int chars_read = 0;
+
+    if (fd == OPEN_ERROR)
+        return fd;
+    if (get_file_size(HISTORIC_FILENAME) == 0) {
+        close(fd);
+        return 0;
+    }
+    chars_read = read(fd, buffer, get_file_size(HISTORIC_FILENAME) - 1);
+    close(fd);
+    if (chars_read == SYS_ERROR)
+        return SYS_ERROR;
+    buffer[chars_read] = '\0';
+    return get_line_nb(my_pimp_str_to_wa(buffer, "\n"));
+}
+
 int add_command_to_save(char const *cmd)
 {
     int fd = open_append(HISTORIC_FILENAME);

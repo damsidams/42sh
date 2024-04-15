@@ -52,7 +52,8 @@ static void check_seg_fault(int wstatus, shell_info *my_shell)
 
 bool built_in_command(char **args, shell_info *my_shell)
 {
-    char *flags_array[] = {"env", "cd", "setenv", "unsetenv", "color", NULL};
+    char *flags_array[] =
+        {"env", "cd", "setenv", "unsetenv", "color", "history", NULL};
     void (*fptr_array[])() =
         {disp_env, change_dir, set_env, unset_env, set_color};
 

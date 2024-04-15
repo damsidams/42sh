@@ -23,7 +23,7 @@ Test(unit_test, get_file_size)
 
 Test(unit_test, open_append)
 {
-    open_append("unknow file");
+    open_append("test_file");
 }
 
 Test(unit_test, read_open)

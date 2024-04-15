@@ -18,6 +18,6 @@ typedef struct shell_info_t {
     bool is_a_tty;
     int stdout_cpy;
     int stdin_cpy;
-}shell_info;
+} shell_info;
 
 #endif /* MINISHELL_1_STRUCT */

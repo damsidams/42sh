@@ -48,6 +48,7 @@ bool no_env(char **env);
 // --> save xommands
 int add_command_to_save(char const *cmd);
 char **get_array_from_prev_cmd(char *current_cmd);
+int my_special_getnbr(char const *str);
 
 // --> file
 int get_file_size(char const *filename);

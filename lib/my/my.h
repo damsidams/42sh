@@ -66,5 +66,6 @@ void my_free_n_str(int nb_of_str, ...);
 bool my_char_in_str(char c, char *str);
 char **my_pimp_str_to_wa(char *str, char *delim);
 char **my_strstrcpy(char **dest, char **src);
+char *my_nb_to_str(int nb);
 
 #endif /*MY_H*/

@@ -21,6 +21,8 @@ static int get_line_nb(char **lines)
     line = lines[my_strstrlen(lines) - 1];
     nb = my_special_getnbr(line);
     free_str_array(lines);
+    if (nb == 0)
+        return -1;
     return nb;
 }
 
@@ -44,13 +46,33 @@ static int get_previous_cmd_num(void)
     return get_line_nb(my_pimp_str_to_wa(buffer, "\n"));
 }
 
+char *format_line(char const *cmd, int prev_num)
+{
+    char *num = my_nb_to_str(prev_num);
+    char *num_space = my_strcat(num, " ");
+    char *time = get_current_time();
+    char *num_time = my_strcat(num_space, time);
+    char *time_space = my_strcat(num_time, " ");
+    char *msg = my_strcat(time_space, cmd);
+
+    free(num);
+    free(num_space);
+    free(time);
+    free(num_time);
+    free(time_space);
+    return msg;
+}
+
 int add_command_to_save(char const *cmd)
 {
     int fd = open_append(HISTORIC_FILENAME);
+    int prev_num = get_previous_cmd_num();
+    char *line = NULL;
 
-    if (fd == ERROR)
+    if (fd == ERROR || prev_num < 0)
         return ERROR;
-    if (write(fd, cmd, my_strlen(cmd)) == SYS_ERROR) {
+    line = format_line(cmd, prev_num);
+    if (write(fd, line, my_strlen(cmd)) == SYS_ERROR) {
         perror("Write to save file");
         return ERROR;
     }

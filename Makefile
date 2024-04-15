@@ -19,6 +19,7 @@ SRC	=	src/main.c					\
 		src/file.c	\
 		src/historic.c	\
 		src/special_getnbr.c	\
+		src/time.c	\
 
 UT_SRC	=	tests/unit_tests.c	\
 		src/disp_env.c				\
@@ -34,6 +35,7 @@ UT_SRC	=	tests/unit_tests.c	\
 		src/file.c	\
 		src/historic.c	\
 		src/special_getnbr.c	\
+		src/time.c	\
 
 OBJ	=	$(SRC:.c=.o)
 

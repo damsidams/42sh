@@ -55,4 +55,7 @@ int get_file_size(char const *filename);
 int open_append(char const *filename);
 int read_open(char const *filename);
 
+// --> time
+char *get_current_time(void);
+
 #endif /* MINISHELL_1 */

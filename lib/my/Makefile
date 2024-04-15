@@ -59,6 +59,7 @@ SRC	=	my_showmem.c				\
 		mini_printf.c				\
 		my_str_to_word_class_array.c	\
 		my_strstrcpy.c	\
+		my_nb_to_str.c	\
 
 OBJ	=	$(SRC:.c=.o)
 

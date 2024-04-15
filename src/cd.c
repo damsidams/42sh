@@ -22,7 +22,7 @@ static char *get_current_path(void)
     return path;
 }
 
-static void set_pwd(shell_info *my_shell)
+static void set_pwd(shell_info_t *my_shell)
 {
     char *new_path = get_current_path();
     char *args[] = {"setenv", "PWD", new_path, NULL};
@@ -59,7 +59,7 @@ static char *get_username(char **env)
     return 0;
 }
 
-static void goto_last_dir(shell_info *my_shell)
+static void goto_last_dir(shell_info_t *my_shell)
 {
     char *temp_last_path = NULL;
 
@@ -75,7 +75,7 @@ static void goto_last_dir(shell_info *my_shell)
     my_shell->exit_status = 0;
 }
 
-void goto_root(shell_info *my_shell)
+void goto_root(shell_info_t *my_shell)
 {
     char *username;
     char *path;
@@ -93,7 +93,7 @@ void goto_root(shell_info *my_shell)
     my_shell->exit_status = 0;
 }
 
-void goto_dir(shell_info *my_shell, char *path)
+void goto_dir(shell_info_t *my_shell, char *path)
 {
     int valid_path;
     char *temp_last_path = NULL;
@@ -116,7 +116,7 @@ void goto_dir(shell_info *my_shell, char *path)
     my_shell->exit_status = 0;
 }
 
-void change_dir(char **args, shell_info *my_shell)
+void change_dir(char **args, shell_info_t *my_shell)
 {
     if (my_strstrlen(args) > 2) {
         my_putstr_err("my_sh: cd: too many arguments\n");

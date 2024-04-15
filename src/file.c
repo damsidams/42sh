@@ -55,3 +55,20 @@ int read_open(char const *filename)
     free(err_msg);
     return fd;
 }
+
+char *get_file_content(char const *filename)
+{
+    int fd = read_open(filename);
+    char *buffer = NULL;
+    int char_read = 0;
+
+    if (fd == OPEN_ERROR)
+        return NULL;
+    buffer = malloc(sizeof(char) * (get_file_size(filename) + 1));
+    if (buffer == NULL) {
+        return NULL;
+    }
+    char_read = read(fd, buffer, get_file_size(filename) - 1);
+    buffer[char_read] = '\0';
+    return buffer;
+}

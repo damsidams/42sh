@@ -57,7 +57,7 @@ static char **add_new_name_value(char **env, char *name, char *value)
     return env;
 }
 
-char **set_name(char *name, shell_info *my_shell)
+char **set_name(char *name, shell_info_t *my_shell)
 {
     char *env_name = NULL;
     char **temp_env = my_str_array_dup(my_shell->env);
@@ -81,7 +81,7 @@ char **set_name(char *name, shell_info *my_shell)
     return my_shell->env;
 }
 
-char **set_name_value(char *name, char *value, shell_info *my_shell)
+char **set_name_value(char *name, char *value, shell_info_t *my_shell)
 {
     char *env_name;
 
@@ -98,7 +98,7 @@ char **set_name_value(char *name, char *value, shell_info *my_shell)
     return my_shell->env;
 }
 
-void set_env_no_disp(char **args, shell_info *my_shell)
+void set_env_no_disp(char **args, shell_info_t *my_shell)
 {
     char *name;
     char *value;
@@ -148,7 +148,7 @@ static bool arg_error(char **args)
     return false;
 }
 
-static bool check_exceptions(char **args, shell_info *my_shell)
+static bool check_exceptions(char **args, shell_info_t *my_shell)
 {
     if (my_strstrlen(my_shell->env) == 0)
         return true;
@@ -163,7 +163,7 @@ static bool check_exceptions(char **args, shell_info *my_shell)
     return false;
 }
 
-void set_env(char **args, shell_info *my_shell)
+void set_env(char **args, shell_info_t *my_shell)
 {
     char *name;
     char *value;

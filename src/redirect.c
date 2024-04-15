@@ -12,7 +12,7 @@
 #include "shell.h"
 #include "my.h"
 
-static void simple_output_redirect(char **args, shell_info *my_shell, int i)
+static void simple_output_redirect(char **args, shell_info_t *my_shell, int i)
 {
     int fd;
 
@@ -28,7 +28,7 @@ static void simple_output_redirect(char **args, shell_info *my_shell, int i)
     dup2(fd, STDOUT_FILENO);
 }
 
-static void double_output_redirect(char **args, shell_info *my_shell, int i)
+static void double_output_redirect(char **args, shell_info_t *my_shell, int i)
 {
     int fd;
 
@@ -44,7 +44,7 @@ static void double_output_redirect(char **args, shell_info *my_shell, int i)
     dup2(fd, STDOUT_FILENO);
 }
 
-static void simple_input_redirect(char **args, shell_info *my_shell, int i)
+static void simple_input_redirect(char **args, shell_info_t *my_shell, int i)
 {
     int fd;
 
@@ -60,7 +60,7 @@ static void simple_input_redirect(char **args, shell_info *my_shell, int i)
     dup2(fd, STDIN_FILENO);
 }
 
-static void double_input_redirect(char **args, shell_info *my_shell, int i)
+static void double_input_redirect(char **args, shell_info_t *my_shell, int i)
 {
     int fd;
 
@@ -148,7 +148,7 @@ bool valid_redirect(char **cmds)
     return true;
 }
 
-char **check_redirect(char **args, shell_info *my_shell)
+char **check_redirect(char **args, shell_info_t *my_shell)
 {
     for (int i = 0; args[i]; i++) {
         if (my_strcmp(args[i], SIMPLE_REDIRECT_OUTPUT) == 0)

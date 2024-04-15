@@ -16,7 +16,8 @@
 #include "shell.h"
 #include "struct.h"
 
-static int get_prompt(char **user_input, size_t *bufsize, shell_info *my_shell)
+static int get_prompt(char **user_input,
+    size_t *bufsize, shell_info_t *my_shell)
 {
     ssize_t line_size = 0;
 
@@ -33,7 +34,7 @@ static int get_prompt(char **user_input, size_t *bufsize, shell_info *my_shell)
     return 1;
 }
 
-char *get_user_input(shell_info *my_shell)
+char *get_user_input(shell_info_t *my_shell)
 {
     size_t bufsize = 0;
     ssize_t line_size = 0;
@@ -79,7 +80,7 @@ static bool no_cmd(char *user_input)
     return true;
 }
 
-char **get_args(shell_info *my_shell)
+char **get_args(shell_info_t *my_shell)
 {
     char *user_input = get_user_input(my_shell);
     char *user_input_cpy = my_strdup(user_input);

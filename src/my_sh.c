@@ -16,7 +16,7 @@
 #include "shell.h"
 #include "struct.h"
 
-static int end_shell(shell_info *my_shell)
+static int end_shell(shell_info_t *my_shell)
 {
     int return_value;
 
@@ -29,9 +29,9 @@ static int end_shell(shell_info *my_shell)
     return return_value;
 }
 
-static shell_info *init_shell_info(char **env)
+static shell_info_t *init_shell_info_t(char **env)
 {
-    shell_info *my_shell = malloc(sizeof(shell_info));
+    shell_info_t *my_shell = malloc(sizeof(shell_info_t));
 
     if (!env || my_strstrlen(env) == 0)
         my_shell->env = NULL;
@@ -71,7 +71,7 @@ static char *get_path_to_display(char *actual_dir, int index)
     return path_to_display;
 }
 
-static void disp_error(shell_info *my_shell, char *path)
+static void disp_error(shell_info_t *my_shell, char *path)
 {
     if (my_shell->exit_status == 139)
         mini_printf("\u203C\033[1;%dm [%s]$\033[0m ",
@@ -81,7 +81,7 @@ static void disp_error(shell_info *my_shell, char *path)
             my_shell->color[1], path);
 }
 
-static void disp_actual_dir(shell_info *my_shell)
+static void disp_actual_dir(shell_info_t *my_shell)
 {
     char *actual_dir = NULL;
     char *path = NULL;
@@ -115,7 +115,7 @@ void sig_handler(int signum)
 
 int my_sh(char **env)
 {
-    shell_info *my_shell = init_shell_info(env);
+    shell_info_t *my_shell = init_shell_info_t(env);
     int stdout_cpy = dup(STDOUT_FILENO);
     int stdin_cpy = dup(STDIN_FILENO);
 

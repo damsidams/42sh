@@ -27,25 +27,26 @@
     #define HISTORIC_FILENAME "bonus/save.txt"
 
 int my_sh(char **env);
-void disp_env(char **args, shell_info *my_shell);
-void change_dir(char **args, shell_info *my_shell);
-void set_env(char **args, shell_info *my_shell);
-void set_env_no_disp(char **args, shell_info *my_shell);
-void unset_env(char **args, shell_info *my_shell);
+void disp_env(char **args, shell_info_t *my_shell);
+void change_dir(char **args, shell_info_t *my_shell);
+void set_env(char **args, shell_info_t *my_shell);
+void set_env_no_disp(char **args, shell_info_t *my_shell);
+void unset_env(char **args, shell_info_t *my_shell);
 char *get_name(char **env, int index);
-void command_handling(shell_info *my_shell, char **args);
-void set_color(char **args, shell_info *my_shell);
+void command_handling(shell_info_t *my_shell, char **args);
+void set_color(char **args, shell_info_t *my_shell);
 int valid_color(char *color);
-char **get_args(shell_info *my_shell);
-char **check_redirect(char **args, shell_info *my_shell);
-void check_cmd_type(shell_info *my_shell);
-bool check_pipe(char *cmd, shell_info *my_shell);
+char **get_args(shell_info_t *my_shell);
+char **check_redirect(char **args, shell_info_t *my_shell);
+void check_cmd_type(shell_info_t *my_shell);
+bool check_pipe(char *cmd, shell_info_t *my_shell);
 char ***get_all_cmd(char ***all_cmds, char **args);
 bool valid_redirect(char **cmds);
-char *get_user_input(shell_info *my_shell);
+char *get_user_input(shell_info_t *my_shell);
 bool no_env(char **env);
 
-// --> save xommands
+// --> save commands
+void display_historic(char **args, shell_info_t *my_shell);
 int add_command_to_save(char const *cmd);
 char **get_array_from_prev_cmd(char *current_cmd);
 int my_special_getnbr(char const *str);
@@ -54,6 +55,7 @@ int my_special_getnbr(char const *str);
 int get_file_size(char const *filename);
 int open_append(char const *filename);
 int read_open(char const *filename);
+char *get_file_content(char const *filename);
 
 // --> time
 char *get_current_time(void);

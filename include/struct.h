@@ -5,11 +5,11 @@
 ** struct.h
 */
 
-#ifndef MINISHELL_1_STRUCT
-    #define MINISHELL_1_STRUCT
+#ifndef STRUCT_H
+    #define STRUCT_H
     #include <stdbool.h>
 
-typedef struct shell_info_t {
+typedef struct shell_info_t_s {
     char **env;
     char *last_path;
     int exit_status;
@@ -18,6 +18,6 @@ typedef struct shell_info_t {
     bool is_a_tty;
     int stdout_cpy;
     int stdin_cpy;
-} shell_info;
+} shell_info_t;
 
-#endif /* MINISHELL_1_STRUCT */
+#endif

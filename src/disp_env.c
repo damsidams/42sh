@@ -28,7 +28,7 @@ bool no_env(char **env)
     return false;
 }
 
-void disp_env(char **args, shell_info *my_shell)
+void disp_env(char **args, shell_info_t *my_shell)
 {
     (void)args;
     print_str_array(my_shell->env);

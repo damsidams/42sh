@@ -28,7 +28,7 @@ char **get_pipe_cmds(char *cmd)
     return pipe_sep;
 }
 
-static void exec_last_cmd(char **cmd_args, shell_info *my_shell, int *pipefd)
+static void exec_last_cmd(char **cmd_args, shell_info_t *my_shell, int *pipefd)
 {
     dup2(pipefd[0], STDIN_FILENO);
     dup2(my_shell->stdout_cpy, STDOUT_FILENO);
@@ -36,7 +36,7 @@ static void exec_last_cmd(char **cmd_args, shell_info *my_shell, int *pipefd)
     command_handling(my_shell, cmd_args);
 }
 
-static void exec_pipe(char **args, shell_info *my_shell, int i, int *pipefd)
+static void exec_pipe(char **args, shell_info_t *my_shell, int i, int *pipefd)
 {
     char **cmd_args = my_pimp_str_to_wa(args[i], " ");
 
@@ -74,7 +74,7 @@ static bool check_null_cmd(char *cmd, char **pipe_sep)
     return false;
 }
 
-bool check_pipe(char *cmd, shell_info *my_shell)
+bool check_pipe(char *cmd, shell_info_t *my_shell)
 {
     char **pipe_sep = get_pipe_cmds(cmd);
     int stdout_cpy = dup(STDOUT_FILENO);

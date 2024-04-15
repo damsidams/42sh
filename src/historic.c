@@ -46,7 +46,7 @@ static int get_previous_cmd_num(void)
     return get_line_nb(my_pimp_str_to_wa(buffer, "\n"));
 }
 
-char *format_line(char const *cmd, int prev_num)
+static char *format_line(char const *cmd, int prev_num)
 {
     char *num = my_nb_to_str(prev_num);
     char *num_space = my_strcat(num, " ");
@@ -130,4 +130,19 @@ char **get_array_from_prev_cmd(char *current_cmd)
     close(fd);
     buffer[chars_read] = '\0';
     return add_command_to_end(buffer, current_cmd);
+}
+
+void display_historic(char **args, shell_info_t *my_shell)
+{
+    char *buffer = NULL;
+
+    (void)args;
+    buffer = get_file_content(HISTORIC_FILENAME);
+    if (buffer == NULL || my_strlen(buffer) <= 0) {
+        my_shell->exit_status = ERROR;
+        return;
+    }
+    my_putstr(buffer);
+    free(buffer);
+    my_shell->exit_status = SUCCESS;
 }

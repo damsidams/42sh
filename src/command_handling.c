@@ -35,7 +35,7 @@ static void disp_err_message(char *command)
     }
 }
 
-static void check_seg_fault(int wstatus, shell_info *my_shell)
+static void check_seg_fault(int wstatus, shell_info_t *my_shell)
 {
     if (WIFEXITED(wstatus))
         my_shell->exit_status = WEXITSTATUS(wstatus);
@@ -50,12 +50,13 @@ static void check_seg_fault(int wstatus, shell_info *my_shell)
     }
 }
 
-bool built_in_command(char **args, shell_info *my_shell)
+bool built_in_command(char **args, shell_info_t *my_shell)
 {
     char *flags_array[] =
         {"env", "cd", "setenv", "unsetenv", "color", "history", NULL};
     void (*fptr_array[])() =
-        {disp_env, change_dir, set_env, unset_env, set_color};
+        {disp_env, change_dir, set_env, unset_env, set_color
+        , display_historic};
 
     if (args[0] == NULL)
         return false;
@@ -63,6 +64,7 @@ bool built_in_command(char **args, shell_info *my_shell)
         if (flags_array[i] == NULL)
             break;
         if (my_strcmp(flags_array[i], args[0]) == 0){
+            add_command_to_save(flags_array[i]);
             fptr_array[i](args, my_shell);
             return true;
         }
@@ -81,7 +83,7 @@ static char **get_paths(char **env)
     return my_pimp_str_to_wa(env[i], ":=");
 }
 
-static void cmd_not_found(char **args, shell_info *my_shell,
+static void cmd_not_found(char **args, shell_info_t *my_shell,
     char *cmd_path, char **paths)
 {
     if (no_env(my_shell->env)) {
@@ -95,7 +97,7 @@ static void cmd_not_found(char **args, shell_info *my_shell,
     exit(1);
 }
 
-static void exec_paths(char **args, shell_info *my_shell)
+static void exec_paths(char **args, shell_info_t *my_shell)
 {
     char **paths = get_paths(my_shell->env);
     char *cmd_path = NULL;
@@ -119,7 +121,7 @@ static void exec_paths(char **args, shell_info *my_shell)
     free_str_array(paths);
 }
 
-void exec_cmd(char **args, shell_info *my_shell)
+void exec_cmd(char **args, shell_info_t *my_shell)
 {
     pid_t child;
     int wstatus = 0;
@@ -134,7 +136,7 @@ void exec_cmd(char **args, shell_info *my_shell)
     free_str_array(args);
 }
 
-void command_handling(shell_info *my_shell, char **args)
+void command_handling(shell_info_t *my_shell, char **args)
 {
     args = check_redirect(args, my_shell);
     if (my_shell->exit_shell || !args) {
@@ -146,14 +148,14 @@ void command_handling(shell_info *my_shell, char **args)
     exec_cmd(args, my_shell);
 }
 
-static void exec_no_pipe(char *cmd, shell_info *my_shell)
+static void exec_no_pipe(char *cmd, shell_info_t *my_shell)
 {
     char **args = my_pimp_str_to_wa(cmd, " \t");
 
     command_handling(my_shell, args);
 }
 
-void check_cmd_type(shell_info *my_shell)
+void check_cmd_type(shell_info_t *my_shell)
 {
     char **cmds = NULL;
     bool pipe_status = false;

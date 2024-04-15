@@ -49,7 +49,7 @@ char **remove_var(char **env, int index)
     return new_env;
 }
 
-static void check_existence(shell_info *my_shell, char *name)
+static void check_existence(shell_info_t *my_shell, char *name)
 {
     char *env_name = NULL;
 
@@ -66,7 +66,7 @@ static void check_existence(shell_info *my_shell, char *name)
         free(env_name);
 }
 
-void unset_env(char **args, shell_info *my_shell)
+void unset_env(char **args, shell_info_t *my_shell)
 {
     char *name;
 

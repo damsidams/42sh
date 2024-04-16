@@ -63,7 +63,7 @@ VAL_CLEAN	=	vgcore*
 
 CS_REPORT	=	coding-style-reports.log
 
-NAME	=	mysh
+NAME	=	42sh
 
 RM	=	rm -f
 

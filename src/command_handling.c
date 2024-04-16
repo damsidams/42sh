@@ -64,7 +64,6 @@ bool built_in_command(char **args, shell_info_t *my_shell)
         if (flags_array[i] == NULL)
             break;
         if (my_strcmp(flags_array[i], args[0]) == 0){
-            add_command_to_save(flags_array[i]);
             fptr_array[i](args, my_shell);
             return true;
         }

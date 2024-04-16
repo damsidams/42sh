@@ -31,6 +31,7 @@ static int get_prompt(char **user_input,
     }
     if (line_size == -1 && my_strlen(*user_input) == 0)
         return 0;
+    add_command_to_save(*user_input);
     return 1;
 }
 

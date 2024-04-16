@@ -25,6 +25,7 @@
     #define SIMPLE_REDIRECT_INPUT "<"
     #define DOUBLE_REDIRECT_INPUT "<<"
     #define HISTORIC_FILENAME "/tmp/42sh_cmd_save.txt"
+    #define HISTORY_NB_SIZE 6
 
 int my_sh(char **env);
 void disp_env(char **args, shell_info_t *my_shell);

@@ -49,9 +49,33 @@ static int get_previous_cmd_num(void)
     return get_line_nb(my_pimp_str_to_wa(buffer, "\n"));
 }
 
+static char *line_nb_format(int prev_num)
+{
+    char *nb = my_nb_to_str(prev_num);
+    char *new_str = NULL;
+    int index = 0;
+
+    if (my_strlen(nb) >= HISTORY_NB_SIZE)
+        return nb;
+    new_str = malloc(sizeof(char) * (HISTORY_NB_SIZE + 1));
+    if (new_str == NULL) {
+        perror("line_nb_format malloc");
+        return NULL;
+    }
+    for (int i = HISTORY_NB_SIZE - 1; i >= 0; i--) {
+        if (index < my_strlen(nb))
+            new_str[i] = nb[my_strlen(nb) - 1 - index];
+        else
+            new_str[i] = ' ';
+        index++;
+    }
+    new_str[HISTORY_NB_SIZE] = '\0';
+    return new_str;
+}
+
 static char *format_line(char const *cmd, int prev_num)
 {
-    char *num = my_nb_to_str(prev_num);
+    char *num = line_nb_format(prev_num);
     char *num_space = my_strcat(num, " ");
     char *time = get_current_time();
     char *num_time = my_strcat(num_space, time);

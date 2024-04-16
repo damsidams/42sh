@@ -68,7 +68,7 @@ char *get_file_content(char const *filename)
     if (buffer == NULL) {
         return NULL;
     }
-    char_read = read(fd, buffer, get_file_size(filename) - 1);
+    char_read = read(fd, buffer, get_file_size(filename));
     buffer[char_read] = '\0';
     return buffer;
 }

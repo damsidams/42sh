@@ -20,9 +20,11 @@ static int get_line_nb(char **lines)
         return -1;
     line = lines[my_strstrlen(lines) - 1];
     nb = my_special_getnbr(line);
-    free_str_array(lines);
-    if (nb == 0)
+    if (nb == 0 && line[0] != '0') {
+        free_str_array(lines);
         return -1;
+    }
+    free_str_array(lines);
     return nb;
 }
 
@@ -32,16 +34,17 @@ static int get_previous_cmd_num(void)
     char *buffer = NULL;
     int chars_read = 0;
 
-    if (fd == OPEN_ERROR)
+    if (fd == OPEN_ERROR && get_file_size(HISTORIC_FILENAME) > 0)
         return fd;
-    if (get_file_size(HISTORIC_FILENAME) == 0) {
-        close(fd);
+    if (get_file_size(HISTORIC_FILENAME) <= 0)
         return 0;
-    }
+    buffer = malloc(sizeof(char) * get_file_size(HISTORIC_FILENAME) + 1);
     chars_read = read(fd, buffer, get_file_size(HISTORIC_FILENAME) - 1);
     close(fd);
-    if (chars_read == SYS_ERROR)
+    if (chars_read == SYS_ERROR) {
+        perror("Reading last command number");
         return SYS_ERROR;
+    }
     buffer[chars_read] = '\0';
     return get_line_nb(my_pimp_str_to_wa(buffer, "\n"));
 }
@@ -53,13 +56,15 @@ static char *format_line(char const *cmd, int prev_num)
     char *time = get_current_time();
     char *num_time = my_strcat(num_space, time);
     char *time_space = my_strcat(num_time, " ");
-    char *msg = my_strcat(time_space, cmd);
+    char *tmp_msg = my_strcat(time_space, cmd);
+    char *msg = my_strcat(tmp_msg, "\n");
 
     free(num);
     free(num_space);
     free(time);
     free(num_time);
     free(time_space);
+    free(tmp_msg);
     return msg;
 }
 
@@ -71,8 +76,8 @@ int add_command_to_save(char const *cmd)
 
     if (fd == ERROR || prev_num < 0)
         return ERROR;
-    line = format_line(cmd, prev_num);
-    if (write(fd, line, my_strlen(cmd)) == SYS_ERROR) {
+    line = format_line(cmd, prev_num + 1);
+    if (write(fd, line, my_strlen(line)) == SYS_ERROR) {
         perror("Write to save file");
         return ERROR;
     }

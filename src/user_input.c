@@ -41,6 +41,8 @@ char *get_user_input(shell_info *my_shell)
 
     while (line_size == 0) {
         line_size = get_prompt(&user_input, &bufsize, my_shell);
+        if (user_input[my_strlen(user_input) - 1] == '\t')
+            auto_complete(&user_input, my_shell);
         if (line_size == -1) {
             my_shell->exit_shell = true;
             free(user_input);

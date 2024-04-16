@@ -69,7 +69,7 @@ bool built_in_command(char **args, shell_info *my_shell)
     return false;
 }
 
-static char **get_paths(char **env)
+char **get_paths(char **env)
 {
     int i = 0;
 

@@ -36,5 +36,7 @@ char ***get_all_cmd(char ***all_cmds, char **args);
 bool valid_redirect(char **cmds);
 char *get_user_input(shell_info *my_shell);
 bool no_env(char **env);
+void auto_complete(char **user_input, shell_info *my_shell);
+char **get_paths(char **env);
 
 #endif /* MINISHELL_1 */

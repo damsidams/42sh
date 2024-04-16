@@ -15,7 +15,8 @@ SRC	=	src/main.c					\
 		src/redirect.c				\
 		src/setenv.c				\
 		src/set_color.c				\
-		src/my_sh.c
+		src/my_sh.c					\
+		src/auto_complete.c
 
 UT_SRC	=	tests/unit_tests.c
 

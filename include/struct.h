@@ -18,7 +18,7 @@ typedef struct shell_info_t_s {
     bool is_a_tty;
     int stdout_cpy;
     int stdin_cpy;
-} shell_info_t;
+}  shell_info_t;
 
 enum sep_type {
     And,

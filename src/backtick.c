@@ -14,29 +14,12 @@
 #include <sys/wait.h>
 #include "shell.h"
 
-bool is_backtick(char const *str)
-{
-    if (str == NULL) {
-        return false;
-    }
-    if (strlen(str) <= 1) {
-        return false;
-    }
-    if (str[0] == '`' && str[strlen(str) - 1] == '`') {
-        return true;
-    }
-    return false;
-}
-
 static char *read_fd(int fd)
 {
     char *buffer = NULL;
     int filesize = READ_SIZE;
     int chars_read = 0;
 
-    if (filesize <= 0) {
-        return my_strdup("file size");
-    }
     buffer = calloc(filesize + 1, sizeof(char));
     if (buffer == NULL) {
         perror("read_fd calloc failed");
@@ -71,7 +54,14 @@ static void child(int fd, shell_info_t *my_shell, char *cmd)
     exit(0);
 }
 
-char *get_backtick_output(shell_info_t *shell_info, char *cmd)
+static void clear_func(int *fd, char *old_cmd)
+{
+    close(fd[1]);
+    close(fd[0]);
+    free(cmd);
+}
+
+static char *get_backtick_output(shell_info_t *shell_info, char *cmd)
 {
     char *cmd_result = NULL;
     int output = dup(STDOUT_FILENO);
@@ -88,9 +78,33 @@ char *get_backtick_output(shell_info_t *shell_info, char *cmd)
     if (pid == 0) {
         child(fd[1], shell_info, cmd);
     }
-    close(fd[1]);
     cmd_result = read_fd(fd[0]);
     waitpid(pid, NULL, 0);
-    close(fd[0]);
+    clear_func(fd, cmd);
     return cmd_result;
+}
+
+
+static bool backtick_str(char const *str)
+{
+    if (str == NULL) {
+        return false;
+    }
+    if (strlen(str) <= 1) {
+        return false;
+    }
+    if (str[0] == '`' && str[strlen(str) - 1] == '`') {
+        return true;
+    }
+    return false;
+}
+
+void replace_backtick(char **str, shell_info *my_shell)
+{
+    for (unsigned int i = 0; str[i]; i++) {
+        if (backtick_str(str[i])) {
+            str[i] = get_backtick_output(my_shell, str[i]);
+        }
+    }
+    return false;
 }

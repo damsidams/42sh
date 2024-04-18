@@ -67,5 +67,6 @@ char *get_current_time(void);
 
 // --> backtick
 bool is_backtick(char const *str);
+char *get_backtick_output(shell_info_t *my_shell, char *cmd);
 
 #endif /* MINISHELL_1 */

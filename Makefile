@@ -21,6 +21,7 @@ SRC	=	src/main.c					\
 		src/special_getnbr.c	\
 		src/time.c	\
 		src/built_in_command.c	 \
+		src/backtick.c	\
 
 UT_SRC	=	tests/unit_tests.c	\
 		src/disp_env.c				\

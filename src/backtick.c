@@ -27,41 +27,61 @@ bool is_backtick(char const *str)
     return false;
 }
 
-static char *read_fd(int write_fd, int read_fd)
+int get_fd_size(int fd)
 {
-    char *buffer = malloc(sizeof(char) * (BUFSIZ + 1));
+    unsigned int size = 0;
+    char buffer[BUFSIZ];
     int chars_read = 0;
 
     do {
-        chars_read += read(fd, buffer, BUFSIZ);
+        size += chars_read;
+        chars_read = read(fd, buffer, BUFSIZ - 1);
     } while (chars_read != SYS_ERROR && chars_read != 0);
-    if (chars_read == SYS_ERROR || chars_read == 0) {
-        return NULL;
+    if (chars_read == SYS_ERROR) {
+        return SYS_ERROR;
     }
-    buffer = realloc(buffer, chars_read + 1);
+    return size;
+}
+
+static char *read_fd(int fd)
+{
+    char *buffer = NULL;
+    //ssize_t chars_read = 0;
+    //size_t len = 0;
+
+    int filesize = get_fd_size(fd);
+
+    if (filesize <= 0) {
+        return my_strdup("file size");
+        //return NULL;
+    }
+    buffer = malloc(sizeof(char) * (filesize + 1));
     if (buffer == NULL) {
-        perror("read_fd realloc failed");
+        perror("read_fd malloc failed");
         return NULL;
     }
-    if (read(fd, buffer, chars_read) == SYS_ERROR) {
+    if (read(fd, buffer, filesize) == SYS_ERROR) {
         perror("read_fd read failed");
-        return NULL;
+        return my_strdup("test");
+        //return NULL;
     }
-    buffer[chars_read] = '\0';
+    buffer[filesize] = '\0';
+    chars_read = getline(&buffer, &len, fd);
     return buffer;
 }
 
-static int set_function(int *fd, int output)
+static int set_function(int fd, int output)
 {
-    if (pipe(fd) == SYS_ERROR) {
-        perror("pipe in get_backtick_output failed");
+    if (fd == SYS_ERROR) {
+        perror("open tmp file in get_backtick_output");
         return ERROR;
     }
     if (output == SYS_ERROR) {
         perror("dup in get_backtick_output");
         return ERROR;
     }
-    if (dup2(fd[1], STDOUT_FILENO) == SYS_ERROR) {
+    printf("before dup\n");
+    if (dup2(fd, STDOUT_FILENO) == SYS_ERROR) {
         perror("dup2 in get_backtick_output");
         return ERROR;
     }
@@ -72,15 +92,16 @@ char *get_backtick_output(shell_info_t *shell_info, char *cmd)
 {
     char *cmd_result = NULL;
     int output = dup(STDOUT_FILENO);
-    int fd[2];
+    int fd = open("/tmp/", __O_TMPFILE | O_RDWR, S_IRUSR | S_IWUSR);
 
+    printf("before set function\n");
     if (set_function(fd, output) == ERROR) {
         return NULL;
     }
+    printf("after set function\n");
     check_given_cmd_type(shell_info, cmd);
-    cmd_result = read_fd(fd[1], fd[0]);
-    close(fd[1]);
-    close(fd[0]);
+    cmd_result = read_fd(fd);
+    close(fd);
     if (dup2(output, STDOUT_FILENO) == SYS_ERROR) {
         perror("dup2 get_backtick_output failed");
     }

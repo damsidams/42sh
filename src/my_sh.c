@@ -120,7 +120,6 @@ int my_sh(char **env)
     int stdin_cpy = dup(STDIN_FILENO);
 
     signal(SIGINT, sig_handler);
-    printf("output: %s\n", get_backtick_output(my_shell, "ls -s"));
     while (!my_shell->exit_shell) {
         if (my_shell->is_a_tty)
             disp_actual_dir(my_shell);

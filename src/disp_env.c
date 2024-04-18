@@ -14,8 +14,9 @@ bool no_env(char **env)
 {
     char **equal_sep = NULL;
 
-    if (my_strstrlen(env) == 0)
+    if (my_strstrlen(env) == 0) {
         return true;
+    }
     for (int i = 0; env[i]; i++) {
         equal_sep = my_pimp_str_to_wa(env[i], "=");
         if (my_strcmp(equal_sep[0], "PATH") == 0 &&

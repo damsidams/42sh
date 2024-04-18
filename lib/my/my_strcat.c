@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-char *my_strcat(char *str, char const *to_add)
+char *my_strcat(char const *str, char const *to_add)
 {
     int dest_size = my_strlen(str) + my_strlen(to_add);
     char *dest = malloc(sizeof(char) * (dest_size + 1));

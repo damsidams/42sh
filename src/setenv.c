@@ -11,7 +11,8 @@
 #include "my.h"
 #include "struct.h"
 
-static char **replace_value(char **env, int index, char *name, char *value)
+static char **replace_value(char **env, int index,
+    char const *name, char const *value)
 {
     char *new_name = my_strcat(name, "=");
     char *name_value = my_strcat(new_name, value);
@@ -23,14 +24,18 @@ static char **replace_value(char **env, int index, char *name, char *value)
     return env;
 }
 
-static char **add_new_name(char **env, char *name, char **temp_env)
+static char **add_new_name(char **env, char const *name, char **temp_env)
 {
     char *new_name = my_strcat(name, "=");
 
     free_str_array(env);
     env = malloc(sizeof(char *) * (my_strstrlen(temp_env) + 2));
-    for (int i = 0; i != my_strstrlen(temp_env) + 2; i++)
+    if (env == NULL) {
+        perror("add_new_name malloc failed");
+    }
+    for (int i = 0; i != my_strstrlen(temp_env) + 2; i++) {
         env[i] = NULL;
+    }
     env = my_str_array_cpy(temp_env, env);
     env[my_strstrlen(temp_env)] = my_strdup(new_name);
     free_str_array(temp_env);
@@ -38,7 +43,8 @@ static char **add_new_name(char **env, char *name, char **temp_env)
     return env;
 }
 
-static char **add_new_name_value(char **env, char *name, char *value)
+static char **add_new_name_value(char **env,
+    char const *name, char const *value)
 {
     char *new_name = my_strcat(name, "=");
     char *new_value = my_strcat(new_name, value);
@@ -57,7 +63,7 @@ static char **add_new_name_value(char **env, char *name, char *value)
     return env;
 }
 
-char **set_name(char *name, shell_info_t *my_shell)
+char **set_name(char const *name, shell_info_t *my_shell)
 {
     char *env_name = NULL;
     char **temp_env = my_str_array_dup(my_shell->env);
@@ -81,9 +87,10 @@ char **set_name(char *name, shell_info_t *my_shell)
     return my_shell->env;
 }
 
-char **set_name_value(char *name, char *value, shell_info_t *my_shell)
+char **set_name_value(char const *name,
+    char const *value, shell_info_t *my_shell)
 {
-    char *env_name;
+    char *env_name = NULL;
 
     for (int i = 0; (my_shell->env)[i]; i++) {
         env_name = get_name(my_shell->env, i);
@@ -100,8 +107,8 @@ char **set_name_value(char *name, char *value, shell_info_t *my_shell)
 
 void set_env_no_disp(char **args, shell_info_t *my_shell)
 {
-    char *name;
-    char *value;
+    char *name = NULL;
+    char *value = NULL;
 
     if (my_strstrlen(args) > 3) {
         my_putstr_err("setenv: Too many arguments.\n");
@@ -114,8 +121,9 @@ void set_env_no_disp(char **args, shell_info_t *my_shell)
             value = my_strdup(args[2]);
             my_shell->env = set_name_value(name, value, my_shell);
             free(value);
-        } else
+        } else {
             my_shell->env = set_name(name, my_shell);
+        }
         free(name);
     }
     my_shell->exit_status = 0;
@@ -141,17 +149,20 @@ static bool arg_error(char **args)
         my_putstr_err("setenv: Too many arguments.\n");
         return true;
     }
-    if (my_strstrlen(args) == 2 && !is_valid_arg(args[1]))
+    if (my_strstrlen(args) == 2 && !is_valid_arg(args[1])) {
         return true;
-    if (my_strstrlen(args) == 3 && !is_valid_arg(args[1]))
+    }
+    if (my_strstrlen(args) == 3 && !is_valid_arg(args[1])) {
         return true;
+    }
     return false;
 }
 
 static bool check_exceptions(char **args, shell_info_t *my_shell)
 {
-    if (my_strstrlen(my_shell->env) == 0)
+    if (my_strstrlen(my_shell->env) == 0) {
         return true;
+    }
     if (my_strstrlen(args) == 1) {
         print_str_array(my_shell->env);
         return true;
@@ -165,19 +176,21 @@ static bool check_exceptions(char **args, shell_info_t *my_shell)
 
 void set_env(char **args, shell_info_t *my_shell)
 {
-    char *name;
-    char *value;
+    char *name = NULL;
+    char *value = NULL;
 
-    if (check_exceptions(args, my_shell))
+    if (check_exceptions(args, my_shell)) {
         return;
+    }
     if (my_strstrlen(args) >= 2) {
         name = my_strdup(args[1]);
         if (my_strstrlen(args) == 3) {
             value = my_strdup(args[2]);
             my_shell->env = set_name_value(name, value, my_shell);
             free(value);
-        } else
+        } else {
             my_shell->env = set_name(name, my_shell);
+        }
         free(name);
     }
     my_shell->exit_status = 0;

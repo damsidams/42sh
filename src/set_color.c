@@ -111,9 +111,9 @@ void get_options(char **args, shell_info_t *my_shell)
             return;
         }
     }
-    if (args[1][0] != '-')
+    if (args[1][0] != '-') {
         change_all_colors(args, my_shell);
-    else {
+    } else {
         my_putstr_err("mysh: color: bad arguments\n");
         my_putstr_err("try color -h to see options\n");
         my_shell->exit_status = 1;

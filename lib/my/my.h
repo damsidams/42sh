@@ -44,7 +44,7 @@ int my_str_isupper(char const *str);
 int my_str_isprintable(char const *str);
 int my_showstr(char const *str);
 int my_showmem(char const *str, int size);
-char *my_strcat(char *dest, char const *src);
+char *my_strcat(char const *dest, char const *src);
 char *my_strncat(char *dest, char const *src, int nb);
 int my_strstrlen(char **str);
 char **my_str_to_word_array(char *buf, char *delim);

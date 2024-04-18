@@ -182,18 +182,3 @@ char **get_array_from_prev_cmd(char *current_cmd)
     buffer[chars_read] = '\0';
     return add_command_to_end(buffer, current_cmd);
 }
-
-void display_historic(char **args, shell_info_t *my_shell)
-{
-    char *buffer = NULL;
-
-    (void)args;
-    buffer = get_file_content(HISTORIC_FILENAME);
-    if (buffer == NULL || my_strlen(buffer) <= 0) {
-        my_shell->exit_status = ERROR;
-        return;
-    }
-    my_putstr(buffer);
-    free(buffer);
-    my_shell->exit_status = SUCCESS;
-}

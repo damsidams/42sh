@@ -20,6 +20,7 @@ SRC	=	src/main.c					\
 		src/historic.c	\
 		src/special_getnbr.c	\
 		src/time.c	\
+		src/display_hist.c	\
 
 UT_SRC	=	tests/unit_tests.c	\
 		src/disp_env.c				\

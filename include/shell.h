@@ -46,6 +46,10 @@ bool valid_redirect(char **cmds);
 char *get_user_input(shell_info_t *my_shell);
 bool no_env(char **env);
 
+// --> exec cmds
+void check_given_cmd_type(shell_info_t *my_shell, char *cmd);
+bool built_in_command(char **args, shell_info_t *my_shell);
+
 // --> save commands
 void display_historic(char **args, shell_info_t *my_shell);
 int add_command_to_save(char const *cmd);
@@ -60,5 +64,8 @@ char *get_file_content(char const *filename);
 
 // --> time
 char *get_current_time(void);
+
+// --> backtick
+bool is_backtick(char const *str);
 
 #endif /* MINISHELL_1 */

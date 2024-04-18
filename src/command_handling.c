@@ -50,27 +50,6 @@ static void check_seg_fault(int wstatus, shell_info_t *my_shell)
     }
 }
 
-bool built_in_command(char **args, shell_info_t *my_shell)
-{
-    char *flags_array[] =
-        {"env", "cd", "setenv", "unsetenv", "color", "history", NULL};
-    void (*fptr_array[])() =
-        {disp_env, change_dir, set_env, unset_env, set_color
-        , display_historic};
-
-    if (args[0] == NULL)
-        return false;
-    for (int i = 0; flags_array[i]; i++) {
-        if (flags_array[i] == NULL)
-            break;
-        if (my_strcmp(flags_array[i], args[0]) == 0){
-            fptr_array[i](args, my_shell);
-            return true;
-        }
-    }
-    return false;
-}
-
 static char **get_paths(char **env)
 {
     int i = 0;
@@ -170,6 +149,27 @@ void check_cmd_type(shell_info_t *my_shell)
         pipe_status = check_pipe(cmds[i], my_shell);
         if (!pipe_status)
             exec_no_pipe(cmds[i], my_shell);
+    }
+    free_str_array(cmds);
+}
+
+void check_given_cmd_type(shell_info_t *my_shell, char *cmd)
+{
+    char **cmds = my_pimp_str_to_wa(cmd, ";");
+    bool pipe_status = false;
+
+    if (!cmds) {
+        return;
+    }
+    if (!valid_redirect(cmds)) {
+        my_shell->exit_status = 1;
+        return;
+    }
+    for (int i = 0; cmds[i]; i++) {
+        pipe_status = check_pipe(cmds[i], my_shell);
+        if (!pipe_status) {
+            exec_no_pipe(cmds[i], my_shell);
+        }
     }
     free_str_array(cmds);
 }

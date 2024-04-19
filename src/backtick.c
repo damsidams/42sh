@@ -14,6 +14,22 @@
 #include <sys/wait.h>
 #include "shell.h"
 
+static char *remove_lb(char *str)
+{
+    if (str == NULL) {
+        return NULL;
+    }
+    for (unsigned int i = 0; str[i]; i++) {
+        if (str[i] == '\n') {
+            str[i] = ' ';
+        }
+        if (str[i] == '\t') {
+            str[i] = ' ';
+        }
+    }
+    return str;
+}
+
 static char *read_fd(int fd)
 {
     char *buffer = NULL;
@@ -31,6 +47,7 @@ static char *read_fd(int fd)
         return my_strdup("test");
     }
     buffer[chars_read] = '\0';
+    buffer = remove_lb(buffer);
     return buffer;
 }
 

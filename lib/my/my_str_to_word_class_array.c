@@ -27,19 +27,16 @@ static int get_word_nb(char *str, char *delim)
 {
     int word_nb = 0;
     int in_exception = OUT;
-    int word_start = 0;
-    int last_start = -1;
 
     for (int i = 0; str[i]; i++) {
         if ((is_delim(str[i], delim) && i > 0 && !is_delim
-            (str[i - 1], delim) && in_exception == OUT) || (str[i + 1] == '\0'
-            && last_start != word_start)) {
+             (str[i - 1], delim) && in_exception == OUT) ||
+            (str[i + 1] == '\0' && !is_delim(str[i], delim))) {
             word_nb++;
-            last_start = word_start;
         }
-        if (!is_delim(str[i], delim) && i > 0 &&
+        /*if (!is_delim(str[i], delim) && i > 0 &&
             is_delim(str[i - 1], delim) && in_exception == OUT)
-            last_start = i;
+            word_start = i;*/
         if (is_exception(str[i]))
             in_exception *= -1;
     }
@@ -118,7 +115,11 @@ static void second_assist(int *wc, int *last_start, int *word_start)
 
 char **my_pimp_str_to_wa(char *str, char *delim)
 {
-    char **array = malloc(sizeof(char *) * (get_word_nb(str, delim) + 1));
+    printf("str: %s\n", str);
+    printf("delim: |%s|\n", delim);
+    int wnb = get_word_nb(str, delim);
+    printf("word_nb: %d\n", wnb);
+    char **array = malloc(sizeof(char *) * (wnb + 1));
     int wc = 0;
     int word_start = 0;
     int last_start = -1;
@@ -137,5 +138,7 @@ char **my_pimp_str_to_wa(char *str, char *delim)
         assist_func(str, i, &in_exception);
     }
     array[wc] = NULL;
+    for (int i = 0; array[i]; i++)
+        printf("array: %s\n", array[i]);
     return array;
 }

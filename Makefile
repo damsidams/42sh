@@ -23,6 +23,7 @@ SRC	=	src/main.c					\
 		src/built_in_command.c	 \
 		src/backtick.c	\
 		src/display_hist.c	\
+		src/check_and_or.c	\
 
 UT_SRC	=	tests/unit_tests.c	\
 		src/disp_env.c				\

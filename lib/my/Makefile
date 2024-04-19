@@ -60,6 +60,7 @@ SRC	=	my_showmem.c				\
 		my_str_to_word_class_array.c	\
 		my_strstrcpy.c	\
 		my_nb_to_str.c	\
+		my_tuned_str_to_wa.c	\
 
 OBJ	=	$(SRC:.c=.o)
 

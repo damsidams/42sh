@@ -17,6 +17,7 @@
     #define SUCCESS 0
     #define SYS_ERROR -1
     #define OPEN_ERROR -1
+    #define INVALID_NULL_COMMAND -1
     #define READ_SIZE 1000000
     #define EXIT_STATUS_ERROR 139
     #define DEFAULT_SUCCESS_COLOR "green"
@@ -70,5 +71,8 @@ char *get_current_time(void);
 // --> backtick
 void replace_backtick(char **str, shell_info_t *my_shell);
 
+
+// --> and or
+bool check_and_or(char *cmd, shell_info_t *my_shell);
 
 #endif /* MINISHELL_1 */

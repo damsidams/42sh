@@ -11,11 +11,12 @@
 #include <unistd.h>
 #include "shell.h"
 
-static int get_line_nb(char **lines)
+static int get_line_nb(char **lines, char *buffer)
 {
     char *line = NULL;
     int nb = 0;
 
+    free(buffer);
     if (lines == NULL) {
         return -1;
     }
@@ -49,10 +50,10 @@ static int get_previous_cmd_num(void)
         return SYS_ERROR;
     }
     buffer[chars_read] = '\0';
-    return get_line_nb(my_pimp_str_to_wa(buffer, "\n"));
+    return get_line_nb(my_pimp_str_to_wa(buffer, "\n"), buffer);
 }
 
-static char *fill_string(char *new_str, char const *nb)
+static char *fill_string(char *new_str, char *nb)
 {
     int index = 0;
 
@@ -64,6 +65,7 @@ static char *fill_string(char *new_str, char const *nb)
         index++;
     }
     new_str[HISTORY_NB_SIZE] = '\0';
+    free(nb);
     return new_str;
 }
 
@@ -77,6 +79,7 @@ static char *line_nb_format(int prev_num)
     }
     new_str = malloc(sizeof(char) * (HISTORY_NB_SIZE + 1));
     if (new_str == NULL) {
+        free(nb);
         perror("line_nb_format malloc");
         return NULL;
     }
@@ -114,9 +117,11 @@ int add_command_to_save(char const *cmd)
     line = format_line(cmd, prev_num + 1);
     if (write(fd, line, my_strlen(line)) == SYS_ERROR) {
         perror("Write to save file");
+        free(line);
         return ERROR;
     }
     close(fd);
+    free(line);
     return SUCCESS;
 }
 

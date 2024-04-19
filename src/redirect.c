@@ -110,7 +110,7 @@ static bool ambiguous(char **space_sep, char **cmd_cpy)
 {
     int cpt[2] = {0, 0};
 
-    for (int i = 0; space_sep[i]; i++) {
+    for (unsigned int i = 0; space_sep[i]; i++) {
         if (my_strcmp(space_sep[i], ">>") == 0 ||
             my_strcmp(space_sep[i], ">") == 0)
             cpt[0]++;
@@ -151,7 +151,7 @@ bool valid_redirect(char **cmds)
     char **space_sep = NULL;
     char **cmds_cpy = my_str_array_dup(cmds);
 
-    for (int i = 0; cmds_cpy[i]; i++) {
+    for (unsigned int i = 0; cmds_cpy[i]; i++) {
         space_sep = my_pimp_str_to_wa(cmds_cpy[i], " ");
         if (check_errors(space_sep, cmds_cpy) == false) {
             return false;
@@ -164,7 +164,7 @@ bool valid_redirect(char **cmds)
 
 char **check_redirect(char **args, shell_info_t *my_shell)
 {
-    for (int i = 0; args[i]; i++) {
+    for (unsigned int i = 0; args[i]; i++) {
         if (my_strcmp(args[i], SIMPLE_REDIRECT_OUTPUT) == 0) {
             simple_output_redirect(args, my_shell, i);
         }

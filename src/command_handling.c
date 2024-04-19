@@ -163,7 +163,7 @@ void check_cmd_type(shell_info_t *my_shell)
 void check_given_cmd_type(shell_info_t *my_shell, char *cmd)
 {
     char **cmds = my_pimp_str_to_wa(cmd, ";");
-    bool pipe_status = false;
+    bool exec_status = false;
 
     if (!cmds) {
         return;
@@ -173,8 +173,11 @@ void check_given_cmd_type(shell_info_t *my_shell, char *cmd)
         return;
     }
     for (int i = 0; cmds[i]; i++) {
-        pipe_status = check_pipe(cmds[i], my_shell);
-        if (!pipe_status) {
+        exec_status = check_and_or(cmds[i]);
+        if (!exec_status) {
+            exec_status = check_pipe(cmds[i], my_shell);
+        }
+        if (!exec_status) {
             exec_no_pipe(cmds[i], my_shell);
         }
     }

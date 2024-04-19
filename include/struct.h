@@ -20,4 +20,9 @@ typedef struct shell_info_t_s {
     int stdin_cpy;
 } shell_info_t;
 
+enum sep_type {
+    And,
+    Or
+};
+
 #endif

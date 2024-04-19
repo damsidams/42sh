@@ -50,7 +50,6 @@ static int set_function(int *fd, int output)
 static void child(int fd, shell_info_t *my_shell, char *cmd)
 {
     dup2(fd, STDOUT_FILENO);
-    printf("%s\n", cmd);
     check_given_cmd_type(my_shell, cmd);
     exit(0);
 }
@@ -77,7 +76,6 @@ static char *get_backtick_output(shell_info_t *shell_info, char *cmd)
         return NULL;
     }
     if (pid == 0) {
-        printf("going to child\n");
         child(fd[1], shell_info, cmd);
     }
     cmd_result = read_fd(fd[0]);

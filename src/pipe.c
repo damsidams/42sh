@@ -18,12 +18,12 @@ char **get_pipe_cmds(char *cmd)
 {
     char *cmd_cpy = my_strdup(cmd);
     char **pipe_sep = my_pimp_str_to_wa(cmd_cpy, "|");
+    char **pipe_sep_no_quote = my_str_to_word_array(cmd_cpy, "|");
 
-    print_str_array(pipe_sep);
-    if (my_strstrlen(pipe_sep) == 1) {
-        printf("no pipe\n");
+    if (my_strstrlen(pipe_sep) == 1 && my_strstrlen(pipe_sep_no_quote) == 1) {
         free(cmd_cpy);
         free_str_array(pipe_sep);
+        free_str_array(pipe_sep_no_quote);
         return NULL;
     }
     free(cmd_cpy);
@@ -64,7 +64,12 @@ static void exec_pipe(char **args, shell_info_t *my_shell, int i, int *pipefd)
 static bool check_null_cmd(char *cmd, char **pipe_sep)
 {
     int pipe_cpt = 0;
+    char **pipe_sep_cpy = my_str_array_dup(pipe_sep);
 
+    if (my_strstrlen(pipe_sep) == 1) {
+        free_str_array(pipe_sep_cpy);
+        pipe_sep_cpy = my_str_to_word_array(pipe_sep[0], "|");
+    }
     for (int i = 0; cmd[i] != '\0'; i++) {
         if (cmd[i] == '|')
             pipe_cpt++;
@@ -72,7 +77,7 @@ static bool check_null_cmd(char *cmd, char **pipe_sep)
     if (pipe_cpt == 0) {
         return false;
     }
-    if (pipe_cpt != my_strstrlen(pipe_sep) - 1) {
+    if (pipe_cpt != my_strstrlen(pipe_sep_cpy) - 1) {
         return true;
     }
     return false;

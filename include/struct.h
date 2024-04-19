@@ -22,7 +22,8 @@ typedef struct shell_info_t_s {
 
 enum sep_type {
     And,
-    Or
+    Or,
+    End
 };
 
 #endif

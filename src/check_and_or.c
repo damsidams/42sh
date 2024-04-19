@@ -40,8 +40,8 @@ static void set_array(char **tmp_array, enum sep_type *array)
             index++;
         }
     }
-    //array[index] = NULL;
-    (void)array; //not suze
+    array[index] = End;
+    (void)array;
 }
 
 static enum sep_type *init_sep_array(char *cmds)
@@ -53,7 +53,7 @@ static enum sep_type *init_sep_array(char *cmds)
         free_str_array(tmp_array);
         return NULL;
     }
-    array = calloc(get_sep_nb(tmp_array), sizeof(enum sep_type));
+    array = calloc(get_sep_nb(tmp_array) + 1, sizeof(enum sep_type));
     set_array(tmp_array, array);
     return array;
 }
@@ -77,7 +77,7 @@ static void execute_rec(shell_info_t *my_shell, char **cmds,
         return;
     }
     check_given_cmd_type(my_shell, cmds[0]);
-    if (array == NULL) {
+    if (array == NULL || array[0] == End) {
         return;
     }
     if (array[0] == And && my_shell->exit_status != 0) {

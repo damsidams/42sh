@@ -30,13 +30,10 @@ static int get_word_nb(char *str, char *delim)
 
     for (int i = 0; str[i]; i++) {
         if ((is_delim(str[i], delim) && i > 0 && !is_delim
-             (str[i - 1], delim) && in_exception == OUT) ||
+            (str[i - 1], delim) && in_exception == OUT) ||
             (str[i + 1] == '\0' && !is_delim(str[i], delim))) {
             word_nb++;
         }
-        /*if (!is_delim(str[i], delim) && i > 0 &&
-            is_delim(str[i - 1], delim) && in_exception == OUT)
-            word_start = i;*/
         if (is_exception(str[i]))
             in_exception *= -1;
     }
@@ -107,38 +104,26 @@ static void assist_func(char *str, int i, int *in_exception)
             *in_exception *= -1;
 }
 
-static void second_assist(int *wc, int *last_start, int *word_start)
-{
-    *wc += 1;
-    *last_start = *word_start;
-}
-
 char **my_pimp_str_to_wa(char *str, char *delim)
 {
-    printf("str: %s\n", str);
-    printf("delim: |%s|\n", delim);
-    int wnb = get_word_nb(str, delim);
-    printf("word_nb: %d\n", wnb);
-    char **array = malloc(sizeof(char *) * (wnb + 1));
+    char **array = malloc(sizeof(char *) * (get_word_nb(str, delim) + 1));
     int wc = 0;
     int word_start = 0;
-    int last_start = -1;
     int in_exception = OUT;
 
     for (int i = 0; str[i]; i++) {
+        if (!is_delim(str[i], delim) && i > 0 &&
+            is_delim(str[i - 1], delim) && in_exception == OUT) {
+            word_start = i;
+        }
         if ((is_delim(str[i], delim) && i > 0 && !is_delim(str[i - 1], delim)
             && in_exception == OUT) || (str[i + 1] == '\0' &&
-            last_start != word_start)) {
+            !is_delim(str[i], delim))) {
             array[wc] = new_word(str, word_start, delim);
-            second_assist(&wc, &last_start, &word_start);
+            wc++;
         }
-        if (!is_delim(str[i], delim) && i > 0 &&
-            is_delim(str[i - 1], delim) && in_exception == OUT)
-            word_start = i;
         assist_func(str, i, &in_exception);
     }
     array[wc] = NULL;
-    for (int i = 0; array[i]; i++)
-        printf("array: %s\n", array[i]);
     return array;
 }

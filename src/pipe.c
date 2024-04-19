@@ -53,6 +53,7 @@ static void exec_pipe(char **args, shell_info_t *my_shell, int i, int *pipefd)
         } else {
             close(pipefd[1]);
             dup2(pipefd[0], STDIN_FILENO);
+            free_str_array(cmd_args);
             exec_pipe(args, my_shell, i + 1, pipefd);
         }
     }

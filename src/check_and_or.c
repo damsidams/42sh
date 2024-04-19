@@ -55,6 +55,7 @@ static enum sep_type *init_sep_array(char *cmds)
     }
     array = calloc(get_sep_nb(tmp_array) + 1, sizeof(enum sep_type));
     set_array(tmp_array, array);
+    free_str_array(tmp_array);
     return array;
 }
 

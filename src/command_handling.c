@@ -173,7 +173,7 @@ void check_given_cmd_type(shell_info_t *my_shell, char *cmd)
         return;
     }
     for (int i = 0; cmds[i]; i++) {
-        exec_status = check_and_or(cmds[i]);
+        exec_status = check_and_or(cmds[i], my_shell);
         if (!exec_status) {
             exec_status = check_pipe(cmds[i], my_shell);
         }

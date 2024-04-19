@@ -67,5 +67,6 @@ bool my_char_in_str(char c, char *str);
 char **my_pimp_str_to_wa(char *str, char *delim);
 char **my_strstrcpy(char **dest, char **src);
 char *my_nb_to_str(int nb);
+char **my_tuned_str_to_wa(char *str, char **delim);
 
 #endif /*MY_H*/

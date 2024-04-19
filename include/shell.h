@@ -71,4 +71,7 @@ char *get_current_time(void);
 // --> backtick
 void is_backtick(char **str, shell_info_t *my_shell);
 
+// --> and or
+bool check_and_or(char *cmd, shell_info_t *my_shell);
+
 #endif /* MINISHELL_1 */

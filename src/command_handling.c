@@ -135,6 +135,7 @@ static void exec_no_pipe(char *cmd, shell_info_t *my_shell)
 {
     char **args = my_pimp_str_to_wa(cmd, " \t");
 
+    replace_backtick(args, my_shell);
     command_handling(my_shell, args);
 }
 

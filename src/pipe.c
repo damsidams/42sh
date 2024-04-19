@@ -19,7 +19,9 @@ char **get_pipe_cmds(char *cmd)
     char *cmd_cpy = my_strdup(cmd);
     char **pipe_sep = my_pimp_str_to_wa(cmd_cpy, "|");
 
+    print_str_array(pipe_sep);
     if (my_strstrlen(pipe_sep) == 1) {
+        printf("no pipe\n");
         free(cmd_cpy);
         free_str_array(pipe_sep);
         return NULL;
@@ -40,6 +42,7 @@ static void exec_pipe(char **args, shell_info_t *my_shell, int i, int *pipefd)
 {
     char **cmd_args = my_pimp_str_to_wa(args[i], " ");
 
+    replace_backtick(cmd_args, my_shell);
     if (i == my_strstrlen(args) - 1)
         exec_last_cmd(cmd_args, my_shell, pipefd);
     else {

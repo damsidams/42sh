@@ -68,6 +68,7 @@ char *get_file_content(char const *filename);
 char *get_current_time(void);
 
 // --> backtick
-void is_backtick(char **str, shell_info_t *my_shell);
+void replace_backtick(char **str, shell_info_t *my_shell);
+
 
 #endif /* MINISHELL_1 */

@@ -58,7 +58,7 @@ static void clear_func(int *fd, char *old_cmd)
 {
     close(fd[1]);
     close(fd[0]);
-    free(cmd);
+    free(old_cmd);
 }
 
 static char *get_backtick_output(shell_info_t *shell_info, char *cmd)
@@ -99,12 +99,30 @@ static bool backtick_str(char const *str)
     return false;
 }
 
-void replace_backtick(char **str, shell_info *my_shell)
+static char *remove_backtick(char *str)
+{
+    char *new_str = calloc(strlen(str) - 1, sizeof(char));
+    unsigned int index = 0;
+
+    if (new_str == NULL) {
+        perror("remove_backtick calloc failed");
+        return NULL;
+    }
+    for (unsigned int i = 1; str[i + 1]; i++) {
+        new_str[i - 1] = str[i];
+        index = i;
+    }
+    new_str[index] = '\0';
+    free(str);
+    return new_str;
+}
+
+void replace_backtick(char **str, shell_info_t *my_shell)
 {
     for (unsigned int i = 0; str[i]; i++) {
         if (backtick_str(str[i])) {
+            str[i] = remove_backtick(str[i]);
             str[i] = get_backtick_output(my_shell, str[i]);
         }
     }
-    return false;
 }

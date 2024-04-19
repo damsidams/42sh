@@ -84,7 +84,6 @@ static char *get_backtick_output(shell_info_t *shell_info, char *cmd)
     return cmd_result;
 }
 
-
 static bool backtick_str(char const *str)
 {
     if (str == NULL) {

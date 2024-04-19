@@ -62,8 +62,9 @@ char *get_file_content(char const *filename)
     char *buffer = NULL;
     int char_read = 0;
 
-    if (fd == OPEN_ERROR)
+    if (fd == OPEN_ERROR) {
         return NULL;
+    }
     buffer = malloc(sizeof(char) * (get_file_size(filename) + 1));
     if (buffer == NULL) {
         return NULL;

@@ -66,8 +66,9 @@ static bool check_null_cmd(char *cmd, char **pipe_sep)
         if (cmd[i] == '|')
             pipe_cpt++;
     }
-    if (pipe_cpt == 0)
+    if (pipe_cpt == 0) {
         return false;
+    }
     if (pipe_cpt != my_strstrlen(pipe_sep) - 1) {
         return true;
     }
@@ -81,8 +82,9 @@ bool check_pipe(char *cmd, shell_info_t *my_shell)
     int stdin_cpy = dup(STDIN_FILENO);
     int pipefd[2];
 
-    if (!pipe_sep && !check_null_cmd(cmd, pipe_sep))
+    if (!pipe_sep && !check_null_cmd(cmd, pipe_sep)) {
         return false;
+    }
     if (check_null_cmd(cmd, pipe_sep)) {
         my_putstr_err("Invalid null command.\n");
         my_shell->exit_status = 1;

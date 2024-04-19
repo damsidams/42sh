@@ -7,11 +7,13 @@
 
 #include "my.h"
 
-static int isitover(char const *str, int i)
+static int isitover(char const *str, int *i)
 {
-    if (str[i + 1] < '0' || str[i + 1] > '9') {
+    if (str[*i + 1] < '0' || str[*i + 1] > '9') {
+        *i += 1;
         return 0;
     }
+    *i += 1;
     return 1;
 }
 
@@ -27,16 +29,16 @@ static int ispos(char const *str, int i, int pos)
 
 static int retourforce(int nb, int istolong)
 {
-    if (nb < 0)
+    if (nb < 0) {
         return 0;
+    }
     return istolong;
 }
 
 static int addnb(char const *str, int i, int nb)
 {
-    int x;
+    int x = str[i] - 48;
 
-    x = str[i] - 48;
     nb = nb * 10 + x;
     return nb;
 }
@@ -53,14 +55,14 @@ int my_special_getnbr(char const *str)
         while (str[i] >= '0' && str[i] <= '9' && isover == 1) {
             pos = ispos(str, i, pos);
             nb = addnb(str, i, nb);
-            isover = isitover(str, i);
+            isover = isitover(str, &i);
             istolong = retourforce(nb, istolong);
-            i++;
             tnum++;
         }
         istolong = retourforce(nb, istolong);
-        if (pos == 0)
+        if (pos == 0) {
             nb = nb * (-1);
+        }
     }
     return nb * istolong * pos;
 }

@@ -18,6 +18,7 @@
     #define SYS_ERROR -1
     #define OPEN_ERROR -1
     #define READ_SIZE 1000000
+    #define EXIT_STATUS_ERROR 139
     #define DEFAULT_SUCCESS_COLOR "green"
     #define DEFAULT_ERROR_COLOR "red"
     #define SIMPLE_REDIRECT_OUTPUT ">"

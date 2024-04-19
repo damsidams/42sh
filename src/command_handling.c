@@ -17,7 +17,7 @@
 #include "shell.h"
 #include "struct.h"
 
-static void disp_err_message(char *command)
+static void disp_err_message(char const *command)
 {
     if (errno == ENOENT) {
         my_putstr_err(command);
@@ -37,8 +37,9 @@ static void disp_err_message(char *command)
 
 static void check_seg_fault(int wstatus, shell_info_t *my_shell)
 {
-    if (WIFEXITED(wstatus))
+    if (WIFEXITED(wstatus)) {
         my_shell->exit_status = WEXITSTATUS(wstatus);
+    }
     if (WIFSIGNALED(wstatus) && WCOREDUMP(wstatus)) {
             mini_printf("%s (core dumped)\n", strsignal(WTERMSIG(wstatus)));
             my_shell->exit_status = WTERMSIG(wstatus) + 128;
@@ -54,10 +55,12 @@ static char **get_paths(char **env)
 {
     int i = 0;
 
-    if (!env || my_strstrlen(env) == 0)
+    if (!env || my_strstrlen(env) == 0) {
         return NULL;
-    while (env[i] && my_strncmp(env[i], "PATH", 4) != 0)
+    }
+    while (env[i] && my_strncmp(env[i], "PATH", 4) != 0) {
         i++;
+    }
     return my_pimp_str_to_wa(env[i], ":=");
 }
 
@@ -67,8 +70,9 @@ static void cmd_not_found(char **args, shell_info_t *my_shell,
     if (no_env(my_shell->env)) {
         my_putstr_err(args[0]);
         my_putstr_err(": Command not found.\n");
-    } else
+    } else {
         disp_err_message(args[0]);
+    }
     my_shell->exit_status = 1;
     free(cmd_path);
     free_str_array(paths);
@@ -105,9 +109,9 @@ void exec_cmd(char **args, shell_info_t *my_shell)
     int wstatus = 0;
 
     child = fork();
-    if (child == 0)
+    if (child == 0) {
         exec_paths(args, my_shell);
-    else {
+    } else {
         waitpid(child, &wstatus, 0);
         check_seg_fault(wstatus, my_shell);
     }
@@ -121,8 +125,9 @@ void command_handling(shell_info_t *my_shell, char **args)
         free_str_array(args);
         return;
     }
-    if (built_in_command(args, my_shell))
+    if (built_in_command(args, my_shell)) {
         return;
+    }
     exec_cmd(args, my_shell);
 }
 
@@ -139,16 +144,18 @@ void check_cmd_type(shell_info_t *my_shell)
     bool pipe_status = false;
 
     cmds = get_args(my_shell);
-    if (!cmds)
+    if (cmds == NULL) {
         return;
+    }
     if (!valid_redirect(cmds)) {
         my_shell->exit_status = 1;
         return;
     }
     for (int i = 0; cmds[i]; i++) {
         pipe_status = check_pipe(cmds[i], my_shell);
-        if (!pipe_status)
+        if (!pipe_status) {
             exec_no_pipe(cmds[i], my_shell);
+        }
     }
     free_str_array(cmds);
 }

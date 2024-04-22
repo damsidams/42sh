@@ -17,10 +17,24 @@
 #include "shell.h"
 #include "struct.h"
 
+static void exec_good_type(char *cmd, shell_info_t *my_shell)
+{
+    bool exec_status = check_and_or(cmd, my_shell);
+
+    if (!exec_status) {
+        exec_status = check_pipe(cmd, my_shell);
+    }
+    // if (!exec_status) {
+        
+    // }
+    if (!exec_status) {
+        exec_no_pipe(cmd, my_shell);
+    }
+}
+
 void check_cmd_type(shell_info_t *my_shell)
 {
     char **cmds = get_args(my_shell);
-    bool exec_status = false;
 
     if (cmds == NULL) {
         return;
@@ -30,13 +44,7 @@ void check_cmd_type(shell_info_t *my_shell)
         return;
     }
     for (unsigned int i = 0; cmds[i]; i++) {
-        exec_status = check_and_or(cmds[i], my_shell);
-        if (!exec_status) {
-            exec_status = check_pipe(cmds[i], my_shell);
-        }
-        if (!exec_status) {
-            exec_no_pipe(cmds[i], my_shell);
-        }
+        exec_good_type(cmds[i], my_shell);
     }
     free_str_array(cmds);
 }
@@ -44,7 +52,6 @@ void check_cmd_type(shell_info_t *my_shell)
 void check_given_cmd_type(shell_info_t *my_shell, char *cmd)
 {
     char **cmds = my_pimp_str_to_wa(cmd, ";");
-    bool exec_status = false;
 
     if (!cmds) {
         return;
@@ -54,13 +61,7 @@ void check_given_cmd_type(shell_info_t *my_shell, char *cmd)
         return;
     }
     for (unsigned int i = 0; cmds[i]; i++) {
-        exec_status = check_and_or(cmds[i], my_shell);
-        if (!exec_status) {
-            exec_status = check_pipe(cmds[i], my_shell);
-        }
-        if (!exec_status) {
-            exec_no_pipe(cmds[i], my_shell);
-        }
+        exec_good_type(cmds[i], my_shell);
     }
     free_str_array(cmds);
 }

@@ -28,6 +28,11 @@
     #define DOUBLE_REDIRECT_INPUT "<<"
     #define HISTORIC_FILENAME "/tmp/42sh_cmd_save.txt"
     #define HISTORY_NB_SIZE 6
+    #define MAX_LENGTH 100
+    //ASCI chars
+    #define ESC 27
+    #define DEL 127
+    #define EOT 4
 
 int my_sh(char **env);
 void disp_env(char **args, shell_info_t *my_shell);
@@ -69,5 +74,8 @@ char *get_current_time(void);
 
 // --> backtick
 void is_backtick(char **str, shell_info_t *my_shell);
+
+// --> line parsing
+char *get_prompt(void);
 
 #endif /* MINISHELL_1 */

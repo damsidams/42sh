@@ -10,7 +10,7 @@ SRC	=	src/main.c					\
 		src/unsetenv.c				\
 		src/cd.c					\
 		src/pipe.c					\
-		src/user_input.c			\
+		src/line_parsing/get_cmd.c	\
 		src/command_handling.c		\
 		src/redirect.c				\
 		src/setenv.c				\
@@ -23,6 +23,7 @@ SRC	=	src/main.c					\
 		src/built_in_command.c	 \
 		src/backtick.c	\
 		src/display_hist.c	\
+		src/line_parsing/get_input.c	\
 
 UT_SRC	=	tests/unit_tests.c	\
 		src/disp_env.c				\

@@ -11,7 +11,6 @@ SRC	=	src/main.c					\
 		src/cd.c					\
 		src/pipe.c					\
 		src/line_parsing/get_cmd.c	\
-		src/command_handling.c		\
 		src/redirect.c				\
 		src/setenv.c				\
 		src/set_color.c				\
@@ -25,6 +24,9 @@ SRC	=	src/main.c					\
 		src/display_hist.c	\
 		src/line_parsing/get_input.c	\
 		src/check_and_or.c	\
+		src/command_handling/command_type.c		\
+		src/command_handling/command_error.c	\
+		src/command_handling/command_exec.c		\
 
 UT_SRC	=	tests/unit_tests.c	\
 		src/disp_env.c				\

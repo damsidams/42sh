@@ -83,4 +83,14 @@ bool check_and_or(char *cmd, shell_info_t *my_shell);
 // --> line parsing
 char *get_prompt(void);
 
+// --> command error
+void cmd_not_found(char **args, shell_info_t *my_shell,
+    char *cmd_path, char **paths);
+void check_seg_fault(int wstatus, shell_info_t *my_shell);
+void disp_err_message(char const *command);
+
+// --> command exec
+void exec_no_pipe(char *cmd, shell_info_t *my_shell);
+
+
 #endif /* MINISHELL_1 */

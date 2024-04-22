@@ -92,5 +92,9 @@ void disp_err_message(char const *command);
 // --> command exec
 void exec_no_pipe(char *cmd, shell_info_t *my_shell);
 
+// --> globbing
+int get_globbing_nb(char **command);
+void globbing(char **commands, shell_info_t *my_shell);
+
 
 #endif /* MINISHELL_1 */

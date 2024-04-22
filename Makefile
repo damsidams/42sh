@@ -27,6 +27,7 @@ SRC	=	src/main.c					\
 		src/command_handling/command_type.c		\
 		src/command_handling/command_error.c	\
 		src/command_handling/command_exec.c		\
+		src/globbing.c	\
 
 UT_SRC	=	tests/unit_tests.c	\
 		src/disp_env.c				\

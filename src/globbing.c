@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <sys/wait.h>
 #include "shell.h"
 
 static int array_size(char **array)
@@ -54,7 +55,7 @@ static int count_globbing(char const *command)
     return res;
 }
 
-static int get_globbing_nb(char **command)
+int get_globbing_nb(char **command)
 {
     int res = 0;
 
@@ -101,8 +102,13 @@ void globbing(char **commands, shell_info_t *my_shell)
     if (globbing_buffer.gl_pathc == 0) {
         dprintf(2, "%s: No match.\n", commands[0]);
         my_shell->exit_status = 1;
+    } else {
+        if (fork() == 0) {
+            execvp(commands[0], &globbing_buffer.gl_pathv[0]);
+            exit(0);
+        } else {
+            wait(NULL);
+            my_shell->exit_status = 0;
+        }
     }
-    else
-        execvp(commands[0], &globbing_buffer.gl_pathv[0]);
-    my_shell->exit_status = 1;
 }

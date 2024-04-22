@@ -24,9 +24,13 @@ static void exec_good_type(char *cmd, shell_info_t *my_shell)
     if (!exec_status) {
         exec_status = check_pipe(cmd, my_shell);
     }
-    // if (!exec_status) {
-        
-    // }
+    if (!exec_status) {
+        if (get_globbing_nb(my_str_to_word_array(cmd, " ")) != 0) {
+            //printf("HERE: %s\n", cmd);
+            globbing(my_str_to_word_array(cmd, " "), my_shell);
+            exec_status = true;
+        }
+    }
     if (!exec_status) {
         exec_no_pipe(cmd, my_shell);
     }

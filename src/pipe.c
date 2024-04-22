@@ -18,10 +18,12 @@ char **get_pipe_cmds(char *cmd)
 {
     char *cmd_cpy = my_strdup(cmd);
     char **pipe_sep = my_pimp_str_to_wa(cmd_cpy, "|");
+    char **pipe_sep_no_quote = my_str_to_word_array(cmd_cpy, "|");
 
-    if (my_strstrlen(pipe_sep) == 1) {
+    if (my_strstrlen(pipe_sep) == 1 && my_strstrlen(pipe_sep_no_quote) == 1) {
         free(cmd_cpy);
         free_str_array(pipe_sep);
+        free_str_array(pipe_sep_no_quote);
         return NULL;
     }
     free(cmd_cpy);
@@ -40,6 +42,7 @@ static void exec_pipe(char **args, shell_info_t *my_shell, int i, int *pipefd)
 {
     char **cmd_args = my_pimp_str_to_wa(args[i], " ");
 
+    replace_backtick(cmd_args, my_shell);
     if (i == my_strstrlen(args) - 1)
         exec_last_cmd(cmd_args, my_shell, pipefd);
     else {
@@ -53,6 +56,7 @@ static void exec_pipe(char **args, shell_info_t *my_shell, int i, int *pipefd)
         } else {
             close(pipefd[1]);
             dup2(pipefd[0], STDIN_FILENO);
+            free_str_array(cmd_args);
             exec_pipe(args, my_shell, i + 1, pipefd);
         }
     }
@@ -61,7 +65,12 @@ static void exec_pipe(char **args, shell_info_t *my_shell, int i, int *pipefd)
 static bool check_null_cmd(char *cmd, char **pipe_sep)
 {
     int pipe_cpt = 0;
+    char **pipe_sep_cpy = my_str_array_dup(pipe_sep);
 
+    if (my_strstrlen(pipe_sep) == 1) {
+        free_str_array(pipe_sep_cpy);
+        pipe_sep_cpy = my_str_to_word_array(pipe_sep[0], "|");
+    }
     for (int i = 0; cmd[i] != '\0'; i++) {
         if (cmd[i] == '|')
             pipe_cpt++;
@@ -69,7 +78,7 @@ static bool check_null_cmd(char *cmd, char **pipe_sep)
     if (pipe_cpt == 0) {
         return false;
     }
-    if (pipe_cpt != my_strstrlen(pipe_sep) - 1) {
+    if (pipe_cpt != my_strstrlen(pipe_sep_cpy) - 1) {
         return true;
     }
     return false;

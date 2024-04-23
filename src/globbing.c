@@ -28,7 +28,6 @@ static int is_bracket(char const *command, int i)
 {
     if (command[i] == ']')
         return 0;
-
     for (int j = i; command[j] != '\0'; j++) {
         if (command[j] == ']')
             return 1;
@@ -79,7 +78,8 @@ static void fill_globbing_struct(glob_t *globbing_buffer, char *command)
     }
 }
 
-static void fill_globbing_struct_commands(glob_t *globbing_buffer, char *command)
+static void fill_globbing_struct_commands(glob_t *globbing_buffer,
+    char *command)
 {
     static int command_params = 0;
 

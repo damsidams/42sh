@@ -15,15 +15,18 @@ SRC	=	src/main.c					\
 		src/redirect.c				\
 		src/setenv.c				\
 		src/set_color.c				\
-		src/my_sh.c	\
-		src/file.c	\
-		src/historic.c	\
-		src/special_getnbr.c	\
-		src/time.c	\
-		src/built_in_command.c	 \
-		src/backtick.c	\
-		src/display_hist.c	\
-		src/check_and_or.c	\
+		src/my_sh.c					\
+		src/file.c					\
+		src/historic.c				\
+		src/special_getnbr.c		\
+		src/time.c					\
+		src/built_in_command.c	 	\
+		src/backtick.c				\
+		src/display_hist.c			\
+		src/check_and_or.c			\
+		src/job_control.c	\
+		src/signal.c	\
+		src/execute_process.c	\
 
 UT_SRC	=	tests/unit_tests.c	\
 		src/disp_env.c				\

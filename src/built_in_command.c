@@ -11,10 +11,11 @@
 bool built_in_command(char **args, shell_info_t *my_shell)
 {
     char *flags_array[] =
-        {"env", "cd", "setenv", "unsetenv", "color", "history", NULL};
+        {"env", "cd", "setenv", "unsetenv", "color",
+        "history", "bg", "fg", NULL};
     void (*fptr_array[])() =
         {disp_env, change_dir, set_env, unset_env, set_color
-        , display_historic};
+        , display_historic, background_process, foreground_process};
 
     if (args[0] == NULL)
         return false;

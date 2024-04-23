@@ -32,6 +32,7 @@
 
 int my_sh(char **env);
 void disp_env(char **args, shell_info_t *my_shell);
+void disp_actual_dir(shell_info_t *my_shell);
 void change_dir(char **args, shell_info_t *my_shell);
 void set_env(char **args, shell_info_t *my_shell);
 void set_env_no_disp(char **args, shell_info_t *my_shell);
@@ -52,6 +53,7 @@ bool no_env(char **env);
 // --> exec cmds
 void check_given_cmd_type(shell_info_t *my_shell, char *cmd);
 bool built_in_command(char **args, shell_info_t *my_shell);
+void exec_cmd(char **args, shell_info_t *my_shell);
 
 // --> save commands
 void display_historic(char **args, shell_info_t *my_shell);
@@ -64,6 +66,15 @@ int get_file_size(char const *filename);
 int open_append(char const *filename);
 int read_open(char const *filename);
 char *get_file_content(char const *filename);
+
+// --> job control
+void background_process(char **args, shell_info_t *my_shell);
+void foreground_process(char **args, shell_info_t *my_shell);
+void signal_child(int pid, int signal, shell_info_t *my_shell);
+void add_job(int pid, shell_info_t *my_shell, bool suspended);
+void wait_for_pid(int pid, shell_info_t *my_shell);
+void sig_handler(int signum);
+void sigstp_handler(int signum);
 
 // --> time
 char *get_current_time(void);

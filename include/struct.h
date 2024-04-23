@@ -9,6 +9,11 @@
     #define STRUCT_H
     #include <stdbool.h>
 
+typedef struct process_t_s {
+    int nb;
+    int pid;
+}process_t;
+
 typedef struct shell_info_t_s {
     char **env;
     char *last_path;
@@ -18,6 +23,8 @@ typedef struct shell_info_t_s {
     bool is_a_tty;
     int stdout_cpy;
     int stdin_cpy;
+    process_t *jobs;
+    int shell_pgid;
 } shell_info_t;
 
 enum sep_type {

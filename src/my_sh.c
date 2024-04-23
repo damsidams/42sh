@@ -30,12 +30,39 @@ static int end_shell(shell_info_t *my_shell)
     return return_value;
 }
 
+void set_shell_pgid(shell_info_t *my_shell)
+{
+    int shell_terminal = STDIN_FILENO;
+
+    my_shell->shell_pgid = getpgrp();
+    if (!my_shell->is_a_tty) {
+        return;
+    }
+    while (tcgetpgrp(shell_terminal) != my_shell->shell_pgid) {
+        kill(-my_shell->shell_pgid, SIGTTIN);
+        my_shell->shell_pgid = getpgrp();
+    }
+    signal(SIGINT, sig_handler);
+    signal(SIGQUIT, SIG_IGN);
+    signal(SIGTSTP, sigstp_handler);
+    signal(SIGTTIN, SIG_IGN);
+    signal(SIGTTOU, SIG_IGN);
+    signal(SIGCHLD, SIG_IGN);
+    my_shell->shell_pgid = getpid();
+    setpgid(my_shell->shell_pgid, my_shell->shell_pgid);
+    tcsetpgrp(shell_terminal, my_shell->shell_pgid);
+    signal_child(my_shell->shell_pgid, 0, my_shell);
+}
+
 static shell_info_t *set_shell_info(shell_info_t *my_shell)
 {
     my_shell->last_path = NULL;
+    my_shell->jobs = NULL;
+    my_shell->shell_pgid = 0;
     my_shell->exit_status = 0;
     my_shell->exit_shell = false;
     my_shell->color = malloc(sizeof(int) * 2);
+    set_shell_pgid(my_shell);
     if (my_shell->color == NULL) {
         perror("shell color malloc");
     } else {
@@ -110,7 +137,7 @@ static void set_index(char const *actual_dir, int *index)
     *index += 1;
 }
 
-static void disp_actual_dir(shell_info_t *my_shell)
+void disp_actual_dir(shell_info_t *my_shell)
 {
     char *actual_dir = NULL;
     char *path = NULL;
@@ -132,21 +159,12 @@ static void disp_actual_dir(shell_info_t *my_shell)
     free(actual_dir);
 }
 
-void sig_handler(int signum)
-{
-    (void)signum;
-    write(0, "\n", 1);
-    disp_actual_dir(NULL);
-    return;
-}
-
 int my_sh(char **env)
 {
     shell_info_t *my_shell = init_shell_info_t(env);
     int stdout_cpy = dup(STDOUT_FILENO);
     int stdin_cpy = dup(STDIN_FILENO);
 
-    signal(SIGINT, sig_handler);
     while (!my_shell->exit_shell) {
         if (my_shell->is_a_tty) {
             disp_actual_dir(my_shell);

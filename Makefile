@@ -6,27 +6,27 @@
 ##
 
 SRC	=	src/main.c					\
-		src/disp_env.c				\
-		src/unsetenv.c				\
-		src/cd.c					\
-		src/pipe.c					\
+		src/env/disp_env.c				\
+		src/env/unsetenv.c				\
+		src/env/setenv.c				\
 		src/line_parsing/get_cmd.c	\
-		src/redirect.c				\
-		src/setenv.c				\
-		src/set_color.c				\
-		src/my_sh.c	\
-		src/file.c	\
-		src/historic.c	\
-		src/special_getnbr.c	\
-		src/time.c	\
-		src/built_in_command.c	 \
-		src/backtick.c	\
-		src/display_hist.c	\
 		src/line_parsing/get_input.c	\
-		src/check_and_or.c	\
+		src/history/historic.c	\
+		src/history/special_getnbr.c	\
+		src/history/time.c	\
+		src/history/display_hist.c	\
 		src/command_handling/command_type.c		\
 		src/command_handling/command_error.c	\
 		src/command_handling/command_exec.c		\
+		src/cd.c					\
+		src/pipe.c					\
+		src/redirect.c				\
+		src/set_color.c				\
+		src/my_sh.c	\
+		src/file.c	\
+		src/built_in_command.c	 \
+		src/backtick.c	\
+		src/check_and_or.c	\
 		src/globbing.c	\
 
 UT_SRC	=	tests/unit_tests.c	\

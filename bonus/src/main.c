@@ -5,12 +5,13 @@
 ** main.c
 */
 
-#include "minishell1.h"
+#include "shell.h"
 
 int main(int argc, char **argv, char **env)
 {
     (void)argv;
-    if (argc != 1)
+    if (argc != 1) {
         return ERROR_EXIT;
+    }
     return my_sh(env);
 }

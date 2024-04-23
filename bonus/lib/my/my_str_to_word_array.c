@@ -55,15 +55,33 @@ static int get_nb_col(char *buf, char *delim)
     return final_size;
 }
 
-static bool new_line(char **args, int *index, int *i, int nb_col, char *buf)
+void check_comment(char *buf, int *i)
+{
+    if ((buf[*i] == '#' && buf[*i + 1] == '#') || (buf[*i] == '#' &&
+        *i >= 0 && buf[*i - 1] == '#'))
+        return;
+    if (buf[*i] == '#') {
+        while (buf[*i] != '\0' && buf[*i] != '\n')
+            (*i)++;
+    }
+}
+
+static bool skip_delim(char *buf, int *i, char *delim)
+{
+    if (buf[(*i) + 1] != '\0')
+        (*i)++;
+    check_comment(buf, i);
+    if (!in_delim(buf[*i], delim))
+        return true;
+    return false;
+}
+
+static void new_line(char **args, int *index, int nb_col)
 {
     args[index[0]][index[1]] = '\0';
     index[1] = 0;
     index[0]++;
-    args[index[0]] = malloc(sizeof(char) * nb_col + 1);
-    if (buf[(*i) + 1] != '\0')
-        (*i)++;
-    return false;
+    args[index[0]] = malloc(sizeof(char) * nb_col + 10);
 }
 
 static int *init_index(void)
@@ -75,45 +93,24 @@ static int *init_index(void)
     return index;
 }
 
-static void finish_str_array(int *index, char **args)
+static char **finish_str_array(int *index, char **args)
 {
+    char **final_array = NULL;
+
     if (index[1] > 0) {
         args[index[0]][index[1]] = '\0';
         index[0]++;
     }
     args[index[0]] = NULL;
+    final_array = my_str_array_dup_ban_str(args, "\n");
+    free(index);
+    return final_array;
 }
 
-static int get_nb_words(char *str, char *sep)
+static void add_char(char **args, int *index, char new_char)
 {
-    char *seps = my_strcat(sep, "\t");
-    char *token = strtok(str, seps);
-    int len = 0;
-
-    while (token) {
-        len++;
-        token = strtok(NULL, seps);
-    }
-    free(seps);
-    return len;
-}
-
-char **my_strtok_to_word_array(char *str_buf, char *sep)
-{
-    char *temp = my_strdup(str_buf);
-    int len = get_nb_words(temp, sep);
-    char **array = malloc(sizeof(char *) * (len + 1));
-    char *token = strtok(str_buf, sep);
-    int count = 0;
-
-    while (token && count != len) {
-        array[count] = my_strdup(token);
-        count++;
-        token = strtok(NULL, sep);
-    }
-    array[count] = NULL;
-    free(temp);
-    return array;
+    args[index[0]][index[1]] = new_char;
+    index[1]++;
 }
 
 char **my_str_to_word_array(char *buf, char *delim)
@@ -125,15 +122,15 @@ char **my_str_to_word_array(char *buf, char *delim)
 
     args[index[0]] = malloc(sizeof(char) * nb_col + 1);
     for (int i = 0; buf[i] != '\0'; i++){
+        check_comment(buf, &i);
         if (!in_delim(buf[i], delim))
             add_line = true;
-        if (buf[i] != '\0' && in_delim(buf[i], delim) && add_line)
-            add_line = new_line(args, index, &i, nb_col, buf);
-        if (buf[i] != '\0' && !in_delim(buf[i], delim)) {
-            args[index[0]][index[1]] = buf[i];
-            index[1]++;
+        if (buf[i] != '\0' && in_delim(buf[i], delim) && add_line) {
+            new_line(args, index, nb_col);
+            add_line = skip_delim(buf, &i, delim);
         }
+        if (buf[i] != '\0' && !in_delim(buf[i], delim))
+            add_char(args, index, buf[i]);
     }
-    finish_str_array(index, args);
-    return args;
+    return finish_str_array(index, args);
 }

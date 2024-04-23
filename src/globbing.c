@@ -65,27 +65,40 @@ int get_globbing_nb(char **command)
     return res;
 }
 
-static void fill_globbing_struct(glob_t *globbing_buffer, char *command)
+static void fill_globbing_struct(glob_t *globbing_buffer, char *command,
+    int command_params)
 {
-    static int command_params = 0;
-
     if (count_globbing(command) != 0) {
         if (command_params == 0) {
             glob(command, GLOB_DOOFFS, NULL, globbing_buffer);
-            command_params += 1;
         } else
             glob(command, GLOB_DOOFFS | GLOB_APPEND, NULL, globbing_buffer);
     }
 }
 
 static void fill_globbing_struct_commands(glob_t *globbing_buffer,
-    char *command)
+    char *command, int command_params)
 {
-    static int command_params = 0;
-
     if (count_globbing(command) == 0) {
         globbing_buffer->gl_pathv[command_params] = strdup(command);
-        command_params++;
+    }
+}
+
+static void fill_structs(char **commands, glob_t *globbing_buffer)
+{
+    int command_params = 0;
+
+    for (int i = 0; commands[i] != NULL; i++) {
+        fill_globbing_struct(globbing_buffer, commands[i], command_params);
+        if (count_globbing(commands[i]) != 0 && command_params == 0)
+            command_params += 1;
+    }
+    command_params = 0;
+    for (int i = 0; commands[i] != NULL; i++) {
+        fill_globbing_struct_commands(globbing_buffer, commands[i],
+            command_params);
+        if (count_globbing(commands[i]) == 0)
+            command_params += 1;
     }
 }
 
@@ -95,10 +108,7 @@ void globbing(char **commands, shell_info_t *my_shell)
     int command_nb = array_size(commands) - get_globbing_nb(commands);
 
     globbing_buffer.gl_offs = command_nb;
-    for (int i = 0; commands[i] != NULL; i++)
-        fill_globbing_struct(&globbing_buffer, commands[i]);
-    for (int i = 0; commands[i] != NULL; i++)
-        fill_globbing_struct_commands(&globbing_buffer, commands[i]);
+    fill_structs(commands, &globbing_buffer);
     if (globbing_buffer.gl_pathc == 0) {
         dprintf(2, "%s: No match.\n", commands[0]);
         my_shell->exit_status = 1;

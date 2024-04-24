@@ -42,6 +42,19 @@ static list_t *init_list(void)
     return list_alias;
 }
 
+static void display_list_alias(list_t *list_alias)
+{
+    alias_t *current = NULL;
+
+    if (list_alias == NULL)
+        return;
+    current = list_alias->premier;
+    while (current != NULL && current->real_cmd != NULL) {
+        printf("alias '%s'\n", current->real_cmd);
+        current = current->next;
+    }
+}
+
 void my_alias(char **args, shell_info_t *my_shell)
 {
     list_t *list_alias = init_list();
@@ -49,9 +62,14 @@ void my_alias(char **args, shell_info_t *my_shell)
 
     if (alias_command == NULL)
         return;
+    if (args[1] == NULL) {
+        display_list_alias(list_alias);
+        return;
+    }
     my_strcpy(alias_command, args[1]);
     if (args[1] != NULL) {
         list_alias = add_alias(alias_command, list_alias);
+        display_list_alias(list_alias);
     }
     my_shell->exit_status = 0;
 }

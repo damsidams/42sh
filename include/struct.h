@@ -37,4 +37,3 @@ enum sep_type {
 };
 
 #endif
-        display_list_alias(list_alias);

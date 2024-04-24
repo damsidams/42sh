@@ -111,6 +111,8 @@ void my_alias(char **args, shell_info_t *my_shell)
     my_strcpy(alias_command, args[1]);
     if (args[1] != NULL) {
         list_alias = add_alias(alias_command, list_alias);
+        return;
     }
+    exec_alias(list_alias, my_shell, alias_command);
     my_shell->exit_status = 0;
 }

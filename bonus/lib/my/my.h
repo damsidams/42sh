@@ -44,7 +44,7 @@ int my_str_isupper(char const *str);
 int my_str_isprintable(char const *str);
 int my_showstr(char const *str);
 int my_showmem(char const *str, int size);
-char *my_strcat(char *dest, char const *src);
+char *my_strcat(char const *dest, char const *src);
 char *my_strncat(char *dest, char const *src, int nb);
 int my_strstrlen(char **str);
 char **my_str_to_word_array(char *buf, char *delim);
@@ -65,5 +65,8 @@ void free_triple_array(char ***array);
 void my_free_n_str(int nb_of_str, ...);
 bool my_char_in_str(char c, char *str);
 char **my_pimp_str_to_wa(char *str, char *delim);
+char **my_strstrcpy(char **dest, char **src);
+char *my_nb_to_str(int nb);
+char **my_tuned_str_to_wa(char *str, char **delim);
 
 #endif /*MY_H*/

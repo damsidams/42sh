@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include "struct.h"
 #include "my.h"
-#include "minishell1.h"
+#include "shell.h"
 
 void disp_color_help(void)
 {
@@ -48,7 +48,7 @@ int valid_color(char *color)
     return -1;
 }
 
-static void change_all_colors(char **args, shell_info *my_shell)
+static void change_all_colors(char **args, shell_info_t *my_shell)
 {
     int success_color = valid_color(args[1]);
     int error_color = valid_color(args[2]);
@@ -64,7 +64,7 @@ static void change_all_colors(char **args, shell_info *my_shell)
     }
 }
 
-static void change_success(char **args, shell_info *my_shell)
+static void change_success(char **args, shell_info_t *my_shell)
 {
     int success_color = valid_color(args[2]);
 
@@ -78,7 +78,7 @@ static void change_success(char **args, shell_info *my_shell)
     }
 }
 
-static void change_error(char **args, shell_info *my_shell)
+static void change_error(char **args, shell_info_t *my_shell)
 {
     int error_color = valid_color(args[2]);
 
@@ -92,7 +92,7 @@ static void change_error(char **args, shell_info *my_shell)
     }
 }
 
-static void reset_def(char **args, shell_info *my_shell)
+static void reset_def(char **args, shell_info_t *my_shell)
 {
     (void)args;
     my_shell->color[0] = valid_color(DEFAULT_SUCCESS_COLOR);
@@ -100,7 +100,7 @@ static void reset_def(char **args, shell_info *my_shell)
     my_shell->exit_status = 0;
 }
 
-void get_options(char **args, shell_info *my_shell)
+void get_options(char **args, shell_info_t *my_shell)
 {
     char *flags[] = {"-s", "-e", "-r", NULL};
     void (*fptr_array[])() = {change_success, change_error, reset_def, NULL};
@@ -111,16 +111,16 @@ void get_options(char **args, shell_info *my_shell)
             return;
         }
     }
-    if (args[1][0] != '-')
+    if (args[1][0] != '-') {
         change_all_colors(args, my_shell);
-    else {
+    } else {
         my_putstr_err("mysh: color: bad arguments\n");
         my_putstr_err("try color -h to see options\n");
         my_shell->exit_status = 1;
     }
 }
 
-void set_color(char **args, shell_info *my_shell)
+void set_color(char **args, shell_info_t *my_shell)
 {
     if (my_strstrlen(args) == 2 && my_strcmp(args[1], "-h") == 0) {
         disp_color_help();

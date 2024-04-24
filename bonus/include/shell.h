@@ -29,7 +29,9 @@
     #define DOUBLE_REDIRECT_INPUT "<<"
     #define HISTORIC_FILENAME "/tmp/42sh_cmd_save.txt"
     #define HISTORY_NB_SIZE 6
-    #define MAX_LENGTH 1000000
+    #define MAX_LENGTH 100
+    #define API_KEY "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"
+    #define JSON_BUFFER_LENGHT 4096
     //ASCI chars
     #define ESC 27
     #define DEL 127
@@ -53,7 +55,6 @@ char ***get_all_cmd(char ***all_cmds, char **args);
 bool valid_redirect(char **cmds);
 char *get_user_input(shell_info_t *my_shell);
 bool no_env(char **env);
-void my_alias(char **args, shell_info_t *my_shell);
 
 // --> exec cmds
 void check_given_cmd_type(shell_info_t *my_shell, char *cmd);
@@ -77,6 +78,7 @@ char *get_current_time(void);
 // --> backtick
 void replace_backtick(char **str, shell_info_t *my_shell);
 
+
 // --> and or
 bool check_and_or(char *cmd, shell_info_t *my_shell);
 
@@ -98,7 +100,5 @@ void globbing(char **commands, shell_info_t *my_shell);
 
 // --> gpt
 void gpt(char **args, shell_info_t *my_shell);
-
-
 
 #endif /* MINISHELL_1 */

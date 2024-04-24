@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include <curl/curl.h>
-#include "minishell1.h"
+#include "shell.h"
 #include "my.h"
 #include "cJSON.h"
 #include <string.h>
@@ -70,7 +70,7 @@ static int parse_json(char *API_respons)
     return SUCCESS_EXIT;
 }
 
-void gpt(char **args, shell_info *my_shell)
+void gpt(char **args, shell_info_t *my_shell)
 {
     CURL *curl = curl_easy_init();
     CURLcode res;

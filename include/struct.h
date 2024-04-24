@@ -20,6 +20,16 @@ typedef struct shell_info_t_s {
     int stdin_cpy;
 } shell_info_t;
 
+typedef struct alias_s {
+    char *alias_cmd;
+    char *real_cmd;
+    struct alias_s *next;
+}alias_t;
+
+typedef struct list {
+    alias_t *premier;
+}list_t;
+
 enum sep_type {
     And,
     Or,
@@ -27,3 +37,4 @@ enum sep_type {
 };
 
 #endif
+        display_list_alias(list_alias);

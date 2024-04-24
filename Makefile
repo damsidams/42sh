@@ -24,6 +24,7 @@ SRC	=	src/main.c					\
 		src/backtick.c	\
 		src/display_hist.c	\
 		src/check_and_or.c	\
+		src/aliases.c
 
 UT_SRC	=	tests/unit_tests.c	\
 		src/disp_env.c				\

@@ -48,6 +48,7 @@ char ***get_all_cmd(char ***all_cmds, char **args);
 bool valid_redirect(char **cmds);
 char *get_user_input(shell_info_t *my_shell);
 bool no_env(char **env);
+void my_alias(char **args, shell_info_t *my_shell);
 
 // --> exec cmds
 void check_given_cmd_type(shell_info_t *my_shell, char *cmd);

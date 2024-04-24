@@ -72,10 +72,22 @@ static struct termios init_shell_settings(void)
     return initial_settings;
 }
 
+static void check_opening_char(int *index, int *cursor, char *input, char c)
+{
+    if (c == '"' || c == '(' || c == '\'' || c == '`') {
+        if (c == '(')
+            insert_char(index, cursor, input, ')');
+        else
+            insert_char(index, cursor, input, c);
+        move_cursor(cursor, *index, 'D');
+    }
+}
+
 static void check_input(int *index, int *cursor, char *input, char c)
 {
     if (c == '\t')
         return;
+    check_opening_char(index, cursor, input, c);
     if (c == DEL || c == '\b') {
         delete_char(index, cursor, input);
     } else {

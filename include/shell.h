@@ -29,7 +29,7 @@
     #define DOUBLE_REDIRECT_INPUT "<<"
     #define HISTORIC_FILENAME "/tmp/42sh_cmd_save.txt"
     #define HISTORY_NB_SIZE 6
-    #define MAX_LENGTH 100
+    #define MAX_LENGTH 1000000
     //ASCI chars
     #define ESC 27
     #define DEL 127

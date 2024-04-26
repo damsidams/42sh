@@ -5,11 +5,24 @@
 ** Functions related to linked_list
 */
 
+#include <string.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h>
 #include "shell.h"
 #include "struct.h"
+
+void free_list(linked_list_t *list)
+{
+    linked_list_t *next = NULL;
+
+    while (list != NULL) {
+        free(list->value);
+        next = list->next;
+        free(list);
+        list = next;
+    }
+}
 
 static linked_list_t *create_node(char *value, linked_list_t *prev)
 {
@@ -19,7 +32,7 @@ static linked_list_t *create_node(char *value, linked_list_t *prev)
         perror("create_node malloc failed");
         return NULL;
     }
-    element->value = value;
+    element->value = strdup(value);
     element->prev = prev;
     element->next = NULL;
     return element;

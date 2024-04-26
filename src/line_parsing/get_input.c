@@ -115,7 +115,6 @@ static void check_input(shell_input_t *user_input, char c,
 static char *finish_input(shell_input_t *user_input,
     struct termios *initial_settings, char last_char)
 {
-
     tcsetattr(STDIN_FILENO, TCSANOW, initial_settings);
     if (last_char == EOT)
         return NULL;

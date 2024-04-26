@@ -30,16 +30,6 @@ static int get_line_nb(char **lines, char *buffer)
     return nb;
 }
 
-static int read_history(char const *filename)
-{
-    int fd = open(filename, O_RDONLY);
-
-    if (fd == SYS_ERROR) {
-        return OPEN_ERROR;
-    }
-    return fd;
-}
-
 static int get_previous_cmd_num(void)
 {
     int fd = read_history(HISTORIC_FILENAME);

@@ -23,7 +23,8 @@ SRC	=	src/main.c								\
 		src/pipe.c								\
 		src/redirect.c							\
 		src/set_color.c							\
-		src/my_sh.c								\
+		src/my_sh.c					\
+		src/auto_complete.c								\
 		src/file.c								\
 		src/backtick.c							\
 		src/check_and_or.c						\

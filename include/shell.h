@@ -34,8 +34,15 @@
     #define ESC 27
     #define DEL 127
     #define EOT 4
+    //special printf values
+    #define CLEAR "\e[1;1H\e[2J"
+    #define MOVE_LEFT "\033[1D"
+    #define MOVE_RIGHT "\033[1C"
+    #define MOVE_UP "\033[1A"
+    #define MOVE_DOWN "\033[1B"
 
 int my_sh(char **env);
+char **get_paths(char **env);
 void disp_env(char **args, shell_info_t *my_shell);
 void change_dir(char **args, shell_info_t *my_shell);
 void set_env(char **args, shell_info_t *my_shell);
@@ -83,7 +90,9 @@ void replace_backtick(char **str, shell_info_t *my_shell);
 bool check_and_or(char *cmd, shell_info_t *my_shell);
 
 // --> line parsing
-char *get_prompt(void);
+char *get_prompt(shell_info_t *my_shell);
+void delete_string(shell_input_t *user_input);
+void insert_string(shell_input_t *user_input, char *to_insert);
 
 // --> command error
 void cmd_not_found(char **args, shell_info_t *my_shell,
@@ -100,5 +109,8 @@ void globbing(char **commands, shell_info_t *my_shell);
 
 // --> gpt
 void gpt(char **args, shell_info_t *my_shell);
+
+// --> auto-complete
+void auto_complete(shell_input_t *user_input, shell_info_t *my_shell);
 
 #endif

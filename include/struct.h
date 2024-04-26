@@ -26,6 +26,12 @@ typedef struct linked_list_s {
     struct linked_list_s *next;
 } linked_list_t;
 
+typedef struct shell_input_s {
+    int index;
+    int cursor;
+    char *input;
+} shell_input_t;
+
 enum sep_type {
     And,
     Or,

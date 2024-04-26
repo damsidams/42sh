@@ -17,7 +17,7 @@
 #include "shell.h"
 #include "struct.h"
 
-static char **get_paths(char **env)
+char **get_paths(char **env)
 {
     int i = 0;
 

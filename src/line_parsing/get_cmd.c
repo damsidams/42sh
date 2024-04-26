@@ -17,7 +17,7 @@
 
 char *get_user_input(shell_info_t *my_shell)
 {
-    char *user_input = get_prompt();
+    char *user_input = get_prompt(my_shell);
 
     putchar('\n');
     if (!user_input) {

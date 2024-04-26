@@ -12,13 +12,15 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include "struct.h"
-#include "minishell1.h"
+#include "shell.h"
 #include "my.h"
 
 static int nb_ch_match(char *file, char *cmd)
 {
     int i = 0;
 
+    if (!file || !cmd)
+        return -1;
     for (i = 0; file[i] != '\0' && cmd[i] != '\0'; i++) {
         if (file[i] != cmd[i])
             break;
@@ -41,7 +43,6 @@ static char *search_file(char *cmd_path, char *cmd)
             continue;
         }
         if (nb_ch_match(cur_file->d_name, cmd) == my_strlen(cmd)) {
-            printf("[%s]\n", cur_file->d_name);
             return cur_file->d_name;
         }
         cur_file = readdir(bin_dir);
@@ -62,28 +63,24 @@ static int args_len(char **args)
     return len;
 }
 
-static void replace_user_input(char **user_input, char **args)
+static void replace_user_input(shell_input_t *user_input, char **args)
 {
-    int k = 0;
-
-    *user_input = malloc(sizeof(char) * (args_len(args) + 1));
+    delete_string(user_input);
     for (int i = 0; args[i]; i++) {
-        for (int j = 0; args[i][j] != '\0'; j++) {
-            (*user_input)[k] = args[i][j];
-            k++;
-        }
+        insert_string(user_input, args[i]);
     }
-    (*user_input)[k] = '\0';
 }
 
-void auto_complete(char **user_input, shell_info *my_shell)
+void auto_complete(shell_input_t *user_input, shell_info_t *my_shell)
 {
     char **args = NULL;
     char *new_cmd = NULL;
     char **paths = get_paths(my_shell->env);
 
-    (*user_input)[my_strlen(*user_input) - 1] = '\0';
-    args = my_pimp_str_to_wa(*user_input, " \t");
+    if (!user_input->input)
+        return;
+    user_input->input[my_strlen(user_input->input) - 1] = '\0';
+    args = my_pimp_str_to_wa(user_input->input, " \t");
     for (int i = 1; paths && paths[i]; i++) {
         new_cmd = search_file(paths[i], args[0]);
         if (new_cmd)

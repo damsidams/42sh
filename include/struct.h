@@ -18,13 +18,19 @@ typedef struct shell_info_t_s {
     bool is_a_tty;
     int stdout_cpy;
     int stdin_cpy;
-}  shell_info_t;
+} shell_info_t;
 
 typedef struct linked_list_s {
     char *value;
     struct linked_list_s *prev;
     struct linked_list_t *next;
 } linked_list_t;
+
+typedef struct shell_input_s {
+    int index;
+    int cursor;
+    char *input;
+} shell_input_t;
 
 enum sep_type {
     And,

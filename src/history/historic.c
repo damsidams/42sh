@@ -152,7 +152,7 @@ static char **add_command_to_end(char *buffer, char *cmd)
     final_array[my_strstrlen(file_by_line)] = my_strdup(cmd);
     final_array[my_strstrlen(file_by_line) + 1] = NULL;
     free_str_array(file_by_line);
-    return create_list_from_array(final_array);
+    return final_array;
 }
 
 static int check_buffer(char const *buffer, int fd)
@@ -165,7 +165,7 @@ static int check_buffer(char const *buffer, int fd)
     return SUCCESS;
 }
 
-linked_list_t **get_list_from_prev_cmd(char *current_cmd)
+char **get_array_from_prev_cmd(char *current_cmd)
 {
     int fd = read_open(HISTORIC_FILENAME);
     char *buffer = NULL;

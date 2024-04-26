@@ -34,6 +34,12 @@
     #define ESC 27
     #define DEL 127
     #define EOT 4
+    //special printf values
+    #define CLEAR "\e[1;1H\e[2J"
+    #define MOVE_LEFT "\033[1D"
+    #define MOVE_RIGHT "\033[1C"
+    #define MOVE_UP "\033[1A"
+    #define MOVE_DOWN "\033[1B"
 
 int my_sh(char **env);
 void disp_env(char **args, shell_info_t *my_shell);

@@ -15,44 +15,51 @@
 static void move_cursor(int *cursor, int max_index, char direction)
 {
     if (direction == 'D' && *cursor > 0) {
-        printf("\033[1D");
+        printf("%s", MOVE_LEFT);
         (*cursor)--;
-    } else if (direction == 'C' && *cursor < max_index) {
+    }
+    if (direction == 'C' && *cursor < max_index) {
         (*cursor)++;
-        printf("\033[1C");
+        printf("%s", MOVE_RIGHT);
+    }
+    if (direction == 'A') {
+        printf("history not implemented\n");
+    }
+    if (direction == 'B') {
+        printf("history not implemented\n");
     }
 }
 
-static void delete_char(int *index, int *cursor, char *phrase)
+static void delete_char(int *index, int *cursor, char *input)
 {
     if (*index > 0 && *cursor > 0) {
-        memmove(&phrase[*cursor - 1], &phrase[*cursor], *index - *cursor + 1);
+        memmove(&input[*cursor - 1], &input[*cursor], *index - *cursor + 1);
         (*index)--;
         (*cursor)--;
         printf("\033[D\033[P");
         for (int i = *cursor; i < *index; i++) {
-            printf("%c", phrase[i]);
+            printf("%c", input[i]);
         }
-        printf(" ");
+        putchar(' ');
         for (int i = *index + 1; i > *cursor; i--) {
-            printf("\033[1D");
+            printf("%s", MOVE_LEFT);
         }
     }
 }
 
-static void insert_char(int *index, int *cursor, char *phrase, char c)
+void insert_char(int *index, int *cursor, char *input, char c)
 {
     if (*index < MAX_LENGTH - 1) {
-        memmove(&phrase[*cursor + 1], &phrase[*cursor], *index - *cursor + 1);
-        phrase[*cursor] = c;
+        memmove(&input[*cursor + 1], &input[*cursor], *index - *cursor + 1);
+        input[*cursor] = c;
         (*index)++;
         (*cursor)++;
-        printf("%c", c);
+        putchar(c);
         for (int i = *cursor; i < *index; i++) {
-            printf("%c", phrase[i]);
+            putchar(input[i]);
         }
         for (int i = *index; i > *cursor; i--) {
-            printf("\033[1D");
+            printf("%s", MOVE_LEFT);
         }
     }
 }

@@ -13,7 +13,7 @@ SRC	=	src/main.c								\
 		src/line_parsing/get_input.c			\
 		src/history/historic.c					\
 		src/history/special_getnbr.c			\
-		src/history/time.c						\
+		src/history/time.c							\
 		src/history/display_hist.c				\
 		src/command_handling/command_type.c		\
 		src/command_handling/command_error.c	\
@@ -28,6 +28,7 @@ SRC	=	src/main.c								\
 		src/backtick.c							\
 		src/check_and_or.c						\
 		src/globbing.c							\
+		src/linked_list.c	\
 
 UT_SRC	=	tests/unit_tests.c						\
 			src/env/disp_env.c						\
@@ -52,6 +53,7 @@ UT_SRC	=	tests/unit_tests.c						\
 			src/backtick.c							\
 			src/check_and_or.c						\
 			src/globbing.c							\
+			src/linked_list.c	\
 
 OBJ	=	$(SRC:.c=.o)
 

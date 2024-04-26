@@ -23,7 +23,7 @@ typedef struct shell_info_t_s {
 typedef struct linked_list_s {
     char *value;
     struct linked_list_s *prev;
-    struct linked_list_t *next;
+    struct linked_list_s *next;
 } linked_list_t;
 
 enum sep_type {

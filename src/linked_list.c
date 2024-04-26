@@ -5,23 +5,27 @@
 ** Functions related to linked_list
 */
 
+#include <stdlib.h>
+#include <stddef.h>
+#include <stdio.h>
 #include "shell.h"
-#inlcude "struct.h"
+#include "struct.h"
 
 static linked_list_t *create_node(char *value, linked_list_t *prev)
 {
     linked_list_t *element = malloc(sizeof(linked_list_t));
 
-    if (elemenent == NULL) {
+    if (element == NULL) {
         perror("create_node malloc failed");
         return NULL;
     }
     element->value = value;
     element->prev = prev;
     element->next = NULL;
+    return element;
 }
 
-linked_list_t **create_list_from_array(char **array)
+linked_list_t *create_list_from_array(char **array)
 {
     linked_list_t *prev = NULL;
     linked_list_t *node = NULL;

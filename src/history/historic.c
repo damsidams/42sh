@@ -30,9 +30,19 @@ static int get_line_nb(char **lines, char *buffer)
     return nb;
 }
 
+static int read_history(char const *filename)
+{
+    int fd = open(filename, O_RDONLY);
+
+    if (fd == SYS_ERROR) {
+        return OPEN_ERROR;
+    }
+    return fd;
+}
+
 static int get_previous_cmd_num(void)
 {
-    int fd = read_open(HISTORIC_FILENAME);
+    int fd = read_history(HISTORIC_FILENAME);
     char *buffer = NULL;
     int chars_read = 0;
 
@@ -125,14 +135,14 @@ int add_command_to_save(char const *cmd)
     return SUCCESS;
 }
 
-static char **return_read_error(int fd)
+static linked_list_t *return_read_error(int fd)
 {
     perror("Read error");
     close(fd);
     return NULL;
 }
 
-static char **add_command_to_end(char *buffer, char *cmd)
+static linked_list_t *add_command_to_end(char *buffer, char *cmd)
 {
     char **file_by_line = NULL;
     char **final_array = NULL;
@@ -152,7 +162,7 @@ static char **add_command_to_end(char *buffer, char *cmd)
     final_array[my_strstrlen(file_by_line)] = my_strdup(cmd);
     final_array[my_strstrlen(file_by_line) + 1] = NULL;
     free_str_array(file_by_line);
-    return final_array;
+    return create_list_from_array(final_array);
 }
 
 static int check_buffer(char const *buffer, int fd)
@@ -165,9 +175,9 @@ static int check_buffer(char const *buffer, int fd)
     return SUCCESS;
 }
 
-char **get_array_from_prev_cmd(char *current_cmd)
+linked_list_t *get_array_from_prev_cmd(char *current_cmd)
 {
-    int fd = read_open(HISTORIC_FILENAME);
+    int fd = read_history(HISTORIC_FILENAME);
     char *buffer = NULL;
     int file_size = get_file_size(HISTORIC_FILENAME);
     int chars_read = 0;

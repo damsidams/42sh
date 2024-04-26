@@ -58,11 +58,14 @@ bool no_env(char **env);
 void check_given_cmd_type(shell_info_t *my_shell, char *cmd);
 bool built_in_command(char **args, shell_info_t *my_shell);
 
-// --> save commands
+// --> historic
 void display_historic(char **args, shell_info_t *my_shell);
 int add_command_to_save(char const *cmd);
-char **get_array_from_prev_cmd(char *current_cmd);
+linked_list_t *get_array_from_prev_cmd(char *current_cmd);
 int my_special_getnbr(char const *str);
+
+// --> linked_list
+linked_list_t *create_list_from_array(char **array);
 
 // --> file
 int get_file_size(char const *filename);
@@ -98,6 +101,4 @@ void globbing(char **commands, shell_info_t *my_shell);
 // --> gpt
 void gpt(char **args, shell_info_t *my_shell);
 
-
-
-#endif /* MINISHELL_1 */
+#endif

@@ -98,10 +98,13 @@ static void check_input(int *index, int *cursor, char *input, char c)
 static char *finish_input(char *input, int index,
     struct termios *initial_settings, char last_char)
 {
+    linked_list_t *history = NULL;
+
     input[index] = '\0';
     tcsetattr(STDIN_FILENO, TCSANOW, initial_settings);
     if (last_char == EOT)
         return NULL;
+    add_command_to_save(input);
     return input;
 }
 
@@ -110,7 +113,7 @@ char *get_prompt(void)
     char *input = malloc(sizeof(char) * MAX_LENGTH);
     int index = 0;
     int cursor = 0;
-    char c;
+    char c = 0;
     struct termios initial_settings = init_shell_settings();
 
     c = getchar();

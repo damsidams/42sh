@@ -59,7 +59,7 @@ static void display_list_alias(shell_info_t *my_shell)
         return;
     current = my_shell->list_alias;
     while (current != NULL && current->real_cmd != NULL) {
-        printf("%s\t%s\n", current->alias_cmd, current->real_cmd);
+        printf("%s%s\n", current->alias_cmd, current->real_cmd);
         current = current->next;
     }
 }
@@ -91,10 +91,35 @@ alias_t *init_alias(void)
     return init_alias;
 }
 
+int create_42rc(shell_info_t *my_shell)
+{
+    int fd = open("42rc", O_CREAT | O_TRUNC | O_WRONLY, 0666);
+    alias_t *current = my_shell->list_alias;
+    char *buffer = NULL;
+    int lengh = 0;
+
+    if (fd == -1)
+        return 84;
+    if (my_shell->list_alias == NULL)
+        return;
+    while (current) {
+        lengh =  strlen(current->alias_cmd) * strlen(current->real_cmd) + 10;
+        buffer = malloc(sizeof(char) * lengh);
+        strcpy(buffer, current->alias_cmd);
+        strcat(buffer, " ");
+        strcat(buffer, current->real_cmd);
+        strcat(buffer, "\n");
+        write(fd, buffer, strlen(buffer));
+        current = current->next;
+    }
+    close(fd);
+}
+
 void my_alias(char **args, shell_info_t *my_shell)
 {
     char *alias_command = NULL;
 
+    create_42rc(my_shell);
     if (args[1] == NULL) {
         display_list_alias(my_shell);
         return;
@@ -105,6 +130,7 @@ void my_alias(char **args, shell_info_t *my_shell)
     my_strcpy(alias_command, args[1]);
     if (args[1] != NULL) {
         my_shell->list_alias = add_alias(alias_command, my_shell->list_alias);
+        create_42rc(my_shell);
         return;
     }
     my_shell->exit_status = 0;

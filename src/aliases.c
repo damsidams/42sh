@@ -30,7 +30,7 @@ static alias_t *add_alias(char *args, alias_t *list_alias)
 
 static char **set_alias(void)
 {
-    char **set_alias = malloc(sizeof(char *) * 14);
+    char **set_alias = malloc(sizeof(char *) * 13);
 
     if (set_alias == NULL)
         return NULL;
@@ -40,14 +40,13 @@ static char **set_alias(void)
     set_alias[3] = my_strdup("l.='ls -d .* --color=auto'");
     set_alias[4] = my_strdup("ll='ls -l --color=auto'");
     set_alias[5] = my_strdup("ls='ls --color=auto'");
-    set_alias[6] = my_strdup("which='(alias; declare -f) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot'");
-    set_alias[7] = my_strdup("xzegrep='xzegrep --color=auto'");
-    set_alias[8] = my_strdup("xzfgrep='xzfgrep --color=auto'");
-    set_alias[9] = my_strdup("xzgrep='xzgrep --color=auto'");
-    set_alias[10] = my_strdup("zegrep='zegrep --color=auto'");
-    set_alias[11] = my_strdup("zfgrep='zfgrep --color=auto'");
-    set_alias[12] = my_strdup("zgrep='zgrep --color=auto'");
-    set_alias[13] = NULL;
+    set_alias[6] = my_strdup("xzegrep='xzegrep --color=auto'");
+    set_alias[7] = my_strdup("xzfgrep='xzfgrep --color=auto'");
+    set_alias[8] = my_strdup("xzgrep='xzgrep --color=auto'");
+    set_alias[9] = my_strdup("zegrep='zegrep --color=auto'");
+    set_alias[10] = my_strdup("zfgrep='zfgrep --color=auto'");
+    set_alias[11] = my_strdup("zgrep='zgrep --color=auto'");
+    set_alias[12] = NULL;
     return set_alias;
 }
 
@@ -85,7 +84,7 @@ alias_t *init_alias(void)
     alias_t *init_alias = NULL;
     char **set_command = set_alias();
 
-    for (int i = 0; i != 13; i++) {
+    for (int i = 0; i != 12; i++) {
         init_alias = add_alias(set_command[i], init_alias);
     }
     return init_alias;
@@ -103,7 +102,7 @@ int create_42rc(shell_info_t *my_shell)
     if (my_shell->list_alias == NULL)
         return;
     while (current) {
-        lengh =  strlen(current->alias_cmd) * strlen(current->real_cmd) + 10;
+        lengh = strlen(current->alias_cmd) * strlen(current->real_cmd) + 10;
         buffer = malloc(sizeof(char) * lengh);
         strcpy(buffer, current->alias_cmd);
         strcat(buffer, " ");

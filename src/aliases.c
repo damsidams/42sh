@@ -11,63 +11,21 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <string.h>
 
-static list_t *add_alias(char *args, list_t *list_alias)
+static alias_t *add_alias(char *args, alias_t *list_alias)
 {
     alias_t *alias = malloc(sizeof(alias_t));
     char **alias_command = my_str_to_word_array(args, "=");
     char **real_command = NULL;
 
     if (alias == NULL || alias_command[1] == NULL)
-        return;
+        return NULL;
     real_command = my_str_to_word_array(alias_command[1], "'");
     alias->alias_cmd = my_strdup(alias_command[0]);
     alias->real_cmd = my_strdup(real_command[0]);
-    alias->next = list_alias->premier;
-    list_alias->premier = alias;
-    return list_alias;
-}
-
-static list_t *init_list(void)
-{
-    list_t *list_alias = malloc(sizeof(list_t));
-    alias_t *alias = malloc(sizeof(alias_t));
-
-    if (list_alias == NULL || alias == NULL)
-        return;
-    alias->alias_cmd = NULL;
-    alias->real_cmd = NULL;
-    alias->next = NULL;
-    list_alias->premier = alias;
-    return list_alias;
-}
-
-static void display_list_alias(list_t *list_alias)
-{
-    alias_t *current = NULL;
-
-    if (list_alias == NULL)
-        return;
-    current = list_alias->premier;
-    while (current != NULL && current->real_cmd != NULL) {
-        printf("alias '%s'\n", current->real_cmd);
-        current = current->next;
-    }
-}
-
-void exec_alias(list_t *list_alias, shell_info_t *my_shell, char *args)
-{
-    char **new_command = my_str_to_word_array(args, "=");
-    char **real_command = my_str_to_word_array(new_command[1], "'");
-    alias_t *current = list_alias->premier;
-
-    while (current) {
-        if (my_strcmp(current->alias_cmd, new_command[0])) {
-            command_handling(my_shell, real_command);
-            return;
-        }
-        current = current->next;
-    }
+    alias->next = list_alias;
+    return alias;
 }
 
 static char **set_alias(void)
@@ -75,7 +33,7 @@ static char **set_alias(void)
     char **set_alias = malloc(sizeof(char *) * 14);
 
     if (set_alias == NULL)
-        return;
+        return NULL;
     set_alias[0] = my_strdup("egrep='egrep --color=auto'");
     set_alias[1] = my_strdup("fgrep='fgrep --color=auto'");
     set_alias[2] = my_strdup("grep='grep --color=auto'");
@@ -93,26 +51,61 @@ static char **set_alias(void)
     return set_alias;
 }
 
+static void display_list_alias(shell_info_t *my_shell)
+{
+    alias_t *current = NULL;
+
+    if (my_shell->list_alias == NULL)
+        return;
+    current = my_shell->list_alias;
+    while (current != NULL && current->real_cmd != NULL) {
+        printf("%s\t%s\n", current->alias_cmd, current->real_cmd);
+        current = current->next;
+    }
+}
+
+int exec_alias(shell_info_t *my_shell, char *args)
+{
+    alias_t *current = my_shell->list_alias;
+    char **cmd = NULL;
+
+    while (current) {
+        if (my_strcmp(current->alias_cmd, args) == 0) {
+            cmd = my_str_to_word_array(current->real_cmd, " ");
+            exec_cmd(cmd, my_shell);
+            return 1;
+        }
+        current = current->next;
+    }
+    return 0;
+}
+
+alias_t *init_alias(void)
+{
+    alias_t *init_alias = NULL;
+    char **set_command = set_alias();
+
+    for (int i = 0; i != 13; i++) {
+        init_alias = add_alias(set_command[i], init_alias);
+    }
+    return init_alias;
+}
+
 void my_alias(char **args, shell_info_t *my_shell)
 {
-    list_t *list_alias = init_list();
-    char *alias_command = malloc(sizeof(char) * my_strlen(args[1]) + 1);
-    char **set_commands = set_alias();
+    char *alias_command = NULL;
 
+    if (args[1] == NULL) {
+        display_list_alias(my_shell);
+        return;
+    }
+    alias_command = malloc(sizeof(char) * my_strlen(args[1]) + 1);
     if (alias_command == NULL)
         return;
-    for (int i = 0; i != 13; i++) {
-        add_alias(set_commands[i], list_alias);
-    }
-    if (args[1] == NULL) {
-        display_list_alias(list_alias);
-        return;
-    }
     my_strcpy(alias_command, args[1]);
     if (args[1] != NULL) {
-        list_alias = add_alias(alias_command, list_alias);
+        my_shell->list_alias = add_alias(alias_command, my_shell->list_alias);
         return;
     }
-    exec_alias(list_alias, my_shell, alias_command);
     my_shell->exit_status = 0;
 }

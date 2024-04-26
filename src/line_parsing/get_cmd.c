@@ -11,6 +11,7 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "my.h"
 #include "shell.h"
 #include "struct.h"
@@ -20,9 +21,10 @@ char *get_user_input(shell_info_t *my_shell)
     char *user_input = get_prompt(my_shell);
 
     putchar('\n');
-    if (!user_input) {
+    if (!user_input)
+        return NULL;
+    if (strcmp(user_input, "EOT") == 0) {
         my_shell->exit_shell = true;
-        free(user_input);
         return NULL;
     }
     if (my_strlen(user_input) == 0) {

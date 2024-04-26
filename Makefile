@@ -18,6 +18,7 @@ SRC	=	src/main.c								\
 		src/command_handling/command_type.c		\
 		src/command_handling/command_error.c	\
 		src/command_handling/command_exec.c		\
+		src/command_handling/built_in_command.c	\
 		src/cd.c								\
 		src/pipe.c								\
 		src/redirect.c							\
@@ -25,7 +26,6 @@ SRC	=	src/main.c								\
 		src/my_sh.c					\
 		src/auto_complete.c								\
 		src/file.c								\
-		src/built_in_command.c	 				\
 		src/backtick.c							\
 		src/check_and_or.c						\
 		src/globbing.c							\

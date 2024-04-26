@@ -20,7 +20,7 @@ static int is_delim(char c, char *delim)
 
 static int is_exception(char c)
 {
-    return (c == '\"' || c == '`');
+    return (c == '\"' || c == '`' || c == '(' || c == ')');
 }
 
 static int get_word_nb(char *str, char *delim)

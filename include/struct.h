@@ -20,6 +20,12 @@ typedef struct shell_info_t_s {
     int stdin_cpy;
 }  shell_info_t;
 
+typedef struct linked_list_s {
+    char *value;
+    struct linked_list_s *prev;
+    struct linked_list_t *next;
+} linked_list_t;
+
 enum sep_type {
     And,
     Or,

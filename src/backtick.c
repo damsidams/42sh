@@ -66,9 +66,14 @@ static int set_function(int *fd, int output)
 
 static void child(int fd, shell_info_t *my_shell, char *cmd)
 {
+    shell_info_t *shell_copy = init_shell_info_t(my_shell->env);
+
+    if (shell_copy == NULL) {
+        exit(ERROR);
+    }
     dup2(fd, STDOUT_FILENO);
-    check_given_cmd_type(my_shell, cmd);
-    exit(0);
+    check_given_cmd_type(shell_copy, cmd);
+    exit(end_shell(shell_copy));
 }
 
 static void clear_func(int *fd, char *old_cmd)

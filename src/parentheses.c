@@ -5,6 +5,7 @@
 ** Functions for the parentheses in 42sh
 */
 
+#include <stddef.h>
 #include <stdbool.h>
 #include "shell.h"
 
@@ -16,7 +17,7 @@ bool exec_parentheses(shell_info_t *my_shell, char *cmd)
         return false;
     }
     check_given_cmd_type(shell_copy, cmd);
-    my_shell->return_value = shell_copy->return_value;
+    my_shell->exit_status = shell_copy->exit_status;
     end_shell(shell_copy);
     return true;
 }

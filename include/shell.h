@@ -91,6 +91,8 @@ char *get_current_time(void);
 // --> backtick
 void replace_backtick(char **str, shell_info_t *my_shell);
 
+// --> parentheses
+bool exec_parentheses(shell_info_t *my_shell, char *cmd);
 // --> and or
 bool check_and_or(char *cmd, shell_info_t *my_shell);
 

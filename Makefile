@@ -31,6 +31,7 @@ SRC	=	src/main.c								\
 		src/globbing.c							\
 		src/linked_list.c	\
 		src/shell_info.c	\
+		src/parentheses.c	\
 
 UT_SRC	=	tests/unit_tests.c						\
 			src/env/disp_env.c						\
@@ -57,6 +58,7 @@ UT_SRC	=	tests/unit_tests.c						\
 			src/globbing.c							\
 			src/linked_list.c	\
 			src/shell_info.c	\
+		src/parentheses.c	\
 
 OBJ	=	$(SRC:.c=.o)
 

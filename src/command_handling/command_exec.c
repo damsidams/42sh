@@ -30,12 +30,39 @@ char **get_paths(char **env)
     return my_pimp_str_to_wa(env[i], ":=");
 }
 
+static void default_signals(void)
+{
+    signal(SIGINT, SIG_DFL);
+    signal(SIGQUIT, SIG_DFL);
+    signal(SIGTSTP, SIG_DFL);
+    signal(SIGTTIN, SIG_DFL);
+    signal(SIGTTOU, SIG_DFL);
+    signal(SIGCHLD, SIG_DFL);
+}
+
+static bool is_ampersand(char **args)
+{
+    for (int i = 0; args[i]; i++) {
+        if (my_strcmp(args[i], "&") == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static void free_paths(char *cmd_path, char **paths)
+{
+    free(cmd_path);
+    free_str_array(paths);
+}
+
 static void exec_paths(char **args, shell_info_t *my_shell)
 {
     char **paths = get_paths(my_shell->env);
     char *cmd_path = NULL;
     bool command_found = false;
 
+    default_signals();
     for (int i = 1; paths && paths[i]; i++) {
         if (cmd_path)
             free(cmd_path);
@@ -50,21 +77,25 @@ static void exec_paths(char **args, shell_info_t *my_shell)
         execve(args[0], args, my_shell->env) == -1)) {
         cmd_not_found(args, my_shell, cmd_path, paths);
     }
-    free(cmd_path);
-    free_str_array(paths);
+    free_paths(cmd_path, paths);
 }
 
 void exec_cmd(char **args, shell_info_t *my_shell)
 {
     pid_t child;
-    int wstatus = 0;
+    bool ampersand = is_ampersand(args);
 
+    if (ampersand)
+        args = my_word_array_delete(args, "&");
     child = fork();
     if (child == 0) {
         exec_paths(args, my_shell);
     } else {
-        waitpid(child, &wstatus, 0);
-        check_seg_fault(wstatus, my_shell);
+        if (!ampersand) {
+            wait_for_pid(child, my_shell);
+        } else {
+            add_job(child, my_shell, false);
+        }
     }
     free_str_array(args);
 }

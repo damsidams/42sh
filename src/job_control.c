@@ -15,22 +15,6 @@
 #include "shell.h"
 #include "struct.h"
 
-static void check_seg_fault(int wstatus, shell_info_t *my_shell)
-{
-    if (WIFEXITED(wstatus)) {
-        my_shell->exit_status = WEXITSTATUS(wstatus);
-    }
-    if (WIFSIGNALED(wstatus) && WCOREDUMP(wstatus)) {
-            mini_printf("%s (core dumped)\n", strsignal(WTERMSIG(wstatus)));
-            my_shell->exit_status = WTERMSIG(wstatus) + 128;
-            return;
-    }
-    if (WIFSIGNALED(wstatus) && WTERMSIG(wstatus) == 11) {
-        mini_printf("%s\n", strsignal(WTERMSIG(wstatus)));
-        my_shell->exit_status = WTERMSIG(wstatus) + 128;
-    }
-}
-
 void add_job(int pid, shell_info_t *my_shell, bool suspended)
 {
     static int nb_jobs = 0;

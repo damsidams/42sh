@@ -13,7 +13,7 @@ SRC	=	src/main.c								\
 		src/line_parsing/get_input.c			\
 		src/history/historic.c					\
 		src/history/special_getnbr.c			\
-		src/history/time.c							\
+		src/history/time.c						\
 		src/history/display_hist.c				\
 		src/command_handling/command_type.c		\
 		src/command_handling/command_error.c	\
@@ -23,14 +23,16 @@ SRC	=	src/main.c								\
 		src/pipe.c								\
 		src/redirect.c							\
 		src/set_color.c							\
-		src/my_sh.c					\
-		src/auto_complete.c								\
+		src/my_sh.c								\
+		src/auto_complete.c						\
+		src/signal.c							\
 		src/file.c								\
 		src/backtick.c							\
 		src/check_and_or.c						\
 		src/globbing.c							\
 		src/aliases.c							\
 		src/linked_list.c						\
+		src/job_control.c						\
 
 UT_SRC	=	tests/unit_tests.c						\
 			src/env/disp_env.c						\

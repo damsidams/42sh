@@ -98,9 +98,9 @@ int create_42rc(shell_info_t *my_shell)
     int lengh = 0;
 
     if (fd == -1)
-        return 84;
+        return ERROR;
     if (my_shell->list_alias == NULL)
-        return;
+        return SUCCESS;
     while (current) {
         lengh = strlen(current->alias_cmd) * strlen(current->real_cmd) + 10;
         buffer = malloc(sizeof(char) * lengh);
@@ -112,6 +112,7 @@ int create_42rc(shell_info_t *my_shell)
         current = current->next;
     }
     close(fd);
+    return SUCCESS;
 }
 
 void my_alias(char **args, shell_info_t *my_shell)

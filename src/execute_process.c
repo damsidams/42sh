@@ -75,7 +75,6 @@ static bool is_ampersand(char **args)
 
 static void default_signals(void)
 {
-    setpgid(0, 0);
     signal(SIGINT, SIG_DFL);
     signal(SIGQUIT, SIG_DFL);
     signal(SIGTSTP, SIG_DFL);

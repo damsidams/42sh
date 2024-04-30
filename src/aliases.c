@@ -13,17 +13,15 @@
 #include <stdio.h>
 #include <string.h>
 
-static alias_t *add_alias(char *args, alias_t *list_alias)
+static alias_t *add_alias(char *alias_command, char *real_command,
+    alias_t *list_alias)
 {
     alias_t *alias = malloc(sizeof(alias_t));
-    char **alias_command = my_str_to_word_array(args, "=");
-    char **real_command = NULL;
 
-    if (alias == NULL || alias_command[1] == NULL)
+    if (alias == NULL || alias_command == NULL || real_command == NULL)
         return NULL;
-    real_command = my_str_to_word_array(alias_command[1], "'");
-    alias->alias_cmd = my_strdup(alias_command[0]);
-    alias->real_cmd = my_strdup(real_command[0]);
+    alias->alias_cmd = my_strdup(alias_command);
+    alias->real_cmd = my_strdup(real_command);
     alias->next = list_alias;
     return alias;
 }
@@ -34,18 +32,18 @@ static char **set_alias(void)
 
     if (set_alias == NULL)
         return NULL;
-    set_alias[0] = my_strdup("egrep='egrep --color=auto'");
-    set_alias[1] = my_strdup("fgrep='fgrep --color=auto'");
-    set_alias[2] = my_strdup("grep='grep --color=auto'");
-    set_alias[3] = my_strdup("l.='ls -d .* --color=auto'");
-    set_alias[4] = my_strdup("ll='ls -l --color=auto'");
-    set_alias[5] = my_strdup("ls='ls --color=auto'");
-    set_alias[6] = my_strdup("xzegrep='xzegrep --color=auto'");
-    set_alias[7] = my_strdup("xzfgrep='xzfgrep --color=auto'");
-    set_alias[8] = my_strdup("xzgrep='xzgrep --color=auto'");
-    set_alias[9] = my_strdup("zegrep='zegrep --color=auto'");
-    set_alias[10] = my_strdup("zfgrep='zfgrep --color=auto'");
-    set_alias[11] = my_strdup("zgrep='zgrep --color=auto'");
+    set_alias[0] = my_strdup("egrep=egrep --color=auto");
+    set_alias[1] = my_strdup("fgrep=fgrep --color=auto");
+    set_alias[2] = my_strdup("grep=grep --color=auto");
+    set_alias[3] = my_strdup("l.=ls -d .* --color=auto");
+    set_alias[4] = my_strdup("ll=ls -l --color=auto");
+    set_alias[5] = my_strdup("ls=ls --color=auto");
+    set_alias[6] = my_strdup("xzegrep=xzegrep --color=auto");
+    set_alias[7] = my_strdup("xzfgrep=xzfgrep --color=auto");
+    set_alias[8] = my_strdup("xzgrep=xzgrep --color=auto");
+    set_alias[9] = my_strdup("zegrep=zegrep --color=auto");
+    set_alias[10] = my_strdup("zfgrep=zfgrep --color=auto");
+    set_alias[11] = my_strdup("zgrep=zgrep --color=auto");
     set_alias[12] = NULL;
     return set_alias;
 }
@@ -58,7 +56,7 @@ static void display_list_alias(shell_info_t *my_shell)
         return;
     current = my_shell->list_alias;
     while (current != NULL && current->real_cmd != NULL) {
-        printf("%s%s\n", current->alias_cmd, current->real_cmd);
+        printf("%s\t%s\n", current->alias_cmd, current->real_cmd);
         current = current->next;
     }
 }
@@ -83,11 +81,32 @@ alias_t *init_alias(void)
 {
     alias_t *init_alias = NULL;
     char **set_command = set_alias();
+    char **args = NULL;
 
     for (int i = 0; i != 12; i++) {
-        init_alias = add_alias(set_command[i], init_alias);
+        args = my_str_to_word_array(set_command[i], "=");
+        init_alias = add_alias(args[0], args[1], init_alias);
+        free_str_array(args);
     }
+    for (int i = 0; set_command[i]; i++) {
+        free(set_command[i]);
+    }
+    free(set_command);
     return init_alias;
+}
+
+char *set_buffer(char *buffer, int fd, alias_t *current)
+{
+    int lengh = 0;
+
+    lengh = strlen(current->alias_cmd) * strlen(current->real_cmd) + 10;
+    buffer = malloc(sizeof(char) * lengh);
+    strcpy(buffer, current->alias_cmd);
+    strcat(buffer, " ");
+    strcat(buffer, current->real_cmd);
+    strcat(buffer, "\n");
+    write(fd, buffer, strlen(buffer));
+    return buffer;
 }
 
 int create_42rc(shell_info_t *my_shell)
@@ -95,21 +114,15 @@ int create_42rc(shell_info_t *my_shell)
     int fd = open("42rc", O_CREAT | O_TRUNC | O_WRONLY, 0666);
     alias_t *current = my_shell->list_alias;
     char *buffer = NULL;
-    int lengh = 0;
 
     if (fd == -1)
         return ERROR;
     if (my_shell->list_alias == NULL)
-        return SUCCESS;
+        return ERROR;
     while (current) {
-        lengh = strlen(current->alias_cmd) * strlen(current->real_cmd) + 10;
-        buffer = malloc(sizeof(char) * lengh);
-        strcpy(buffer, current->alias_cmd);
-        strcat(buffer, " ");
-        strcat(buffer, current->real_cmd);
-        strcat(buffer, "\n");
-        write(fd, buffer, strlen(buffer));
+        buffer = set_buffer(buffer, fd, current);
         current = current->next;
+        free(buffer);
     }
     close(fd);
     return SUCCESS;
@@ -117,19 +130,14 @@ int create_42rc(shell_info_t *my_shell)
 
 void my_alias(char **args, shell_info_t *my_shell)
 {
-    char *alias_command = NULL;
-
     create_42rc(my_shell);
     if (args[1] == NULL) {
         display_list_alias(my_shell);
         return;
     }
-    alias_command = malloc(sizeof(char) * my_strlen(args[1]) + 1);
-    if (alias_command == NULL)
-        return;
-    my_strcpy(alias_command, args[1]);
     if (args[1] != NULL) {
-        my_shell->list_alias = add_alias(alias_command, my_shell->list_alias);
+        my_shell->list_alias = add_alias(args[1], args[2],
+            my_shell->list_alias);
         create_42rc(my_shell);
         return;
     }

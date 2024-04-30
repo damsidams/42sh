@@ -19,12 +19,20 @@
 static int end_shell(shell_info_t *my_shell)
 {
     int return_value = 0;
+    alias_t *tmp = NULL;
 
     if (my_shell->env) {
         free_str_array(my_shell->env);
     }
     free(my_shell->last_path);
     free(my_shell->color);
+    while (my_shell->list_alias) {
+        free(my_shell->list_alias->alias_cmd);
+        free(my_shell->list_alias->real_cmd);
+        tmp = my_shell->list_alias;
+        my_shell->list_alias = my_shell->list_alias->next;
+        free(tmp);
+    }
     return_value = my_shell->exit_status;
     free(my_shell);
     return return_value;

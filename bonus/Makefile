@@ -5,20 +5,54 @@
 ## Makefile
 ##
 
-SRC	=	src/main.c					\
-		src/disp_env.c				\
-		src/unsetenv.c				\
-		src/cd.c					\
-		src/pipe.c					\
-		src/user_input.c			\
-		src/command_handling.c		\
-		src/redirect.c				\
-		src/setenv.c				\
-		src/gpt.c					\
-		src/set_color.c				\
-		src/my_sh.c
+SRC	=	src/main.c								\
+		src/env/disp_env.c						\
+		src/env/unsetenv.c						\
+		src/env/setenv.c						\
+		src/line_parsing/get_cmd.c				\
+		src/line_parsing/get_input.c			\
+		src/history/historic.c					\
+		src/history/special_getnbr.c			\
+		src/history/time.c						\
+		src/history/display_hist.c				\
+		src/command_handling/command_type.c		\
+		src/command_handling/command_error.c	\
+		src/command_handling/command_exec.c		\
+		src/command_handling/built_in_command.c	\
+		src/cd.c								\
+		src/pipe.c								\
+		src/redirect.c							\
+		src/set_color.c							\
+		src/my_sh.c								\
+		src/file.c								\
+		src/backtick.c							\
+		src/check_and_or.c						\
+		src/globbing.c							\
+		src/gpt.c
 
-UT_SRC	=	tests/unit_tests.c
+UT_SRC	=	tests/unit_tests.c						\
+			src/env/disp_env.c						\
+			src/env/unsetenv.c						\
+			src/env/setenv.c						\
+			src/line_parsing/get_cmd.c				\
+			src/line_parsing/get_input.c			\
+			src/history/historic.c					\
+			src/history/special_getnbr.c			\
+			src/history/time.c						\
+			src/history/display_hist.c				\
+			src/command_handling/command_type.c		\
+			src/command_handling/command_error.c	\
+			src/command_handling/command_exec.c		\
+			src/cd.c								\
+			src/pipe.c								\
+			src/redirect.c							\
+			src/set_color.c							\
+			src/my_sh.c								\
+			src/file.c								\
+			src/built_in_command.c	 				\
+			src/backtick.c							\
+			src/check_and_or.c						\
+			src/globbing.c							\
 
 OBJ	=	$(SRC:.c=.o)
 
@@ -36,7 +70,7 @@ LIBNAME	=	libmy.a
 
 CS_CLEAN = *.log
 
-UT_BIN	=	ut
+UT_BIN	=	unit_test
 
 UT_FLAGS	=	--coverage -lcriterion
 
@@ -50,30 +84,31 @@ NAME	=	42sh
 
 RM	=	rm -f
 
+all:	libb $(NAME)
 
-all:	lib	$(NAME)
+libb:
+	$(MAKE) all -C lib/my
 
 $(NAME):	$(OBJ)
-	$(MAKE) -C lib/my
-	$(MAKE) -C cJSON
-	$(CC) -o $(NAME) $(CFLAGS) $(OBJ) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
 
-clean	:
+clean:
 	$(MAKE) clean -C lib/my
 	$(RM) $(OBJ)
 
-fclean	:	clean
-	$(RM) $(NAME) $(TNAME) lib/my/$(LIBNAME)
+fclean:	clean
+	$(MAKE) fclean -C lib/my/
+	$(RM) $(NAME) $(TNAME)
 	$(RM) $(NAME)
 	$(RM) $(CS_CLEAN)
 	$(RM) $(UT_CLEAN)
 	$(RM) $(UT_BIN)
 	$(RM) $(VAL_CLEAN)
 
-re	:	fclean all
+re:	fclean all
 
-valgrind : CFLAGS += -g3
-valgrind : re
+valgrind: CFLAGS += -g3
+valgrind: re
 
 asan:	CC	=	clang -fsanitize=address
 asan:	CFLAGS += -g3
@@ -87,15 +122,15 @@ coding_style:	fclean
 	cat $(CS_REPORT)
 	make fclean  > /dev/null 2>&1
 
-tests_run:	fclean re
-	gcc -o $(UT_BIN) $(UT_SRC) -I include/ -L . -lhashtable $(UT_FLAGS)
+tests_run:
+	$(CC) -I include/ -L ./lib/my -o $(UT_BIN) $(UT_SRC) $(UT_FLAGS) -lmy
 	./$(UT_BIN)
 
 coverage:
 	gcovr --exclude tests/ --exclude src/useful_funcs
 
-.PHONY	:
-	all	clean fclean re debug $(NAME) coding_style tests_run coverage
+.PHONY:
+	all libb clean fclean re debug coding_style tests_run coverage
 
 .SILENT :
-	all	clean fclean re debug $(NAME) coding_style tests_run coverage
+	coding_style

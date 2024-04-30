@@ -73,13 +73,3 @@ char *get_file_content(char const *filename)
     buffer[char_read] = '\0';
     return buffer;
 }
-
-int read_history(char const *filename)
-{
-    int fd = open(filename, O_RDONLY);
-
-    if (fd == SYS_ERROR) {
-        return OPEN_ERROR;
-    }
-    return fd;
-}

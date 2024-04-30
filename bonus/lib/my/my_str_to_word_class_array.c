@@ -20,26 +20,20 @@ static int is_delim(char c, char *delim)
 
 static int is_exception(char c)
 {
-    return (c == '\"');
+    return (c == '\"' || c == '`');
 }
 
 static int get_word_nb(char *str, char *delim)
 {
     int word_nb = 0;
     int in_exception = OUT;
-    int word_start = 0;
-    int last_start = -1;
 
     for (int i = 0; str[i]; i++) {
         if ((is_delim(str[i], delim) && i > 0 && !is_delim
-            (str[i - 1], delim) && in_exception == OUT) || (str[i + 1] == '\0'
-            && last_start != word_start)) {
+            (str[i - 1], delim) && in_exception == OUT) ||
+            (str[i + 1] == '\0' && !is_delim(str[i], delim))) {
             word_nb++;
-            last_start = word_start;
         }
-        if (!is_delim(str[i], delim) && i > 0 &&
-            is_delim(str[i - 1], delim) && in_exception == OUT)
-            last_start = i;
         if (is_exception(str[i]))
             in_exception *= -1;
     }
@@ -99,7 +93,7 @@ static char *new_word(char *str, int start, char *delim)
         inew++;
     }
     new_word[inew] = '\0';
-    if (is_exception(new_word[0]))
+    if (is_exception(new_word[0]) && new_word[0] != '`')
         remove_exception(&new_word);
     return new_word;
 }
@@ -110,30 +104,24 @@ static void assist_func(char *str, int i, int *in_exception)
             *in_exception *= -1;
 }
 
-static void second_assist(int *wc, int *last_start, int *word_start)
-{
-    *wc += 1;
-    *last_start = *word_start;
-}
-
 char **my_pimp_str_to_wa(char *str, char *delim)
 {
     char **array = malloc(sizeof(char *) * (get_word_nb(str, delim) + 1));
     int wc = 0;
     int word_start = 0;
-    int last_start = -1;
     int in_exception = OUT;
 
     for (int i = 0; str[i]; i++) {
+        if (!is_delim(str[i], delim) && i > 0 &&
+            is_delim(str[i - 1], delim) && in_exception == OUT) {
+            word_start = i;
+        }
         if ((is_delim(str[i], delim) && i > 0 && !is_delim(str[i - 1], delim)
             && in_exception == OUT) || (str[i + 1] == '\0' &&
-            last_start != word_start)) {
+            !is_delim(str[i], delim))) {
             array[wc] = new_word(str, word_start, delim);
-            second_assist(&wc, &last_start, &word_start);
+            wc++;
         }
-        if (!is_delim(str[i], delim) && i > 0 &&
-            is_delim(str[i - 1], delim) && in_exception == OUT)
-            word_start = i;
         assist_func(str, i, &in_exception);
     }
     array[wc] = NULL;

@@ -9,6 +9,12 @@
     #define STRUCT_H
     #include <stdbool.h>
 
+typedef struct alias_s {
+    char *alias_cmd;
+    char *real_cmd;
+    struct alias_s *next;
+}alias_t;
+
 typedef struct process_t_s {
     int nb;
     int pid;
@@ -23,9 +29,22 @@ typedef struct shell_info_t_s {
     bool is_a_tty;
     int stdout_cpy;
     int stdin_cpy;
+    alias_t *list_alias;
     process_t *jobs;
     int shell_pgid;
 } shell_info_t;
+
+typedef struct linked_list_s {
+    char *value;
+    struct linked_list_s *prev;
+    struct linked_list_s *next;
+} linked_list_t;
+
+typedef struct shell_input_s {
+    int index;
+    int cursor;
+    char *input;
+} shell_input_t;
 
 enum sep_type {
     And,

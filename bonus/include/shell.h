@@ -29,22 +29,16 @@
     #define DOUBLE_REDIRECT_INPUT "<<"
     #define HISTORIC_FILENAME "/tmp/42sh_cmd_save.txt"
     #define HISTORY_NB_SIZE 6
-    #define MAX_LENGTH 1000000
+    #define MAX_LENGTH 100
+    #define API_KEY "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"
+    #define JSON_BUFFER_LENGHT 4096
     //ASCI chars
     #define ESC 27
     #define DEL 127
     #define EOT 4
-    //special printf values
-    #define CLEAR "\e[1;1H\e[2J"
-    #define MOVE_LEFT "\033[1D"
-    #define MOVE_RIGHT "\033[1C"
-    #define MOVE_UP "\033[1A"
-    #define MOVE_DOWN "\033[1B"
 
 int my_sh(char **env);
-char **get_paths(char **env);
 void disp_env(char **args, shell_info_t *my_shell);
-void disp_actual_dir(shell_info_t *my_shell);
 void change_dir(char **args, shell_info_t *my_shell);
 void set_env(char **args, shell_info_t *my_shell);
 void set_env_no_disp(char **args, shell_info_t *my_shell);
@@ -61,25 +55,16 @@ char ***get_all_cmd(char ***all_cmds, char **args);
 bool valid_redirect(char **cmds);
 char *get_user_input(shell_info_t *my_shell);
 bool no_env(char **env);
-void my_alias(char **args, shell_info_t *my_shell);
-alias_t *init_alias(void);
-int exec_alias(shell_info_t *my_shell, char *args);
-void exec_cmd(char **args, shell_info_t *my_shell);
 
 // --> exec cmds
 void check_given_cmd_type(shell_info_t *my_shell, char *cmd);
 bool built_in_command(char **args, shell_info_t *my_shell);
-void exec_cmd(char **args, shell_info_t *my_shell);
 
-// --> historic
+// --> save commands
 void display_historic(char **args, shell_info_t *my_shell);
 int add_command_to_save(char const *cmd);
-linked_list_t *get_array_from_prev_cmd(char *current_cmd);
+char **get_array_from_prev_cmd(char *current_cmd);
 int my_special_getnbr(char const *str);
-int read_history(char const *filename);
-
-// --> linked_list
-linked_list_t *create_list_from_array(char **array);
 
 // --> file
 int get_file_size(char const *filename);
@@ -87,28 +72,18 @@ int open_append(char const *filename);
 int read_open(char const *filename);
 char *get_file_content(char const *filename);
 
-// --> job control
-void background_process(char **args, shell_info_t *my_shell);
-void foreground_process(char **args, shell_info_t *my_shell);
-void signal_child(int pid, int signal, shell_info_t *my_shell);
-void add_job(int pid, shell_info_t *my_shell, bool suspended);
-void wait_for_pid(int pid, shell_info_t *my_shell);
-void sig_handler(int signum);
-void sigstp_handler(int signum);
-
 // --> time
 char *get_current_time(void);
 
 // --> backtick
 void replace_backtick(char **str, shell_info_t *my_shell);
 
+
 // --> and or
 bool check_and_or(char *cmd, shell_info_t *my_shell);
 
 // --> line parsing
-char *get_prompt(shell_info_t *my_shell);
-void delete_string(shell_input_t *user_input);
-void insert_string(shell_input_t *user_input, char *to_insert);
+char *get_prompt(void);
 
 // --> command error
 void cmd_not_found(char **args, shell_info_t *my_shell,
@@ -126,7 +101,4 @@ void globbing(char **commands, shell_info_t *my_shell);
 // --> gpt
 void gpt(char **args, shell_info_t *my_shell);
 
-// --> auto-complete
-void auto_complete(shell_input_t *user_input, shell_info_t *my_shell);
-
-#endif
+#endif /* MINISHELL_1 */

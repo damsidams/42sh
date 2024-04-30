@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "minishell1.h"
+#include "shell.h"
 #include "my.h"
 #include "struct.h"
 
@@ -22,33 +22,39 @@ static char *get_current_path(void)
     return path;
 }
 
-static void set_pwd(shell_info *my_shell)
+static void set_pwd(shell_info_t *my_shell)
 {
     char *new_path = get_current_path();
     char *args[] = {"setenv", "PWD", new_path, NULL};
 
-    if (my_shell->env)
+    if (my_shell->env) {
         set_env_no_disp(args, my_shell);
+    }
     free(new_path);
 }
 
 static char *get_logname(char **env, int i)
 {
-    char *username;
+    char *username = NULL;
     int len = 0;
 
-    for (int j = 8; env[i][j] != '\0'; j++)
+    for (int j = 8; env[i][j] != '\0'; j++) {
         len++;
+    }
     username = malloc(sizeof(char) * len + 1);
-    for (int j = 8; env[i][j] != '\0'; j++)
+    if (username == NULL) {
+        return NULL;
+    }
+    for (int j = 8; env[i][j] != '\0'; j++) {
         username[j - 8] = env[i][j];
+    }
     username[len] = '\0';
     return username;
 }
 
 static char *get_username(char **env)
 {
-    char *username;
+    char *username = NULL;
 
     for (int i = 0; env[i]; i++) {
         if (my_strncmp("LOGNAME", env[i], 7) == 0) {
@@ -59,7 +65,7 @@ static char *get_username(char **env)
     return 0;
 }
 
-static void goto_last_dir(shell_info *my_shell)
+static void goto_last_dir(shell_info_t *my_shell)
 {
     char *temp_last_path = NULL;
 
@@ -75,13 +81,14 @@ static void goto_last_dir(shell_info *my_shell)
     my_shell->exit_status = 0;
 }
 
-void goto_root(shell_info *my_shell)
+void goto_root(shell_info_t *my_shell)
 {
-    char *username;
-    char *path;
+    char *username = NULL;
+    char *path = NULL;
 
-    if (my_shell->last_path)
+    if (my_shell->last_path) {
         free(my_shell->last_path);
+    }
     my_shell->last_path = NULL;
     my_shell->last_path = getcwd(my_shell->last_path, BUFSIZ);
     username = get_username(my_shell->env);
@@ -93,9 +100,9 @@ void goto_root(shell_info *my_shell)
     my_shell->exit_status = 0;
 }
 
-void goto_dir(shell_info *my_shell, char *path)
+void goto_dir(shell_info_t *my_shell, char const *path)
 {
-    int valid_path;
+    int valid_path = 0;
     char *temp_last_path = NULL;
 
     temp_last_path = getcwd(temp_last_path, BUFSIZ);
@@ -116,7 +123,7 @@ void goto_dir(shell_info *my_shell, char *path)
     my_shell->exit_status = 0;
 }
 
-void change_dir(char **args, shell_info *my_shell)
+void change_dir(char **args, shell_info_t *my_shell)
 {
     if (my_strstrlen(args) > 2) {
         my_putstr_err("my_sh: cd: too many arguments\n");

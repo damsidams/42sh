@@ -7,7 +7,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "minishell1.h"
+#include "shell.h"
 #include "my.h"
 #include "struct.h"
 
@@ -27,6 +27,10 @@ char *get_name(char **env, int index)
 {
     char *name = malloc(sizeof(char) * get_name_len(env, index) + 1);
 
+    if (name == NULL) {
+        perror("get_name malloc failed");
+        return NULL;
+    }
     for (int j = 0; env[index][j] != '='; j++)
         name[j] = env[index][j];
     name[get_name_len(env, index)] = '\0';
@@ -38,6 +42,11 @@ char **remove_var(char **env, int index)
     char **new_env = malloc(sizeof(char *) * my_strstrlen(env));
     int j = 0;
 
+    if (new_env == NULL) {
+        perror("remove_var malloc failed");
+        free_str_array(env);
+        return NULL;
+    }
     for (int i = 0; env[i]; i++) {
         if (i != index) {
             new_env[j] = my_strdup(env[i]);
@@ -49,7 +58,7 @@ char **remove_var(char **env, int index)
     return new_env;
 }
 
-static void check_existence(shell_info *my_shell, char *name)
+static void check_existence(shell_info_t *my_shell, char const *name)
 {
     char *env_name = NULL;
 
@@ -62,16 +71,18 @@ static void check_existence(shell_info *my_shell, char *name)
         free(env_name);
         env_name = NULL;
     }
-    if (env_name)
+    if (env_name) {
         free(env_name);
+    }
 }
 
-void unset_env(char **args, shell_info *my_shell)
+void unset_env(char **args, shell_info_t *my_shell)
 {
-    char *name;
+    char *name = NULL;
 
-    if (my_strstrlen(my_shell->env) == 0)
+    if (my_strstrlen(my_shell->env) == 0) {
         return;
+    }
     if (my_strstrlen(args) < 2) {
         my_putstr_err("unsetenv: Too few arguments.\n");
         my_shell->exit_status = 1;

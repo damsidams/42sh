@@ -76,7 +76,7 @@ void command_handling(shell_info_t *my_shell, char **args)
         free_str_array(args);
         return;
     }
-    if (built_in_command(args, my_shell)) {
+    if (built_in_command(args, my_shell) || exec_alias(my_shell, args[0])) {
         return;
     }
     exec_cmd(args, my_shell);

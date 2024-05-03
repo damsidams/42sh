@@ -67,6 +67,11 @@ int end_shell(shell_info_t *my_shell);
 // --> init
 shell_info_t *init_shell_info_t(char **env);
 
+void my_alias(char **args, shell_info_t *my_shell);
+alias_t *init_alias(void);
+int exec_alias(shell_info_t *my_shell, char *args);
+void exec_cmd(char **args, shell_info_t *my_shell);
+
 // --> exec cmds
 void check_given_cmd_type(shell_info_t *my_shell, char *cmd);
 bool built_in_command(char **args, shell_info_t *my_shell);

@@ -79,13 +79,11 @@ char **get_args(shell_info_t *my_shell)
     char *user_input_cpy = my_strdup(user_input);
     char **args = NULL;
 
+    user_input = check_if_historic(user_input);
     if (!user_input || no_cmd(user_input)) {
         return NULL;
     }
-    user_input = check_if_historic(user_input);
-    if (user_input == NULL) {
-        return NULL;
-    }
+    add_command_to_save(user_input);
     if (my_strlen(user_input) != 0) {
         args = my_pimp_str_to_wa(user_input, ";");
     }

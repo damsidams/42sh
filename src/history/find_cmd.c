@@ -76,3 +76,18 @@ char *get_the_n_cmd(char *history_arg)
     }
     return find_cmd_by_event(lines, cmd_nb);
 }
+
+char *find_last_cmd(void)
+{
+    char *buffer = get_file_content(HISTORIC_FILENAME);
+    char **lines = NULL;
+    char *cmd = NULL;
+
+    if (buffer == NULL) {
+	return not_found_error("!!");
+    }
+    lines = my_pimp_str_to_wa(buffer, "\n");
+    cmd = strdup(lines[my_strstrlen(lines) - 1]);
+    free_str_array(lines);
+    return cmd;
+}

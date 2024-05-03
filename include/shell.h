@@ -27,6 +27,7 @@
     #define PIPE "|"
     #define SIMPLE_REDIRECT_INPUT "<"
     #define DOUBLE_REDIRECT_INPUT "<<"
+    #define HISTORY_CHAR '!'
     #define HISTORIC_FILENAME "/tmp/42sh_cmd_save.txt"
     #define HISTORY_NB_SIZE 6
     #define MAX_LENGTH 1000000

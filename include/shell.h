@@ -1,6 +1,6 @@
 /*
-** EPITECH PROJECT, 2023
-** B-PSU-200-PAR-2-1-minishell1-nicolas.nunney
+** EPITECH PROJECT, 2024
+** B-PSU-200-PAR-2-1-42sh-nicolas.nunney
 ** File description:
 ** shell.h
 */
@@ -17,6 +17,7 @@
     #define SUCCESS 0
     #define SYS_ERROR -1
     #define OPEN_ERROR -1
+    #define BACKTICK_ERROR -1
     #define INVALID_NULL_COMMAND -1
     #define READ_SIZE 1000000
     #define EXIT_STATUS_ERROR 139
@@ -27,6 +28,7 @@
     #define PIPE "|"
     #define SIMPLE_REDIRECT_INPUT "<"
     #define DOUBLE_REDIRECT_INPUT "<<"
+    #define BACKTICK '`'
     #define HISTORIC_FILENAME "/tmp/42sh_cmd_save.txt"
     #define HISTORY_NB_SIZE 6
     #define MAX_LENGTH 1000000
@@ -89,7 +91,8 @@ char *get_file_content(char const *filename);
 char *get_current_time(void);
 
 // --> backtick
-void replace_backtick(char **str, shell_info_t *my_shell);
+char **replace_backtick(char **cmd, shell_info_t *my_shell);
+char *get_backtick_output(shell_info_t *shell_info, char *cmd);
 
 // --> and or
 bool check_and_or(char *cmd, shell_info_t *my_shell);

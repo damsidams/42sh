@@ -9,7 +9,7 @@
     #define STRUCT_H
     #include <stdbool.h>
 
-typedef struct shell_info_t_s {
+typedef struct shell_info_s {
     char **env;
     char *last_path;
     int exit_status;

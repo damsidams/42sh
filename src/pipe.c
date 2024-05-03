@@ -42,7 +42,6 @@ static void exec_pipe(char **args, shell_info_t *my_shell, int i, int *pipefd)
 {
     char **cmd_args = my_pimp_str_to_wa(args[i], " ");
 
-    replace_backtick(cmd_args, my_shell);
     if (i == my_strstrlen(args) - 1)
         exec_last_cmd(cmd_args, my_shell, pipefd);
     else {

@@ -26,7 +26,8 @@ SRC	=	src/main.c								\
 		src/my_sh.c					\
 		src/auto_complete.c								\
 		src/file.c								\
-		src/backtick.c							\
+		src/backtick/backtick.c							\
+		src/backtick/get_output.c							\
 		src/check_and_or.c						\
 		src/globbing.c							\
 		src/linked_list.c	\
@@ -52,7 +53,8 @@ UT_SRC	=	tests/unit_tests.c						\
 			src/my_sh.c								\
 			src/file.c								\
 			src/built_in_command.c	 				\
-			src/backtick.c							\
+			src/backtick/backtick.c							\
+			src/backtick/get_output.c							\
 			src/check_and_or.c						\
 			src/globbing.c							\
 			src/linked_list.c	\

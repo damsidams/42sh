@@ -39,6 +39,7 @@ void check_cmd_type(shell_info_t *my_shell)
 {
     char **cmds = get_args(my_shell);
 
+    cmds = replace_backtick(cmds, my_shell);
     if (cmds == NULL) {
         return;
     }
@@ -56,6 +57,7 @@ void check_given_cmd_type(shell_info_t *my_shell, char *cmd)
 {
     char **cmds = my_pimp_str_to_wa(cmd, ";");
 
+    cmds = replace_backtick(cmds, my_shell);
     if (!cmds) {
         return;
     }

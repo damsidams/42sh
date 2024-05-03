@@ -1,4 +1,4 @@
-sudo rm cJSON/ -r
+rm -rf cJSON/
 git clone git@github.com:DaveGamble/cJSON.git
 cd cJSON/
 make

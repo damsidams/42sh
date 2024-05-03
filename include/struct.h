@@ -15,7 +15,7 @@ typedef struct alias_s {
     struct alias_s *next;
 }alias_t;
 
-typedef struct shell_info_t_s {
+typedef struct shell_info_s {
     char **env;
     char *last_path;
     int exit_status;

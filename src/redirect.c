@@ -19,6 +19,7 @@ static void simple_output_redirect(char **args,
 
     if (i == 0 || !args[i + 1]) {
         my_shell->exit_status = 1;
+        perror("Unable to redirect \'>\' input");
         return;
     }
     fd = open(args[i + 1], O_TRUNC | O_WRONLY | O_CREAT, 0644);
@@ -40,6 +41,7 @@ static void double_output_redirect(char **args,
     }
     fd = open(args[i + 1], O_WRONLY | O_APPEND | O_CREAT, 0644);
     if (fd == SYS_ERROR) {
+        perror("Unable to redirect \'>>\' input");
         my_shell->exit_status = 1;
         return;
     }
@@ -57,6 +59,7 @@ static void simple_input_redirect(char **args,
     }
     fd = open(args[i + 1], O_RDONLY);
     if (fd == SYS_ERROR) {
+        perror("Unable to redirect \'<\' input");
         my_shell->exit_status = 1;
         return;
     }
@@ -74,6 +77,7 @@ static void double_input_redirect(char **args,
     }
     fd = open(args[i + 1], O_RDONLY);
     if (fd == OPEN_ERROR) {
+        perror("Unable to redirect << input");
         my_shell->exit_status = 1;
         return;
     }

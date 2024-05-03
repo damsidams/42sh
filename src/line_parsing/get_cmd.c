@@ -11,6 +11,7 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "my.h"
 #include "shell.h"
 #include "struct.h"
@@ -20,9 +21,10 @@ char *get_user_input(shell_info_t *my_shell)
     char *user_input = get_prompt(my_shell);
 
     putchar('\n');
-    if (!user_input) {
+    if (!user_input)
+        return NULL;
+    if (strcmp(user_input, "EOT") == 0) {
         my_shell->exit_shell = true;
-        free(user_input);
         return NULL;
     }
     if (my_strlen(user_input) == 0) {
@@ -64,6 +66,13 @@ static bool no_cmd(char *user_input)
     return true;
 }
 
+static void set_exit(shell_info_t *my_shell)
+{
+    printf("exit\n");
+    my_shell->exit_shell = true;
+    my_shell->exit_status = 0;
+}
+
 char **get_args(shell_info_t *my_shell)
 {
     char *user_input = get_user_input(my_shell);
@@ -73,13 +82,15 @@ char **get_args(shell_info_t *my_shell)
     if (!user_input || no_cmd(user_input)) {
         return NULL;
     }
+    user_input = check_if_historic(user_input);
+    if (user_input == NULL) {
+        return NULL;
+    }
     if (my_strlen(user_input) != 0) {
         args = my_pimp_str_to_wa(user_input, ";");
     }
     if (my_strcmp(args[0], "exit") == 0) {
-        printf("exit\n");
-        my_shell->exit_shell = true;
-        my_shell->exit_status = 0;
+        set_exit(my_shell);
         args = NULL;
     }
     my_free_n_str(2, user_input, user_input_cpy);

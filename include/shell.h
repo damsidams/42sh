@@ -1,6 +1,6 @@
 /*
-** EPITECH PROJECT, 2023
-** B-PSU-200-PAR-2-1-minishell1-nicolas.nunney
+** EPITECH PROJECT, 2024
+** B-PSU-200-PAR-2-1-42sh-nicolas.nunney
 ** File description:
 ** shell.h
 */
@@ -17,6 +17,8 @@
     #define SUCCESS 0
     #define SYS_ERROR -1
     #define OPEN_ERROR -1
+    #define BACKTICK_ERROR -1
+    #define HISTORIC_ERROR -1
     #define INVALID_NULL_COMMAND -1
     #define READ_SIZE 1000000
     #define EXIT_STATUS_ERROR 139
@@ -28,6 +30,7 @@
     #define SIMPLE_REDIRECT_INPUT "<"
     #define DOUBLE_REDIRECT_INPUT "<<"
     #define HISTORY_CHAR '!'
+    #define BACKTICK '`'
     #define HISTORIC_FILENAME "/tmp/42sh_cmd_save.txt"
     #define HISTORY_NB_SIZE 6
     #define MAX_LENGTH 1000000
@@ -61,6 +64,15 @@ char ***get_all_cmd(char ***all_cmds, char **args);
 bool valid_redirect(char **cmds);
 char *get_user_input(shell_info_t *my_shell);
 bool no_env(char **env);
+int end_shell(shell_info_t *my_shell);
+
+// --> init
+shell_info_t *init_shell_info_t(char **env);
+
+void my_alias(char **args, shell_info_t *my_shell);
+alias_t *init_alias(void);
+int exec_alias(shell_info_t *my_shell, char *args);
+void exec_cmd(char **args, shell_info_t *my_shell);
 
 // --> exec cmds
 void check_given_cmd_type(shell_info_t *my_shell, char *cmd);
@@ -72,6 +84,9 @@ int add_command_to_save(char const *cmd);
 linked_list_t *get_array_from_prev_cmd(char *current_cmd);
 int my_special_getnbr(char const *str);
 int read_history(char const *filename);
+char *check_if_historic(char *cmd);
+char *find_last_cmd(void);
+char *get_the_n_cmd(char *str);
 
 // --> linked_list
 linked_list_t *create_list_from_array(char **array);
@@ -86,7 +101,8 @@ char *get_file_content(char const *filename);
 char *get_current_time(void);
 
 // --> backtick
-void replace_backtick(char **str, shell_info_t *my_shell);
+char **replace_backtick(char **cmd, shell_info_t *my_shell);
+char *get_backtick_output(shell_info_t *shell_info, char *cmd);
 
 // --> and or
 bool check_and_or(char *cmd, shell_info_t *my_shell);

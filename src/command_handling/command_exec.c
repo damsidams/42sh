@@ -76,7 +76,7 @@ void command_handling(shell_info_t *my_shell, char **args)
         free_str_array(args);
         return;
     }
-    if (built_in_command(args, my_shell)) {
+    if (built_in_command(args, my_shell) || exec_alias(my_shell, args[0])) {
         return;
     }
     exec_cmd(args, my_shell);
@@ -86,6 +86,5 @@ void exec_no_pipe(char *cmd, shell_info_t *my_shell)
 {
     char **args = my_pimp_str_to_wa(cmd, " \t");
 
-    replace_backtick(args, my_shell);
     command_handling(my_shell, args);
 }

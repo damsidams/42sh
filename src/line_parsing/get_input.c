@@ -117,8 +117,9 @@ static char *finish_input(shell_input_t *user_input,
 {
     tcsetattr(STDIN_FILENO, TCSANOW, initial_settings);
     if (last_char == EOT)
-        return NULL;
-    add_command_to_save(user_input->input);
+        return "EOT";
+    if (user_input->input)
+        add_command_to_save(user_input->input);
     return user_input->input;
 }
 

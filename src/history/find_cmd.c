@@ -7,7 +7,7 @@
 
 #include "shell.h"
 
-static void remove_from_file(char **file_content, unsigned int line_nb)
+void remove_from_file(char **file_content, unsigned int line_nb)
 {
     FILE *file = fopen(HISTORIC_FILENAME, "w");
     unsigned int i = 0;
@@ -47,7 +47,7 @@ static char *create_str_from_strstr(char **args)
     return cmd;
 }
 
-static char *find_cmd_in_line(char *line)
+char *find_cmd_in_line(char *line)
 {
     char **args = my_pimp_str_to_wa(line, " ");
     char *cmd = strdup(args[2]);
@@ -73,7 +73,7 @@ static char *find_cmd_by_event(char **lines, int cmd_nb)
     return NULL;
 }
 
-static char *not_found_error(char const *cmd_nb)
+char *not_found_error(char const *cmd_nb)
 {
     dprintf(2, "%s: Event not found.\n", cmd_nb);
     return NULL;

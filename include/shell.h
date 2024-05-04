@@ -84,9 +84,13 @@ int add_command_to_save(char const *cmd);
 linked_list_t *get_array_from_prev_cmd(char *current_cmd);
 int my_special_getnbr(char const *str);
 int read_history(char const *filename);
-char *check_if_historic(char *cmd);
+char *check_if_historic(char *cmd, shell_info_t *my_shell);
 char *find_last_cmd(void);
 char *get_the_n_cmd(char *str);
+void remove_from_file(char **, unsigned int);
+char *find_cmd_in_line(char *);
+char *not_found_error(char const *event);
+char *get_cmd_with_str(char *str);
 
 // --> linked_list
 linked_list_t *create_list_from_array(char **array);

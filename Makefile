@@ -17,6 +17,7 @@ SRC	=	src/main.c								\
 		src/history/display_hist.c				\
 		src/history/history_parser.c	\
 		src/history/find_cmd.c	\
+		src/history/find_cmd_str.c	\
 		src/command_handling/command_type.c		\
 		src/command_handling/command_error.c	\
 		src/command_handling/command_exec.c		\

@@ -79,7 +79,7 @@ char **get_args(shell_info_t *my_shell)
     char *user_input_cpy = my_strdup(user_input);
     char **args = NULL;
 
-    user_input = check_if_historic(user_input);
+    user_input = check_if_historic(user_input, my_shell);
     if (!user_input || no_cmd(user_input)) {
         return NULL;
     }

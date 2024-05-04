@@ -18,6 +18,9 @@ static char *get_cmd_from_hist(char *args)
     if (args[0] == HISTORY_CHAR) {
         return find_last_cmd();
     }
+    if (atoi(args) == 0 && args[0] != '0') {
+        return get_cmd_with_str(args);
+    }
     return get_the_n_cmd(args);
 }
 
@@ -110,7 +113,7 @@ static char *parse_cmd(char *cmd, bool *change)
     return cmd;
 }
 
-char *check_if_historic(char *cmd)
+char *check_if_historic(char *cmd, shell_info_t *my_shell)
 {
     bool change = false;
 
@@ -119,8 +122,10 @@ char *check_if_historic(char *cmd)
     }
     cmd = parse_cmd(cmd, &change);
     if (cmd == NULL) {
+        my_shell->exit_status = 1;
         return NULL;
     }
+    my_shell->exit_status = 0;
     if (change) {
         printf("%s\n", cmd);
     }

@@ -31,7 +31,8 @@ static char *check_dollar(char **args, shell_info_t *my_shell)
         if (i != 0)
             strcat(command, "/");
         if (strncmp(args2[i], "$", 1) == 0) {
-            strcat(command, return_value(args2[i], my_shell->env));
+            strcat(command,
+            return_value(my_str_to_word_array(args2[i], "$"), my_shell->env));
             continue;
         }
         strcat(command, args2[i]);
@@ -41,4 +42,9 @@ static char *check_dollar(char **args, shell_info_t *my_shell)
 
 char *return_value(char *args, shell_info_t *my_shell)
 {
+    char **element = get_element(my_shell->env, args);
+    char *command = NULL;
+
+    strcpy(command, element[1]);
+    return command;
 }

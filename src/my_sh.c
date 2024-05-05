@@ -70,7 +70,10 @@ static shell_info_t *set_shell_info(shell_info_t *my_shell)
     my_shell->exit_status = 0;
     my_shell->exit_shell = false;
     my_shell->color = malloc(sizeof(int) * 2);
+    my_shell->stopped_pid = -1;
     set_shell_pgid(my_shell);
+    my_shell->jobs = malloc(sizeof(process_t));
+    my_shell->jobs[0].nb = -1;
     if (my_shell->color == NULL) {
         perror("shell color malloc");
     } else {

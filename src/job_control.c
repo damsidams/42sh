@@ -63,14 +63,18 @@ void signal_child(int pid, int signal, shell_info_t *my_shell)
         current_pid = pid;
         return;
     }
-    if (signal == SIGTSTP)
+    if (signal == SIGTSTP) {
+        shell->stopped_pid = current_pid;
+        tcsetpgrp(STDIN_FILENO, getpgrp());
+        setpgid(0, 0);
         add_job(current_pid, shell, true);
+    }
     if (getpgrp() != current_pid) {
         kill(-current_pid, signal);
     }
 }
 
-void background_process(char **args, shell_info_t *my_shell)
+static void background_process_args(char **args, shell_info_t *my_shell)
 {
     int process_nb = 0;
 
@@ -88,22 +92,62 @@ void background_process(char **args, shell_info_t *my_shell)
     }
 }
 
-void foreground_process(char **args, shell_info_t *my_shell)
+void background_process(char **args, shell_info_t *my_shell)
+{
+    int len = my_strstrlen(args);
+
+    if (len == 1) {
+        signal_child(my_shell->stopped_pid, 0, NULL);
+        kill(my_shell->stopped_pid, SIGCONT);
+    }
+    if (len == 2) {
+        background_process_args(args, my_shell);
+    }
+}
+
+static void foreground_process_args(char **args, shell_info_t *my_shell)
 {
     int process_nb = 0;
     int wstatus = 0;
 
     if (args[1][0] == '%') {
         process_nb = my_getnbr(args[1]);
+        if (my_shell->stopped_pid != -1) {
+            kill(-my_shell->stopped_pid, SIGCONT);
+            my_shell->stopped_pid = -1;
+        }
         if (job_exist(process_nb, my_shell)) {
             signal_child(my_shell->jobs[process_nb - 1].pid, 0, NULL);
             tcsetpgrp(STDIN_FILENO, my_shell->jobs[process_nb - 1].pid);
             waitpid(-my_shell->jobs[process_nb - 1].pid, &wstatus, 0);
-            tcsetpgrp(STDIN_FILENO, getpgrp());
             check_seg_fault(wstatus, my_shell);
+            tcsetpgrp(STDIN_FILENO, getpgrp());
             return;
         } else {
             puts("fg: No such job.");
         }
+    }
+}
+
+void foreground_process(char **args, shell_info_t *my_shell)
+{
+    int len = my_strstrlen(args);
+    int wstatus = 0;
+
+    if (len == 1) {
+        if (my_shell->stopped_pid != -1) {
+            signal_child(my_shell->stopped_pid, 0, NULL);
+            tcsetpgrp(STDIN_FILENO, my_shell->stopped_pid);
+            kill(my_shell->stopped_pid, SIGCONT);
+            waitpid(my_shell->stopped_pid, &wstatus, 0);
+            check_seg_fault(wstatus, my_shell);
+            tcsetpgrp(STDIN_FILENO, getpgrp());
+            my_shell->stopped_pid = -1;
+        } else {
+            puts("fg: No current job.");
+        }
+    }
+    if (len == 2) {
+        foreground_process_args(args, my_shell);
     }
 }

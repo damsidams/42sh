@@ -32,6 +32,7 @@ typedef struct shell_info_t_s {
     alias_t *list_alias;
     process_t *jobs;
     int shell_pgid;
+    int stopped_pid;
 } shell_info_t;
 
 typedef struct linked_list_s {

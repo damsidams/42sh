@@ -61,11 +61,11 @@ char ***get_all_cmd(char ***all_cmds, char **args);
 bool valid_redirect(char **cmds);
 char *get_user_input(shell_info_t *my_shell);
 bool no_env(char **env);
-void my_alias(char **args, shell_info_t *my_shell);
-alias_t *init_alias(void);
-int exec_alias(shell_info_t *my_shell, char *args);
 void exec_cmd(char **args, shell_info_t *my_shell);
-char **check_dollar(char **args, shell_info_t *my_shell);
+int end_shell(shell_info_t *my_shell);
+
+// --> init
+shell_info_t *init_shell_info_t(char **env);
 
 // --> exec cmds
 void check_given_cmd_type(shell_info_t *my_shell, char *cmd);
@@ -113,6 +113,15 @@ void exec_no_pipe(char *cmd, shell_info_t *my_shell);
 // --> globbing
 int get_globbing_nb(char **command);
 void globbing(char **commands, shell_info_t *my_shell);
+
+// --> return_value
+int is_dollar(char *args);
+char **check_dollar(char **args, shell_info_t *my_shell);
+
+// --> alias
+void my_alias(char **args, shell_info_t *my_shell);
+alias_t *init_alias(void);
+int exec_alias(shell_info_t *my_shell, char *args);
 
 // --> gpt
 void gpt(char **args, shell_info_t *my_shell);

@@ -39,6 +39,17 @@ static char *return_value(char **args, shell_info_t *my_shell)
     return command;
 }
 
+int is_dollar(char *args)
+{
+    if (args == NULL)
+        return 0;
+    for (int i = 0; args[i] != '\0'; i++) {
+        if (args[i] == '$')
+            return 1;
+    }
+    return 0;
+}
+
 char **check_dollar(char **args, shell_info_t *my_shell)
 {
     char **args2 = my_str_to_word_array(args[1], "/");

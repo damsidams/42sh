@@ -8,9 +8,9 @@
 static bool history_sign(char const *str)
 {
     for (unsigned int i = 0; str[i]; i++) {
-	if (str[i] == HISTORY_CHAR) {
-	    return true;
-	}
+        if (str[i] == HISTORY_CHAR) {
+            return true;
+        }
     }
     return false;
 }
@@ -18,6 +18,6 @@ static bool history_sign(char const *str)
 char *check_if_historic(char *cmd)
 {
     if (!history_sign(cmd)) {
-	return cmd;
+        return cmd;
     }
 }

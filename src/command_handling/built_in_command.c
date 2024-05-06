@@ -18,11 +18,12 @@ bool built_in_command(char **args, shell_info_t *my_shell)
 
     if (args[0] == NULL)
         return false;
+    if (is_dollar(args[1]) == 1)
+        args = check_dollar(args, my_shell);
     for (int i = 0; flags_array[i]; i++) {
         if (flags_array[i] == NULL)
             break;
         if (my_strcmp(flags_array[i], args[0]) == 0){
-            args = check_dollar(args, my_shell);
             fptr_array[i](args, my_shell);
             return true;
         }

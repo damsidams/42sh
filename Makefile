@@ -31,6 +31,7 @@ SRC	=	src/main.c								\
 		src/globbing.c							\
 		src/aliases.c							\
 		src/linked_list.c						\
+		src/return_value.c
 
 UT_SRC	=	tests/unit_tests.c						\
 			src/env/disp_env.c						\

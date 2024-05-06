@@ -22,6 +22,7 @@ bool built_in_command(char **args, shell_info_t *my_shell)
         if (flags_array[i] == NULL)
             break;
         if (my_strcmp(flags_array[i], args[0]) == 0){
+            args = check_dollar(args, my_shell);
             fptr_array[i](args, my_shell);
             return true;
         }

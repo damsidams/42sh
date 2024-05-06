@@ -5,6 +5,10 @@
 ** Find the command in history
 */
 
+#include <stdio.h>
+#include <stddef.h>
+#include <string.h>
+#include <stdlib.h>
 #include "shell.h"
 
 void remove_from_file(char **file_content, unsigned int line_nb)
@@ -50,7 +54,7 @@ static char *create_str_from_strstr(char **args)
 char *find_cmd_in_line(char *line)
 {
     char **args = my_pimp_str_to_wa(line, " ");
-    char *cmd = strdup(args[2]);
+    char *cmd = create_str_from_strstr(args + 2);
 
     free_str_array(args);
     return cmd;
@@ -59,6 +63,7 @@ char *find_cmd_in_line(char *line)
 static char *find_cmd_by_event(char **lines, int cmd_nb)
 {
     char *cmd = NULL;
+    char **args = NULL;
 
     for (unsigned int i = 0; lines[i]; i++) {
         args = my_pimp_str_to_wa(lines[i], " \n");
@@ -68,6 +73,7 @@ static char *find_cmd_by_event(char **lines, int cmd_nb)
             remove_from_file(lines, i);
             return cmd;
         }
+        free_str_array(args);
     }
     dprintf(2, "%d: Event not found.\n", cmd_nb);
     return NULL;
@@ -79,10 +85,12 @@ char *not_found_error(char const *cmd_nb)
     return NULL;
 }
 
-static char *get_n_previous_cmd(char **lines, int cmd_nb)
+static char *get_n_previous_cmd(char **lines, int cmd_nb, char const *hist)
 {
+    char *cmd = NULL;
+
     if (my_strstrlen(lines) < cmd_nb * -1) {
-        return not_found_error(cmd_nb);
+        return not_found_error(hist);
     }
     cmd = find_cmd_in_line(lines[my_strstrlen(lines) + cmd_nb]);
     remove_from_file(lines, my_strstrlen(lines) + cmd_nb);
@@ -90,32 +98,18 @@ static char *get_n_previous_cmd(char **lines, int cmd_nb)
     return cmd;
 }
 
-static bool is_zero(char *cmd)
-{
-    if (cmd == NULL) {
-        return false;
-    }
-    for (unsigned int i = 0; cmd[i]; i++) {
-        if (cmd[i] != '0') {
-            return false;
-        }
-    }
-    return true;
-}
-
 char *get_the_n_cmd(char *history_arg)
 {
     char *buffer = get_file_content(HISTORIC_FILENAME);
     char **lines = NULL;
-    char *cmd = NULL;
-    int cmd_nb = atoi(history_arg + 1);
+    int cmd_nb = atoi(history_arg);
 
     if (buffer == NULL || cmd_nb == 0) {
         return not_found_error(history_arg + 1);
     }
     lines = my_pimp_str_to_wa(buffer, "\n");
     if (cmd_nb < 0) {
-        return get_n_previous_cmd(lines, cmd_nb);
+        return get_n_previous_cmd(lines, cmd_nb, history_arg);
     }
     return find_cmd_by_event(lines, cmd_nb);
 }
@@ -124,6 +118,7 @@ char *find_last_cmd(void)
 {
     char *buffer = get_file_content(HISTORIC_FILENAME);
     char **lines = NULL;
+    char **line = NULL;
     char *cmd = NULL;
 
     if (buffer == NULL) {
@@ -134,5 +129,6 @@ char *find_last_cmd(void)
     cmd = create_str_from_strstr(line + 2);
     remove_from_file(lines, my_strstrlen(lines) - 1);
     free_str_array(lines);
+    free_str_array(line);
     return cmd;
 }

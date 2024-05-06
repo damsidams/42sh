@@ -15,6 +15,7 @@
     #define ERROR 84
     #define SUCCESS_EXIT 0
     #define SUCCESS 0
+    #define HISTORIC_ERROR -1
     #define SYS_ERROR -1
     #define OPEN_ERROR -1
     #define BACKTICK_ERROR -1

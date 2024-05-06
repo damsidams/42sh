@@ -115,6 +115,8 @@ static char *parse_cmd(char *cmd, bool *change)
 
 char *check_if_historic(char *cmd, shell_info_t *my_shell)
 {
+    bool change = false;
+
     if (!history_sign(cmd)) {
         return cmd;
     }

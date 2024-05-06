@@ -47,11 +47,7 @@
 
 int my_sh(char **env);
 char **get_paths(char **env);
-void disp_env(char **args, shell_info_t *my_shell);
 void change_dir(char **args, shell_info_t *my_shell);
-void set_env(char **args, shell_info_t *my_shell);
-void set_env_no_disp(char **args, shell_info_t *my_shell);
-void unset_env(char **args, shell_info_t *my_shell);
 char *get_name(char **env, int index);
 void command_handling(shell_info_t *my_shell, char **args);
 void set_color(char **args, shell_info_t *my_shell);
@@ -63,8 +59,13 @@ bool check_pipe(char *cmd, shell_info_t *my_shell);
 char ***get_all_cmd(char ***all_cmds, char **args);
 bool valid_redirect(char **cmds);
 char *get_user_input(shell_info_t *my_shell);
-bool no_env(char **env);
 int end_shell(shell_info_t *my_shell);
+
+// -->env
+void disp_env(char **args, shell_info_t *my_shell);
+void set_env(char **args, shell_info_t *my_shell);
+void unset_env(char **args, shell_info_t *my_shell);
+bool no_env(char **env);
 
 // --> init
 shell_info_t *init_shell_info_t(char **env);

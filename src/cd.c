@@ -28,7 +28,7 @@ static void set_pwd(shell_info_t *my_shell)
     char *args[] = {"setenv", "PWD", new_path, NULL};
 
     if (my_shell->env) {
-        set_env_no_disp(args, my_shell);
+        set_env(args, my_shell);
     }
     free(new_path);
 }

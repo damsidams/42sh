@@ -15,10 +15,9 @@
     #define ERROR 84
     #define SUCCESS_EXIT 0
     #define SUCCESS 0
+    #define HISTORIC_ERROR -1
     #define SYS_ERROR -1
     #define OPEN_ERROR -1
-    #define BACKTICK_ERROR -1
-    #define HISTORIC_ERROR -1
     #define INVALID_NULL_COMMAND -1
     #define READ_SIZE 1000000
     #define EXIT_STATUS_ERROR 139
@@ -64,15 +63,14 @@ char ***get_all_cmd(char ***all_cmds, char **args);
 bool valid_redirect(char **cmds);
 char *get_user_input(shell_info_t *my_shell);
 bool no_env(char **env);
-int end_shell(shell_info_t *my_shell);
-
-// --> init
-shell_info_t *init_shell_info_t(char **env);
-
 void my_alias(char **args, shell_info_t *my_shell);
 alias_t *init_alias(void);
 int exec_alias(shell_info_t *my_shell, char *args);
 void exec_cmd(char **args, shell_info_t *my_shell);
+int end_shell(shell_info_t *my_shell);
+
+// --> init
+shell_info_t *init_shell_info_t(char **env);
 
 // --> exec cmds
 void check_given_cmd_type(shell_info_t *my_shell, char *cmd);
@@ -84,6 +82,13 @@ int add_command_to_save(char const *cmd);
 linked_list_t *get_array_from_prev_cmd(char *current_cmd);
 int my_special_getnbr(char const *str);
 int read_history(char const *filename);
+char *check_if_historic(char *cmd, shell_info_t *my_shell);
+char *find_last_cmd(void);
+char *get_the_n_cmd(char *str);
+void remove_from_file(char **, unsigned int);
+char *find_cmd_in_line(char *);
+char *not_found_error(char const *event);
+char *get_cmd_with_str(char *str);
 char *check_if_historic(char *cmd, shell_info_t *my_shell);
 char *find_last_cmd(void);
 char *get_the_n_cmd(char *str);
@@ -128,6 +133,15 @@ void exec_no_pipe(char *cmd, shell_info_t *my_shell);
 // --> globbing
 int get_globbing_nb(char **command);
 void globbing(char **commands, shell_info_t *my_shell);
+
+// --> return_value
+int is_dollar(char *args);
+char **check_dollar(char **args, shell_info_t *my_shell);
+
+// --> alias
+void my_alias(char **args, shell_info_t *my_shell);
+alias_t *init_alias(void);
+int exec_alias(shell_info_t *my_shell, char *args);
 
 // --> gpt
 void gpt(char **args, shell_info_t *my_shell);

@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** aliases
+** lisagoulmot
 ** File description:
 ** aliases
 */

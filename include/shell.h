@@ -126,4 +126,9 @@ void gpt(char **args, shell_info_t *my_shell);
 // --> auto-complete
 void auto_complete(shell_input_t *user_input, shell_info_t *my_shell);
 
+// --> local varaiables
+void set_local(char **args, shell_info_t *my_shell);
+void unset_local(char **args, shell_info_t *my_shell);
+
+
 #endif

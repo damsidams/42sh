@@ -33,6 +33,8 @@ SRC	=	src/main.c								\
 		src/linked_list.c	\
 		src/shell_info.c	\
 		src/aliases.c							\
+		src/local/set.c			\
+		src/local/unset.c		\
 
 UT_SRC	=	tests/unit_tests.c						\
 			src/env/disp_env.c						\

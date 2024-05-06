@@ -15,8 +15,15 @@ typedef struct alias_s {
     struct alias_s *next;
 }alias_t;
 
+typedef struct local_s {
+    char *name;
+    char *value;
+    struct local_s *next;
+} local_t;
+
 typedef struct shell_info_s {
     char **env;
+    local_t *local;
     char *last_path;
     int exit_status;
     int *color;

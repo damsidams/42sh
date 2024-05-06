@@ -51,7 +51,7 @@ static char *search_file(char *cmd_path, char *cmd)
     return NULL;
 }
 
-static int args_len(char **args)
+/*static int args_len(char **args)
 {
     int len = 0;
 
@@ -61,8 +61,7 @@ static int args_len(char **args)
         }
     }
     return len;
-}
-
+    }*/
 static void replace_user_input(shell_input_t *user_input, char **args)
 {
     delete_string(user_input);

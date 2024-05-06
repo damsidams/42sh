@@ -16,7 +16,6 @@
 #include "shell.h"
 #include "struct.h"
 
-
 static char *get_path_to_display(char *actual_dir, int index)
 {
     int len = 0;

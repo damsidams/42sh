@@ -7,6 +7,9 @@
 
 static bool history_sign(char const *str)
 {
+    if (str == NULL) {
+        return false;
+    }
     for (unsigned int i = 0; str[i]; i++) {
         if (str[i] == HISTORY_CHAR) {
             return true;

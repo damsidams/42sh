@@ -15,11 +15,8 @@ SRC	=	src/main.c								\
 		src/history/special_getnbr.c			\
 		src/history/time.c							\
 		src/history/display_hist.c				\
-		src/history/history_parser.c	\
 		src/history/find_cmd.c	\
-		src/history/find_cmd_str.c	\
 		src/history/history_parser.c	\
-		src/history/find_cmd.c	\
 		src/history/find_cmd_str.c	\
 		src/command_handling/command_type.c		\
 		src/command_handling/command_error.c	\
@@ -34,13 +31,12 @@ SRC	=	src/main.c								\
 		src/file.c								\
 		src/backtick/backtick.c							\
 		src/backtick/get_output.c							\
-		src/backtick/backtick.c							\
-		src/backtick/get_output.c							\
 		src/check_and_or.c						\
 		src/globbing.c							\
 		src/linked_list.c	\
 		src/shell_info.c	\
 		src/aliases.c							\
+		src/return_value.c	\
 
 UT_SRC	=	tests/unit_tests.c						\
 			src/env/disp_env.c						\
@@ -68,6 +64,7 @@ UT_SRC	=	tests/unit_tests.c						\
 			src/globbing.c							\
 			src/linked_list.c	\
 			src/shell_info.c	\
+			src/return_value.c	\
 
 OBJ	=	$(SRC:.c=.o)
 

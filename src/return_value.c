@@ -4,10 +4,11 @@
 ** File description:
 ** return value
 */
-#include "shell.h"
 #include <stddef.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include "shell.h"
 
 static char **get_element(char **env, char *element)
 {

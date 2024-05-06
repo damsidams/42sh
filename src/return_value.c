@@ -49,7 +49,7 @@ char **check_dollar(char **args, shell_info_t *my_shell)
         if (strncmp(args2[i], "$", 1) == 0) {
             lengh = strlen(return_value(my_str_to_word_array(args2[i], "$")
                 , my_shell) + 2);
-            command = malloc(malloc(sizeof(char) * lengh));
+            command = malloc((sizeof(char) * lengh));
             strcpy(command,
             return_value(my_str_to_word_array(args2[i], "$"), my_shell));
             continue;

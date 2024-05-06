@@ -61,6 +61,7 @@ void exec_cmd(char **args, shell_info_t *my_shell)
 
     child = fork();
     if (child == 0) {
+        args = check_dollar(args, my_shell);
         exec_paths(args, my_shell);
     } else {
         waitpid(child, &wstatus, 0);

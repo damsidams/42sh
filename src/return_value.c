@@ -17,6 +17,9 @@ static char **get_element(char **env, char *element)
         return NULL;
     }
     while (env[i] && my_strncmp(env[i], element, strlen(element)) != 0) {
+        if (env[i + 1] == NULL &&
+            my_strncmp(env[i], element, strlen(element)) != 0)
+            return NULL;
         i++;
     }
     return my_str_to_word_array(env[i], "=");
@@ -25,8 +28,13 @@ static char **get_element(char **env, char *element)
 static char *return_value(char **args, shell_info_t *my_shell)
 {
     char **element = get_element(my_shell->env, args[0]);
-    char *command = malloc(sizeof(char) * strlen(element[1]) + 1);
+    char *command = NULL;
 
+    if (element == NULL) {
+        printf("%s: Undefined variable.", args[0]);
+        return NULL;
+    }
+    command = malloc(sizeof(char) * strlen(element[1]) + 1);
     strcpy(command, element[1]);
     return command;
 }
@@ -35,21 +43,22 @@ char **check_dollar(char **args, shell_info_t *my_shell)
 {
     char **args2 = my_str_to_word_array(args[1], "/");
     char *command = NULL;
+    int lengh = 0;
 
     for (int i = 0; args2[i] != NULL; i++) {
-        command = malloc(sizeof(char) * strlen(args2[i]) + 1);
-        if (i == 0)
-            strcpy(command, "/");
-        if (i != 0)
-            strcat(command, "/");
-    printf("ok\n");
         if (strncmp(args2[i], "$", 1) == 0) {
-            strcat(command,
+            lengh = strlen(return_value(my_str_to_word_array(args2[i], "$")
+                , my_shell) + 2);
+            command = malloc(malloc(sizeof(char) * lengh));
+            strcpy(command,
             return_value(my_str_to_word_array(args2[i], "$"), my_shell));
             continue;
         }
-        strcat(command, args2[i]);
+        command = malloc(sizeof(char) * strlen(args2[i]) + 1);
+        strcpy(command, args2[i]);
     }
     strcpy(args[1], command);
+    free(command);
+    free(args2);
     return args;
 }

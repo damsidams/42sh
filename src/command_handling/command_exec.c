@@ -72,6 +72,7 @@ void exec_cmd(char **args, shell_info_t *my_shell)
 void command_handling(shell_info_t *my_shell, char **args)
 {
     args = check_redirect(args, my_shell);
+    exec_parentheses(my_shell, args);
     if (my_shell->exit_shell || !args) {
         free_str_array(args);
         return;

@@ -78,7 +78,9 @@ static int side_checks(char *user_input, shell_info_t *my_shell)
     if (!user_input) {
         return ERROR;
     }
-    if (!check_parentheses_order(user_input)) {
+    if (!check_parentheses_order(user_input) ||
+        parentheses_badly_placed(user_input)) {
+	my_shell->exit_status = 1;
         return ERROR;
     }
     user_input = check_if_historic(user_input, my_shell);

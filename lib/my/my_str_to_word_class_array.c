@@ -93,7 +93,7 @@ static char *new_word(char const *str, int start, char *delim)
         inew++;
     }
     new_word[inew] = '\0';
-    if (is_exception(new_word[0]) && new_word[0] != '`')
+    if (is_exception(new_word[0]) && new_word[0] == '\"')
         remove_exception(&new_word);
     return new_word;
 }

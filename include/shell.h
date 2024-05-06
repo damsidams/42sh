@@ -109,9 +109,10 @@ char **replace_backtick(char **cmd, shell_info_t *my_shell);
 char *get_backtick_output(shell_info_t *shell_info, char *cmd);
 
 // --> parentheses
-bool exec_parentheses(shell_info_t *my_shell, char *cmd);
+bool exec_parentheses(shell_info_t *my_shell, char **cmd);
 bool parentheses_badly_placed(char const *cmd);
 bool check_parentheses_order(char const *str);
+bool par_around(char const *str);
 
 // --> and or
 bool check_and_or(char *cmd, shell_info_t *my_shell);

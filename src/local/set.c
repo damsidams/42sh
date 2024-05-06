@@ -115,9 +115,11 @@ void set_local(char **args, shell_info_t *my_shell)
 {
     if (my_strstrlen(args) == 1) {
         print_list(my_shell->local);
+        my_shell->exit_status = SUCCESS;
         return;
     }
     for (int i = 1; args[i]; i++) {
         set_var(args[i], my_shell);
+        my_shell->exit_status = SUCCESS;
     }
 }

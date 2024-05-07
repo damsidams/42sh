@@ -11,6 +11,7 @@ SRC	=	src/main.c								\
 		src/env/setenv.c						\
 		src/line_parsing/get_cmd.c				\
 		src/line_parsing/get_input.c			\
+		src/line_parsing/get_input_getline.c	\
 		src/history/historic.c					\
 		src/history/special_getnbr.c			\
 		src/history/time.c							\
@@ -35,6 +36,7 @@ SRC	=	src/main.c								\
 		src/aliases.c							\
 		src/local/set.c			\
 		src/local/unset.c		\
+		src/local/insert_var.c		\
 
 UT_SRC	=	tests/unit_tests.c						\
 			src/env/disp_env.c						\

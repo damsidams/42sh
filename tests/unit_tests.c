@@ -17,7 +17,7 @@ void redirect_all_std(void)
 
 Test(unit_test, get_file_size)
 {
-    cr_assert_eq(get_file_size("src/main.c"), 263);
+    cr_assert_eq(get_file_size("src/main.c"), 271);
     cr_assert_eq(get_file_size("not existing file"), OPEN_ERROR);
 }
 

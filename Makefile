@@ -41,6 +41,7 @@ SRC	=	src/main.c								\
 		src/return_value.c	\
 
 UT_SRC	=	tests/unit_tests.c						\
+			tests/globing.c	\
 			src/env/disp_env.c						\
 			src/env/unsetenv.c						\
 			src/env/setenv.c						\

@@ -139,7 +139,7 @@ static linked_list_t *add_command_to_end(char *buffer, char *cmd)
 
     file_by_line = my_pimp_str_to_wa(buffer, "\n");
     free(buffer);
-    if (file_by_line == NULL) {
+    if (file_by_line == NULL || !cmd) {
         return NULL;
     }
     final_array = malloc(sizeof(char *) * (my_strstrlen(file_by_line) + 2));

@@ -45,4 +45,9 @@ enum sep_type {
     End
 };
 
+enum historic_direction {
+    UP,
+    DOWN
+};
+
 #endif

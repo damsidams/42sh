@@ -52,7 +52,9 @@ linked_list_t *create_list_from_array(char **array)
             free_str_array(array);
             return NULL;
         }
-        prev->next = node;
+        if (prev) {
+            prev->next = node;
+        }
         prev = node;
     }
     return node;

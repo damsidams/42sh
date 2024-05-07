@@ -48,44 +48,6 @@ static linked_list_t *move_cursor(shell_input_t *user_input, char direction,
     return historic;
 }
 
-static void delete_char(shell_input_t *user_input)
-{
-    if (user_input->index > 0 && user_input->cursor > 0) {
-        memmove(&(user_input->input[user_input->cursor - 1]),
-            &(user_input->input[user_input->cursor]),
-            user_input->index - user_input->cursor + 1);
-        user_input->index--;
-        user_input->cursor--;
-        printf("\033[D\033[P");
-        for (int i = user_input->cursor; i < user_input->index; i++) {
-            printf("%c", user_input->input[i]);
-        }
-        putchar(' ');
-        for (int i = user_input->index + 1; i > user_input->cursor; i--) {
-            printf("%s", MOVE_LEFT);
-        }
-    }
-}
-
-static void insert_char(shell_input_t *user_input, char c)
-{
-    if (user_input->index < MAX_LENGTH - 1) {
-        memmove(&(user_input->input[user_input->cursor + 1]),
-            &(user_input->input[user_input->cursor]),
-            user_input->index - user_input->cursor + 1);
-        user_input->input[user_input->cursor] = c;
-        user_input->index++;
-        user_input->cursor++;
-        putchar(c);
-        for (int i = user_input->cursor; i < user_input->index; i++) {
-            putchar(user_input->input[i]);
-        }
-        for (int i = user_input->index; i > user_input->cursor; i--) {
-            printf("%s", MOVE_LEFT);
-        }
-    }
-}
-
 static struct termios init_shell_settings(void)
 {
     struct termios new_settings;
@@ -138,20 +100,6 @@ static char *finish_input(shell_input_t *user_input,
     if (last_char == EOT)
         return "EOT";
     return user_input->input;
-}
-
-void insert_string(shell_input_t *user_input, char *to_insert)
-{
-    for (int i = 0; to_insert[i] != '\0'; i++) {
-        insert_char(user_input, to_insert[i]);
-    }
-}
-
-void delete_string(shell_input_t *user_input)
-{
-    while (my_strlen(user_input->input) != 0) {
-        delete_char(user_input);
-    }
 }
 
 char *get_prompt(shell_info_t *my_shell)

@@ -33,9 +33,9 @@ static linked_list_t *create_node(char *value, linked_list_t *prev)
         return NULL;
     }
     if (strcmp(value, "") == 0) {
-	element->value = value;
+        element->value = value;
     } else {
-	element->value = find_cmd_in_line(value);
+        element->value = find_cmd_in_line(value);
     }
     element->prev = prev;
     element->next = NULL;

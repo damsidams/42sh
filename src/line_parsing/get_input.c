@@ -15,6 +15,11 @@
 static linked_list_t *get_history_cmd(shell_input_t *user_input,
     linked_list_t *historic, int direction)
 {
+    if (historic && !historic->next && user_input->input) {
+        historic->value = strdup(user_input->input);
+        delete_string(user_input);
+        insert_string(user_input, historic->value);
+    }
     if (direction == UP && historic->prev) {
         historic = historic->prev;
         delete_string(user_input);

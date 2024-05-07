@@ -20,11 +20,7 @@ char *get_user_input(shell_info_t *my_shell)
 {
     char *user_input = NULL;
 
-    if (my_shell->is_a_tty) {
-        user_input = get_prompt(my_shell);
-        putchar('\n');
-    } else
-        user_input = no_entry_input(my_shell);
+    putchar('\n');
     if (!user_input)
         return NULL;
     if (strcmp(user_input, "EOT") == 0) {

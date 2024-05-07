@@ -11,7 +11,6 @@ SRC	=	src/main.c								\
 		src/env/setenv.c						\
 		src/line_parsing/get_cmd.c				\
 		src/line_parsing/get_input.c			\
-		src/line_parsing/get_input_getline.c	\
 		src/history/historic.c					\
 		src/history/special_getnbr.c			\
 		src/history/time.c							\

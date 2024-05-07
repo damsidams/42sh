@@ -106,7 +106,6 @@ bool check_and_or(char *cmd, shell_info_t *my_shell);
 char *get_prompt(shell_info_t *my_shell);
 void delete_string(shell_input_t *user_input);
 void insert_string(shell_input_t *user_input, char *to_insert);
-char *no_entry_input(shell_info_t *my_shell);
 
 // --> command error
 void cmd_not_found(char **args, shell_info_t *my_shell,

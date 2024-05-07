@@ -15,10 +15,10 @@
     #define ERROR 84
     #define SUCCESS_EXIT 0
     #define SUCCESS 0
+    #define HISTORIC_ERROR -1
+    #define BACKTICK_ERROR -1
     #define SYS_ERROR -1
     #define OPEN_ERROR -1
-    #define BACKTICK_ERROR -1
-    #define HISTORIC_ERROR -1
     #define INVALID_NULL_COMMAND -1
     #define READ_SIZE 1000000
     #define EXIT_STATUS_ERROR 139
@@ -64,15 +64,14 @@ char ***get_all_cmd(char ***all_cmds, char **args);
 bool valid_redirect(char **cmds);
 char *get_user_input(shell_info_t *my_shell);
 bool no_env(char **env);
-int end_shell(shell_info_t *my_shell);
-
-// --> init
-shell_info_t *init_shell_info_t(char **env);
-
 void my_alias(char **args, shell_info_t *my_shell);
 alias_t *init_alias(void);
 int exec_alias(shell_info_t *my_shell, char *args);
 void exec_cmd(char **args, shell_info_t *my_shell);
+int end_shell(shell_info_t *my_shell);
+
+// --> init
+shell_info_t *init_shell_info_t(char **env);
 
 // --> exec cmds
 void check_given_cmd_type(shell_info_t *my_shell, char *cmd);
@@ -115,6 +114,7 @@ bool check_and_or(char *cmd, shell_info_t *my_shell);
 char *get_prompt(shell_info_t *my_shell);
 void delete_string(shell_input_t *user_input);
 void insert_string(shell_input_t *user_input, char *to_insert);
+char *no_entry_input(shell_info_t *my_shell);
 
 // --> command error
 void cmd_not_found(char **args, shell_info_t *my_shell,
@@ -128,6 +128,15 @@ void exec_no_pipe(char *cmd, shell_info_t *my_shell);
 // --> globbing
 int get_globbing_nb(char **command);
 void globbing(char **commands, shell_info_t *my_shell);
+
+// --> return_value
+int is_dollar(char *args);
+char **check_dollar(char **args, shell_info_t *my_shell);
+
+// --> alias
+void my_alias(char **args, shell_info_t *my_shell);
+alias_t *init_alias(void);
+int exec_alias(shell_info_t *my_shell, char *args);
 
 // --> gpt
 void gpt(char **args, shell_info_t *my_shell);

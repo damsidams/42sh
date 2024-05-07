@@ -59,6 +59,10 @@ void exec_cmd(char **args, shell_info_t *my_shell)
     pid_t child;
     int wstatus = 0;
 
+    if (is_dollar(args[1]) == 1) {
+        printf("%s\n", args[1]);
+        args = check_dollar(args, my_shell);
+    }
     child = fork();
     if (child == 0) {
         exec_paths(args, my_shell);

@@ -17,6 +17,7 @@
     #define SUCCESS 0
     #define SYS_ERROR -1
     #define OPEN_ERROR -1
+    #define NOT_ALLOWED 1
     #define BACKTICK_ERROR -1
     #define HISTORIC_ERROR -1
     #define INVALID_NULL_COMMAND -1
@@ -46,9 +47,6 @@
     #define MOVE_DOWN "\033[1B"
 
 int my_sh(char **env);
-char **get_paths(char **env);
-void change_dir(char **args, shell_info_t *my_shell);
-char *get_name(char **env, int index);
 void command_handling(shell_info_t *my_shell, char **args);
 void set_color(char **args, shell_info_t *my_shell);
 int valid_color(char *color);
@@ -59,25 +57,32 @@ bool check_pipe(char *cmd, shell_info_t *my_shell);
 char ***get_all_cmd(char ***all_cmds, char **args);
 bool valid_redirect(char **cmds);
 char *get_user_input(shell_info_t *my_shell);
+char **create_strstr(char *s1, char *s2, char *s3, char *s4);
 int end_shell(shell_info_t *my_shell);
+
+// --> built in functions
+void change_dir(char **args, shell_info_t *my_shell);
 
 // -->env
 void disp_env(char **args, shell_info_t *my_shell);
 void set_env(char **args, shell_info_t *my_shell);
 void unset_env(char **args, shell_info_t *my_shell);
 bool no_env(char **env);
+char *get_name(char **env, int index);
+char **get_paths(char **env);
 
 // --> init
 shell_info_t *init_shell_info_t(char **env);
 
+// --> alias
 void my_alias(char **args, shell_info_t *my_shell);
 alias_t *init_alias(void);
 int exec_alias(shell_info_t *my_shell, char *args);
-void exec_cmd(char **args, shell_info_t *my_shell);
 
 // --> exec cmds
 void check_given_cmd_type(shell_info_t *my_shell, char *cmd);
 bool built_in_command(char **args, shell_info_t *my_shell);
+void exec_cmd(char **args, shell_info_t *my_shell);
 
 // --> historic
 void display_historic(char **args, shell_info_t *my_shell);

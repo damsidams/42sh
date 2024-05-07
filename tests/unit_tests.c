@@ -1,32 +1,130 @@
 /*
-** EPITECH PROJECT, 2023
-** B-PSU-200-PAR-2-1-minishell1-nicolas.nunney
+** EPITECH PROJECT, 2024
+** unit_tests
 ** File description:
-** unit_tests.c
+** function that allow me to test my program
 */
 
-#include "../include/shell.h"
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
+#include <stddef.h>
+#include "../include/shell.h"
 
-void redirect_all_std(void)
+void redirect_all_stdout(void)
 {
     cr_redirect_stdout();
     cr_redirect_stderr();
 }
 
-Test(unit_test, get_file_size)
+/* initialisation */
+
+Test(unit_test, set_stuct_with_good_env)
 {
-    cr_assert_eq(get_file_size("src/main.c"), 263);
-    cr_assert_eq(get_file_size("not existing file"), OPEN_ERROR);
+    char **env = malloc(sizeof(char) * 3);
+    shell_info_t *my_shell = NULL;
+
+    env[0] = my_strdup("PATH=vehifvhu");
+    env[1] = my_strdup("HOST=ezfhbvj");
+    env[2] = NULL;
+    my_shell = init_shell_info_t(env);
+    cr_assert_not_null(my_shell);
 }
 
-Test(unit_test, open_append)
+Test(unit_test, set_stuct_with_env_null)
 {
-    open_append("test_file");
+    shell_info_t *my_shell = NULL;
+
+    my_shell = init_shell_info_t(NULL);
+    cr_assert_not_null(my_shell);
 }
 
-Test(unit_test, read_open)
+/* env */
+
+Test(unit_test, set_env_funcs, .init=redirect_all_stdout)
 {
-    read_open("unknow file");
+    char **env = create_strstr("PATH=~/delivery/Project/42sh", "HOST=nicolo", "BAB=ops", "NB=lo");
+    char *av[] = {"setenv", NULL};
+    char *av2[] = {"setenv", "test", NULL};
+    char *av3[] = {"setenv", "test75", "42", NULL};
+    char *av4[] = {"setenv", "45test75", "84", NULL};
+    shell_info_t *my_shell = NULL;
+
+    my_shell = init_shell_info_t(env);
+    set_env(av, my_shell);
+    cr_assert_eq(my_shell->exit_status, SUCCESS);
+    set_env(av2, my_shell), SUCCESS;
+    cr_assert_eq(my_shell->exit_status, SUCCESS);
+    set_env(av3, my_shell), SUCCESS;
+    cr_assert_eq(my_shell->exit_status, SUCCESS);
+    set_env(av4, my_shell), NOT_ALLOWED;
+    cr_assert_eq(my_shell->exit_status, NOT_ALLOWED);
+    free_str_array(env);
+}
+
+Test(unit_test, unset_env_funcs, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=~/delivery/Project/42sh", "HOST=nicolo", "test=ops", "NB=lo");
+    char *av[] = {"unsetenv", NULL};
+    char *av2[] = {"unsetenv", "test", NULL};
+    char *av3[] = {"unsetenv", "7test75", NULL};
+    shell_info_t *my_shell = init_shell_info_t(env);
+
+    unset_env(av, my_shell);
+    cr_assert_eq(my_shell->exit_status, NOT_ALLOWED);
+    unset_env(av2, my_shell);
+    cr_assert_eq(my_shell->exit_status, SUCCESS);
+    unset_env(av3, my_shell);
+    cr_assert_eq(my_shell->exit_status, SUCCESS);
+    free_str_array(env);
+}
+
+Test(unit_test, env_get_name)
+{
+    char **env = create_strstr("PATH=~/delivery/Project/42sh", "HOST=nicolo", "test=ops", "NB=lo");
+
+    cr_assert_str_eq(get_name(env, 2), "test");
+}
+
+Test(unit_test, env_get_path)
+{
+    char **env = create_strstr("PATH=~/delivery/Project/42sh", "HOST=nicolo", "test=ops", "NB=lo");
+    char **strstr = get_paths(env);
+    char **env2 = create_strstr("NO=noenv", "", "", "");
+    char **t2 = get_paths(env2);
+
+    cr_assert_str_eq(strstr[0], "PATH");
+    cr_assert_str_eq(strstr[1], "~/delivery/Project/42sh");
+    cr_assert_null(t2);
+}
+
+/* built in*/
+
+Test(unit_test, change_dir)
+{
+    char **env = create_strstr("PATH=~/delivery/Project/42sh", "HOST=nicolo", "test=ops", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args = malloc(sizeof(char *) * 3);
+    
+    args[0] = strdup("cd");
+    args[1] = strdup("-");
+    args[2] = NULL;
+    change_dir(args, my_shell);
+    cr_assert_eq(my_shell->exit_status, SUCCESS);
+}
+
+/* execution */
+
+Test(unit_test, command_handling)
+{
+    char **env = create_strstr("PATH=~/delivery/Project/42sh", "HOST=nicolo", "test=ops", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args = malloc(sizeof(char *) * 4);
+    
+    args[0] = strdup("ls");
+    args[1] = strdup(">");
+    args[2] = strdup("tmp");
+    args[3] = NULL;
+    command_handling(my_shell, args);
+    cr_assert_eq(my_shell->exit_status, SUCCESS);
+    command_handling(my_shell, NULL);
 }

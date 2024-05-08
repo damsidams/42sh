@@ -106,6 +106,7 @@ void remove_from_file(char **, unsigned int);
 char *find_cmd_in_line(char *);
 char *not_found_error(char const *event);
 char *get_cmd_with_str(char *str);
+int check_buffer(char const *buffer, int fd);
 
 // --> linked_list
 linked_list_t *create_list_from_array(char **array);

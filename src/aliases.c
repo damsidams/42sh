@@ -39,23 +39,7 @@ static void display_list_alias(shell_info_t *my_shell)
     }
 }
 
-int exec_alias(shell_info_t *my_shell, char *args)
-{
-    alias_t *current = my_shell->list_alias;
-
-    while (current) {
-        if (alias_loop(args, my_shell) == 1)
-            return 1;
-        if (my_strcmp(current->alias_cmd, args) == 0) {
-            exec_alias_loop(my_shell, current);
-            return 1;
-        }
-        current = current->next;
-    }
-    return 0;
-}
-
-char *set_buffer(char *buffer, int fd, alias_t *current)
+static char *set_buffer(char *buffer, int fd, alias_t *current)
 {
     int lengh = 0;
 
@@ -69,7 +53,7 @@ char *set_buffer(char *buffer, int fd, alias_t *current)
     return buffer;
 }
 
-int create_42rc(shell_info_t *my_shell)
+static int create_42rc(shell_info_t *my_shell)
 {
     int fd = open("42rc", O_CREAT | O_TRUNC | O_WRONLY, 0666);
     alias_t *current = my_shell->list_alias;
@@ -86,6 +70,22 @@ int create_42rc(shell_info_t *my_shell)
     }
     close(fd);
     return SUCCESS;
+}
+
+int exec_alias(shell_info_t *my_shell, char *args)
+{
+    alias_t *current = my_shell->list_alias;
+
+    while (current) {
+        if (alias_loop(args, my_shell) == 1)
+            return 1;
+        if (my_strcmp(current->alias_cmd, args) == 0) {
+            exec_alias_loop(my_shell, current);
+            return 1;
+        }
+        current = current->next;
+    }
+    return 0;
 }
 
 void my_alias(char **args, shell_info_t *my_shell)

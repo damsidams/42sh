@@ -78,15 +78,7 @@ int valid_color(char *color);
 // --> init
 shell_info_t *init_shell_info_t(char **env);
 
-// --> alias
-void my_alias(char **args, shell_info_t *my_shell);
-alias_t *init_alias(void);
-int exec_alias(shell_info_t *my_shell, char *args);
 bool no_env(char **env);
-void my_alias(char **args, shell_info_t *my_shell);
-alias_t *init_alias(void);
-int exec_alias(shell_info_t *my_shell, char *args);
-void exec_cmd(char **args, shell_info_t *my_shell);
 int end_shell(shell_info_t *my_shell);
 
 // --> exec cmds
@@ -107,7 +99,6 @@ void remove_from_file(char **, unsigned int);
 char *find_cmd_in_line(char *);
 char *not_found_error(char const *event);
 char *get_cmd_with_str(char *str);
-int check_buffer(char const *buffer, int fd);
 
 // --> linked_list
 linked_list_t *create_list_from_array(char **array);
@@ -164,7 +155,6 @@ char **check_dollar(char **args, shell_info_t *my_shell);
 
 // --> alias
 void my_alias(char **args, shell_info_t *my_shell);
-alias_t *init_alias(void);
 int exec_alias(shell_info_t *my_shell, char *args);
 void del_alias(char **args, shell_info_t *my_shell);
 int exec_alias_loop(shell_info_t *my_shell, alias_t *list);

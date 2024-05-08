@@ -145,10 +145,6 @@ void exec_no_pipe(char *cmd, shell_info_t *my_shell);
 int get_globbing_nb(char **command);
 void globbing(char **commands, shell_info_t *my_shell);
 
-// --> return_value
-int is_dollar(char *args);
-char **check_dollar(char **args, shell_info_t *my_shell);
-
 // --> alias
 void my_alias(char **args, shell_info_t *my_shell);
 alias_t *init_alias(void);
@@ -163,6 +159,7 @@ void auto_complete(shell_input_t *user_input, shell_info_t *my_shell);
 // --> local varaiables
 void set_local(char **args, shell_info_t *my_shell);
 void unset_local(char **args, shell_info_t *my_shell);
-char **check_dollar(char **args, shell_info_t *my_shell);
+char **replace_var(char **args, shell_info_t *my_shell);
+
 
 #endif

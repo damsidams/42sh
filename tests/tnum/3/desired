@@ -1,0 +1,7 @@
+total 104
+-rw-r--r--. 1 iamenzo iamenzo     9 May  8 12:04 42rc
+-rwxr-xr-x. 1 iamenzo iamenzo 83520 May  8 12:04 42sh
+-rwxr-xr-x. 1 iamenzo iamenzo   585 May  8 11:55 generator.sh
+-rwxr-xr-x. 1 iamenzo iamenzo  1401 May  8 12:04 test.sh
+drwxr-xr-x. 1 iamenzo iamenzo     6 May  8 11:46 tnum
+-rw-r--r--. 1 iamenzo iamenzo  6380 May  8 11:06 unit_tests.c

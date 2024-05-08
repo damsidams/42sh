@@ -331,3 +331,43 @@ fi
         else
             echo -e "\e[31m[TEST 45] Globbing [a-z]???.sh Test NOT PASSED\e[0m"
         fi
+
+        ##Simple parentheses
+        mkdir tnum/47 -p
+        echo "(ls)" | ./42sh &> tnum/47/output
+        echo "(ls)" | tcsh  &> tnum/47/desired
+        if diff -q tnum/47/desired tnum/47/output; then
+            echo -e "\e[32m[TEST 47] Simple parentheses Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 47] Simple parentheses Test NOT PASSED\e[0m"
+        fi
+
+        ##Simple parentheses 2
+        mkdir tnum/49 -p
+        echo "(ls) && pwd" | ./42sh &> tnum/49/output
+        echo "(ls) && pwd" | tcsh  &> tnum/49/desired
+        if diff -q tnum/49/desired tnum/49/output; then
+            echo -e "\e[32m[TEST 49] Simple parentheses 2 Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 49] Simple parentheses 2 Test NOT PASSED\e[0m"
+        fi
+
+        ##Simple parentheses 3
+        mkdir tnum/51 -p
+        echo "(cd; pwd) && echo ok" | ./42sh &> tnum/51/output
+        echo "(cd; pwd) && echo ok" | tcsh  &> tnum/51/desired
+        if diff -q tnum/51/desired tnum/51/output; then
+            echo -e "\e[32m[TEST 51] Simple parentheses 3 Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 51] Simple parentheses 3 Test NOT PASSED\e[0m"
+        fi
+
+        ##Simple parentheses 4
+        mkdir tnum/53 -p
+        echo "(cd; pwd) || echo ok" | ./42sh &> tnum/53/output
+        echo "(cd; pwd) || echo ok" | tcsh  &> tnum/53/desired
+        if diff -q tnum/53/desired tnum/53/output; then
+            echo -e "\e[32m[TEST 53] Simple parentheses 4 Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 53] Simple parentheses 4 Test NOT PASSED\e[0m"
+        fi

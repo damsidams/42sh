@@ -71,7 +71,7 @@ char *set_buffer(char *buffer, int fd, alias_t *current)
 
 int create_42rc(shell_info_t *my_shell)
 {
-    int fd = open("42rc", O_CREAT | O_TRUNC | O_WRONLY, 0666);
+    int fd = open(ALIAS_PATH, O_CREAT | O_TRUNC | O_WRONLY, 0666);
     alias_t *current = my_shell->list_alias;
     char *buffer = NULL;
 

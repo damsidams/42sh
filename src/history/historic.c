@@ -128,15 +128,15 @@ char *get_last_cmd(void)
     int chars_read = 0;
 
     if (fd == ERROR || file_size <= 0) {
-        return NULL;
+        return strdup(MAGIC_STRING);
     }
     buffer = malloc(sizeof(char) * (file_size + 1));
     if (check_buffer(buffer, fd) == ERROR) {
-        return NULL;
+        return strdup(MAGIC_STRING);
     }
     chars_read = read(fd, buffer, file_size - 1);
     if (chars_read == SYS_ERROR) {
-        return NULL;
+        return strdup(MAGIC_STRING);
     }
     close(fd);
     buffer[chars_read] = '\0';

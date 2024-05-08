@@ -32,7 +32,11 @@ static linked_list_t *create_node(char *value, linked_list_t *prev)
         perror("create_node malloc failed");
         return NULL;
     }
-    element->value = strdup(value);
+    if (strcmp(value, "") == 0) {
+        element->value = value;
+    } else {
+        element->value = find_cmd_in_line(value);
+    }
     element->prev = prev;
     element->next = NULL;
     return element;
@@ -52,7 +56,9 @@ linked_list_t *create_list_from_array(char **array)
             free_str_array(array);
             return NULL;
         }
-        prev->next = node;
+        if (prev) {
+            prev->next = node;
+        }
         prev = node;
     }
     return node;

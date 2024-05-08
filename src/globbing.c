@@ -58,6 +58,8 @@ int get_globbing_nb(char **command)
 {
     int res = 0;
 
+    if (command == NULL)
+        return 0;
     for (int i = 0; command[i] != NULL; i++) {
         if (count_globbing(command[i]) != 0)
             res += 1;

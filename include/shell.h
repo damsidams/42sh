@@ -45,37 +45,46 @@
     #define MOVE_UP "\033[1A"
     #define MOVE_DOWN "\033[1B"
 
+// --> shell
 int my_sh(char **env);
-char **get_paths(char **env);
-void disp_env(char **args, shell_info_t *my_shell);
-void change_dir(char **args, shell_info_t *my_shell);
-void set_env(char **args, shell_info_t *my_shell);
-void set_env_no_disp(char **args, shell_info_t *my_shell);
-void unset_env(char **args, shell_info_t *my_shell);
-char *get_name(char **env, int index);
-void command_handling(shell_info_t *my_shell, char **args);
-void set_color(char **args, shell_info_t *my_shell);
-int valid_color(char *color);
-char **get_args(shell_info_t *my_shell);
-char **check_redirect(char **args, shell_info_t *my_shell);
-void check_cmd_type(shell_info_t *my_shell);
-bool check_pipe(char *cmd, shell_info_t *my_shell);
-char ***get_all_cmd(char ***all_cmds, char **args);
-bool valid_redirect(char **cmds);
-char *get_user_input(shell_info_t *my_shell);
-bool no_env(char **env);
-void my_alias(char **args, shell_info_t *my_shell);
-alias_t *init_alias(void);
-int exec_alias(shell_info_t *my_shell, char *args);
-void exec_cmd(char **args, shell_info_t *my_shell);
 int end_shell(shell_info_t *my_shell);
 
 // --> init
 shell_info_t *init_shell_info_t(char **env);
 
+// --> env
+void set_env(char **args, shell_info_t *my_shell);
+void set_env_no_disp(char **args, shell_info_t *my_shell);
+void unset_env(char **args, shell_info_t *my_shell);
+void disp_env(char **args, shell_info_t *my_shell);
+bool no_env(char **env);
+bool is_valid_arg(char *arg, char *cmd);
+char *get_name(char **env, int index);
+
+// --> alias
+void my_alias(char **args, shell_info_t *my_shell);
+alias_t *init_alias(void);
+int exec_alias(shell_info_t *my_shell, char *args);
+
+// --> color
+void set_color(char **args, shell_info_t *my_shell);
+int valid_color(char *color);
+
+// --> redirections
+char **check_redirect(char **args, shell_info_t *my_shell);
+bool valid_redirect(char **cmds);
+
+// --> cd
+void change_dir(char **args, shell_info_t *my_shell);
+
 // --> exec cmds
 void check_given_cmd_type(shell_info_t *my_shell, char *cmd);
+void exec_cmd(char **args, shell_info_t *my_shell);
+void command_handling(shell_info_t *my_shell, char **args);
 bool built_in_command(char **args, shell_info_t *my_shell);
+char **get_paths(char **env);
+void check_cmd_type(shell_info_t *my_shell);
+bool check_pipe(char *cmd, shell_info_t *my_shell);
 
 // --> historic
 void display_historic(char **args, shell_info_t *my_shell);
@@ -113,13 +122,15 @@ bool check_and_or(char *cmd, shell_info_t *my_shell);
 // --> line parsing
 char *get_prompt(shell_info_t *my_shell);
 char *no_entry_input(shell_info_t *my_shell);
+char *get_user_input(shell_info_t *my_shell);
+char **get_args(shell_info_t *my_shell);
+char ***get_all_cmd(char ***all_cmds, char **args);
 
 // -->input manip
 void delete_char(shell_input_t *user_input);
 void delete_string(shell_input_t *user_input);
 void insert_string(shell_input_t *user_input, char *to_insert);
 void insert_char(shell_input_t *user_input, char c);
-
 
 // --> command error
 void cmd_not_found(char **args, shell_info_t *my_shell,

@@ -92,23 +92,27 @@ static local_t *set_existing_var(char **var, local_t *local)
     return local;
 }
 
-static void set_var(char *var, shell_info_t *my_shell)
+static bool set_var(char *var, shell_info_t *my_shell)
 {
     char **equal_sep = my_str_to_word_array(var, "=");
 
     if (!equal_sep) {
-        return;
+        return false;
     }
-    if (my_strstrlen(equal_sep) == 2) {
+    if (my_strstrlen(equal_sep) == 2 && is_valid_arg(equal_sep[0], "set")) {
         if (!found_var(equal_sep, my_shell->local)) {
             my_shell->local = create_var(equal_sep, my_shell->local);
         } else {
             my_shell->local = set_existing_var(equal_sep, my_shell->local);
         }
+        return true;
     }
-    if (my_strstrlen(equal_sep) == 1) {
+    if (my_strstrlen(equal_sep) == 1 && is_valid_arg(equal_sep[0], "set")) {
         my_shell->local = create_var(equal_sep, my_shell->local);
+        return true;
     }
+    my_shell->exit_status = 1;
+    return false;
 }
 
 void set_local(char **args, shell_info_t *my_shell)
@@ -119,7 +123,10 @@ void set_local(char **args, shell_info_t *my_shell)
         return;
     }
     for (int i = 1; args[i]; i++) {
-        set_var(args[i], my_shell);
-        my_shell->exit_status = SUCCESS;
+        if (set_var(args[i], my_shell)) {
+            my_shell->exit_status = SUCCESS;
+        } else {
+            break;
+        }
     }
 }

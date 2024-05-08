@@ -65,7 +65,6 @@ static char *return_value(char **args, shell_info_t *my_shell)
 char **check_dollar(char **args, shell_info_t *my_shell)
 {
     char *command = NULL;
-    int lengh = 0;
     char **temp = NULL;
 
     for (int i = 0; args[i] != NULL; i++) {

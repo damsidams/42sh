@@ -41,7 +41,6 @@ SRC	=	src/main.c								\
 		src/local/set.c			\
 		src/local/unset.c		\
 		src/local/insert_var.c		\
-		src/return_value.c	\
 
 UT_SRC	=	tests/unit_tests.c						\
 			tests/globing.c	\

@@ -33,6 +33,7 @@
     #define HISTORY_CHAR '!'
     #define BACKTICK '`'
     #define HISTORIC_FILENAME "/tmp/42sh_cmd_save.txt"
+    #define ALIAS_PATH "/tmp/42rc.txt"
     #define HISTORY_NB_SIZE 6
     #define MAX_LENGTH 1000000
     //ASCI chars

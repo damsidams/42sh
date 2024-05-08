@@ -1,7 +1,8 @@
-total 112
--rw-r--r--. 1 iamenzo iamenzo     9 May  8 13:11 42rc
--rwxr-xr-x. 1 iamenzo iamenzo 87584 May  8 13:11 42sh
--rwxr-xr-x. 1 iamenzo iamenzo   786 May  8 12:27 generator.sh
--rwxr-xr-x. 1 iamenzo iamenzo 11765 May  8 13:11 test.sh
-drwxr-xr-x. 1 iamenzo iamenzo    84 May  8 13:11 tnum
--rw-r--r--. 1 iamenzo iamenzo  3985 May  8 12:21 unit_tests.c
+total 116
+drwxr-xr-x. 1 nicolasnny nicolasnny    26 May  8 12:17 1
+-rw-r--r--. 1 nicolasnny nicolasnny     9 May  8 14:23 42rc
+-rwxr-xr-x. 1 nicolasnny nicolasnny 87632 May  8 14:23 42sh
+-rwxr-xr-x. 1 nicolasnny nicolasnny   786 May  8 12:24 generator.sh
+-rwxr-xr-x. 1 nicolasnny nicolasnny 14473 May  8 14:23 test.sh
+drwxr-xr-x. 1 nicolasnny nicolasnny   114 May  8 13:46 tnum
+-rw-r--r--. 1 nicolasnny nicolasnny  3985 May  8 12:21 unit_tests.c

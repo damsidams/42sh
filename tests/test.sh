@@ -1,5 +1,12 @@
 (cd .. && make && cp 42sh tests/.)
 
+echo " _____                 _   _                   _   _____         _            "
+echo "|  ___|   _ _ __   ___| |_(_) ___  _ __   __ _| | |_   _|__  ___| |_ ___ _ __ "
+echo "| |_ | | | | '_ \ / __| __| |/ _ \| '_ \ / _\` | |   | |/ _ \/ __| __/ _ \ '__|"
+echo "|  _|| |_| | | | | (__| |_| | (_) | | | | (_| | |   | |  __/\__ \ ||  __/ |   "
+echo "|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|\__,_|_|   |_|\___||___/\__\___|_|   "
+echo ""
+
 ##simple command (not built-in)
 mkdir tnum/1 -p
 echo "ls" | ./42sh > tnum/1/output
@@ -61,7 +68,6 @@ fi
             echo -e "\e[31m[TEST 6] Multiple commands Test NOT PASSED\e[0m"
         fi
 
-        
 
         ##Simple backtick
         mkdir tnum/7 -p
@@ -73,6 +79,15 @@ fi
             echo -e "\e[31m[TEST 7] Simple backtick Test NOT PASSED\e[0m"
         fi
 
+        ##cd with args
+        mkdir tnum/8 -p
+        echo "cd ../; pwd" | ./42sh > tnum/8/output
+        echo "cd ../; pwd" | tcsh  > tnum/8/desired
+        if diff -q tnum/8/desired tnum/8/output; then
+            echo -e "\e[32m[TEST 8] cd with args Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 8] cd with args Test NOT PASSED\e[0m"
+        fi
 
         ##Simple backtick 2
         mkdir tnum/9 -p
@@ -82,6 +97,16 @@ fi
             echo -e "\e[32m[TEST 9] Simple backtick 2 Test PASSED\e[0m"
         else
             echo -e "\e[31m[TEST 9] Simple backtick 2 Test NOT PASSED\e[0m"
+        fi
+
+        ##cd to root (no args)
+        mkdir tnum/10 -p
+        echo "cd; pwd" | ./42sh > tnum/10/output
+        echo "cd; pwd" | tcsh  > tnum/10/desired
+        if diff -q tnum/10/desired tnum/10/output; then
+            echo -e "\e[32m[TEST 10] cd to root (no args) Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 10] cd to root (no args) Test NOT PASSED\e[0m"
         fi
 
         ##Multiple commands with separator
@@ -94,7 +119,16 @@ fi
             echo -e "\e[31m[TEST 11] Multiple commands with separator || Test NOT PASSED\e[0m"
         fi
 
-        
+        ##cd wrong path
+        mkdir tnum/12 -p
+        echo "cd toto" | ./42sh &> tnum/12/output
+        echo "cd toto" | tcsh  &> tnum/12/desired
+        if diff -q tnum/12/desired tnum/12/output; then
+            echo -e "\e[32m[TEST 12] cd wrong path Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 12] cd wrong path Test NOT PASSED\e[0m"
+        fi
+
         ##Multiple commands with separator &&
         mkdir tnum/13 -p
         echo "echo toto | grep toto; ls; echo op && echo ops; ls" | ./42sh &> tnum/13/output
@@ -105,6 +139,15 @@ fi
             echo -e "\e[31m[TEST 13] Multiple commands with separator && Test NOT PASSED\e[0m"
         fi
 
+        ##no command
+        mkdir tnum/14 -p
+        echo "" | ./42sh &> tnum/14/output
+        echo "" | tcsh  &> tnum/14/desired
+        if diff -q tnum/14/desired tnum/14/output; then
+            echo -e "\e[32m[TEST 14] no command Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 14] no command Test NOT PASSED\e[0m"
+        fi
         
         ##Multiple commands with separator && and ||
         mkdir tnum/15 -p
@@ -116,6 +159,16 @@ fi
             echo -e "\e[31m[TEST 15] Multiple commands with separator && and || Test NOT PASSED\e[0m"
         fi
 
+        ##unknown command
+        mkdir tnum/16 -p
+        echo "toto" | ./42sh &> tnum/16/output
+        echo "toto" | tcsh  &> tnum/16/desired
+        if diff -q tnum/16/desired tnum/16/output; then
+            echo -e "\e[32m[TEST 16] unknown command Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 16] unknown command Test NOT PASSED\e[0m"
+        fi
+
         ##Multiple commands with separator && and || 2
         mkdir tnum/17 -p
         echo "fepf || echo yes && pwd; ls; echo op && echo ops || ferr; ls" | ./42sh &> tnum/17/output
@@ -124,6 +177,16 @@ fi
             echo -e "\e[32m[TEST 17] Multiple commands with separator && and || 2 Test PASSED\e[0m"
         else
             echo -e "\e[31m[TEST 17] Multiple commands with separator && and || 2 Test NOT PASSED\e[0m"
+        fi
+
+        ##inhibitors ""
+        mkdir tnum/18 -p
+        echo "echo "this is a sentence between quotes"" | ./42sh > tnum/18/output
+        echo "echo "this is a sentence between quotes"" | tcsh  > tnum/18/desired
+        if diff -q tnum/18/desired tnum/18/output; then
+            echo -e "\e[32m[TEST 18] inhibitors "" Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 18] inhibitors "" Test NOT PASSED\e[0m"
         fi
 
         ##Multiple commands with separator && and || 3

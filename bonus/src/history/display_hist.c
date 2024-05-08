@@ -16,7 +16,7 @@ void display_historic(char **args, shell_info_t *my_shell)
     (void)args;
     buffer = get_file_content(HISTORIC_FILENAME);
     if (buffer == NULL || my_strlen(buffer) <= 0) {
-        my_shell->exit_status = ERROR;
+        my_shell->exit_status = 1;
         return;
     }
     my_putstr(buffer);

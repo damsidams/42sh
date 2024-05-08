@@ -15,10 +15,10 @@
 bool par_around(char const *str)
 {
     if (str == NULL || strlen(str) < 2) {
-	    return false;
+        return false;
     }
-        if (str[0] != '(' || str[strlen(str) - 1] != ')') {
-	    return false;
+    if (str[0] != '(' || str[strlen(str) - 1] != ')') {
+        return false;
     }
     return true;
 }
@@ -28,15 +28,15 @@ static char *rm_parentheses(char *str)
     char *new_str = NULL;
 
     if (str == NULL || strlen(str) < 2) {
-    	return str;
+        return str;
     }
     new_str = malloc(sizeof(char) * (strlen(str) - 1));
     if (new_str == NULL) {
-	    perror("rm_parentheses malloc failed");
-	    return str;
+        perror("rm_parentheses malloc failed");
+        return str;
     }
     for (unsigned int i = 1; str[i] && str[i] != ')'; i++) {
-	    new_str[i - 1] = str[i];
+        new_str[i - 1] = str[i];
     }
     new_str[strlen(str) - 2] = '\0';
     free(str);
@@ -59,7 +59,7 @@ static bool exec_p(shell_info_t *my_shell, char *cmd)
 bool exec_parentheses(shell_info_t *my_shell, char **args)
 {
     if (args == NULL) {
-	return false;
+        return false;
     }
     for (unsigned int i = 0; args[i]; i++) {
         if (par_around(args[i])) {
@@ -94,7 +94,7 @@ static bool p_check(char const *cmd)
     }
     for (unsigned int i = 1; line[i]; i++) {
         if (is_parentheses(line[i])) {
-	        dprintf(2, "Badly placed ()'s.\n");
+            dprintf(2, "Badly placed ()'s.\n");
             free_str_array(line);
             return true;
         }

@@ -62,7 +62,7 @@ void exec_cmd(char **args, shell_info_t *my_shell)
     pid_t child;
     int wstatus = 0;
 
-    if (strcmp(args[0], MAGIC_STRING) == 0) {
+    if (!args || !args[0] || strcmp(args[0], MAGIC_STRING) == 0) {
         return;
     }
     if (is_dollar(args[1]) == 1) {

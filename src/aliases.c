@@ -42,12 +42,12 @@ static void display_list_alias(shell_info_t *my_shell)
 int exec_alias(shell_info_t *my_shell, char *args)
 {
     alias_t *current = my_shell->list_alias;
-    char **cmd = NULL;
 
     while (current) {
+        if (alias_loop(args, my_shell) == 1)
+            return 1;
         if (my_strcmp(current->alias_cmd, args) == 0) {
-            cmd = my_str_to_word_array(current->real_cmd, " ");
-            exec_cmd(cmd, my_shell);
+            exec_alias_loop(my_shell, current);
             return 1;
         }
         current = current->next;
@@ -102,4 +102,26 @@ void my_alias(char **args, shell_info_t *my_shell)
         return;
     }
     my_shell->exit_status = 0;
+}
+
+void del_alias(char **args, shell_info_t *my_shell)
+{
+    alias_t *current = my_shell->list_alias;
+    alias_t *prev_node = my_shell->list_alias;
+
+    if (args[1] == NULL)
+        return;
+    if (current != NULL && strcmp(current->alias_cmd, args[1]) == 0) {
+        my_shell->list_alias = current->next;
+        free(current);
+        return;
+    }
+    while (current != NULL && strcmp(current->alias_cmd, args[1]) != 0) {
+        prev_node = current;
+        current = current->next;
+    }
+    if (current == NULL)
+        return;
+    prev_node->next = current->next;
+    free(current);
 }

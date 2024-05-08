@@ -41,6 +41,7 @@ SRC	=	src/main.c								\
 		src/aliases.c							\
 		src/return_value.c	\
 		src/test.c	\
+		src/alias_loop.c	\
 
 UT_SRC	=	tests/unit_tests.c						\
 			tests/globing.c	\

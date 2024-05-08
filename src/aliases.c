@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** aliases
+** lisagoulmot
 ** File description:
 ** aliases
 */
@@ -24,28 +24,6 @@ static alias_t *add_alias(char *alias_command, char *real_command,
     alias->real_cmd = my_strdup(real_command);
     alias->next = list_alias;
     return alias;
-}
-
-static char **set_alias(void)
-{
-    char **set_alias = malloc(sizeof(char *) * 13);
-
-    if (set_alias == NULL)
-        return NULL;
-    set_alias[0] = my_strdup("egrep=egrep --color=auto");
-    set_alias[1] = my_strdup("fgrep=fgrep --color=auto");
-    set_alias[2] = my_strdup("grep=grep --color=auto");
-    set_alias[3] = my_strdup("l.=ls -d .* --color=auto");
-    set_alias[4] = my_strdup("ll=ls -l --color=auto");
-    set_alias[5] = my_strdup("ls=ls --color=auto");
-    set_alias[6] = my_strdup("xzegrep=xzegrep --color=auto");
-    set_alias[7] = my_strdup("xzfgrep=xzfgrep --color=auto");
-    set_alias[8] = my_strdup("xzgrep=xzgrep --color=auto");
-    set_alias[9] = my_strdup("zegrep=zegrep --color=auto");
-    set_alias[10] = my_strdup("zfgrep=zfgrep --color=auto");
-    set_alias[11] = my_strdup("zgrep=zgrep --color=auto");
-    set_alias[12] = NULL;
-    return set_alias;
 }
 
 static void display_list_alias(shell_info_t *my_shell)
@@ -75,24 +53,6 @@ int exec_alias(shell_info_t *my_shell, char *args)
         current = current->next;
     }
     return 0;
-}
-
-alias_t *init_alias(void)
-{
-    alias_t *init_alias = NULL;
-    char **set_command = set_alias();
-    char **args = NULL;
-
-    for (int i = 0; i != 12; i++) {
-        args = my_str_to_word_array(set_command[i], "=");
-        init_alias = add_alias(args[0], args[1], init_alias);
-        free_str_array(args);
-    }
-    for (int i = 0; set_command[i]; i++) {
-        free(set_command[i]);
-    }
-    free(set_command);
-    return init_alias;
 }
 
 char *set_buffer(char *buffer, int fd, alias_t *current)

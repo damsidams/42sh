@@ -27,6 +27,9 @@ char **get_paths(char **env)
     while (env[i] && my_strncmp(env[i], "PATH", 4) != 0) {
         i++;
     }
+    if (env[i] == NULL) {
+        return NULL;
+    }
     return my_pimp_str_to_wa(env[i], ":=");
 }
 
@@ -59,6 +62,13 @@ void exec_cmd(char **args, shell_info_t *my_shell)
     pid_t child;
     int wstatus = 0;
 
+    if (strcmp(args[0], MAGIC_STRING) == 0) {
+        return;
+    }
+    if (is_dollar(args[1]) == 1) {
+        printf("%s\n", args[1]);
+        args = check_dollar(args, my_shell);
+    }
     child = fork();
     if (child == 0) {
         exec_paths(args, my_shell);

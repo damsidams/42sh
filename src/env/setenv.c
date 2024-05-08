@@ -105,30 +105,6 @@ char **set_name_value(char const *name,
     return my_shell->env;
 }
 
-void set_env_no_disp(char **args, shell_info_t *my_shell)
-{
-    char *name = NULL;
-    char *value = NULL;
-
-    if (my_strstrlen(args) > 3) {
-        my_putstr_err("setenv: Too many arguments.\n");
-        my_shell->exit_status = 1;
-        return;
-    }
-    if (my_strstrlen(args) >= 2) {
-        name = my_strdup(args[1]);
-        if (my_strstrlen(args) == 3) {
-            value = my_strdup(args[2]);
-            my_shell->env = set_name_value(name, value, my_shell);
-            free(value);
-        } else {
-            my_shell->env = set_name(name, my_shell);
-        }
-        free(name);
-    }
-    my_shell->exit_status = 0;
-}
-
 static bool is_valid_arg(char *arg)
 {
     if (!my_str_isalpha(arg)) {

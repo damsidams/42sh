@@ -65,6 +65,8 @@ bool exec_parentheses(shell_info_t *my_shell, char **args)
         if (par_around(args[i])) {
             args[i] = rm_parentheses(args[i]);
             exec_p(my_shell, args[i]);
+            free(args[i]);
+            args[i] = strdup(MAGIC_STRING);
         }
     }
     return true;

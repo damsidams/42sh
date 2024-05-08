@@ -13,7 +13,7 @@ typedef struct alias_s {
     char *alias_cmd;
     char *real_cmd;
     struct alias_s *next;
-}alias_t;
+} alias_t;
 
 typedef struct shell_info_s {
     char **env;
@@ -43,6 +43,11 @@ enum sep_type {
     And,
     Or,
     End
+};
+
+enum historic_direction {
+    UP,
+    DOWN
 };
 
 #endif

@@ -133,6 +133,9 @@ char **check_dollar(char **args, shell_info_t *my_shell);
 void my_alias(char **args, shell_info_t *my_shell);
 alias_t *init_alias(void);
 int exec_alias(shell_info_t *my_shell, char *args);
+void del_alias(char **args, shell_info_t *my_shell);
+int exec_alias_loop(shell_info_t *my_shell, alias_t *list, char *args);
+int alias_loop(char *args, shell_info_t *my_shell);
 
 // --> gpt
 void gpt(char **args, shell_info_t *my_shell);

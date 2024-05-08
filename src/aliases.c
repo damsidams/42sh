@@ -26,28 +26,6 @@ static alias_t *add_alias(char *alias_command, char *real_command,
     return alias;
 }
 
-static char **set_alias(void)
-{
-    char **set_alias = malloc(sizeof(char *) * 13);
-
-    if (set_alias == NULL)
-        return NULL;
-    set_alias[0] = my_strdup("egrep=egrep --color=auto");
-    set_alias[1] = my_strdup("fgrep=fgrep --color=auto");
-    set_alias[2] = my_strdup("grep=grep --color=auto");
-    set_alias[3] = my_strdup("l.=ls -d .* --color=auto");
-    set_alias[4] = my_strdup("ll=ls -l --color=auto");
-    set_alias[5] = my_strdup("ls=ls --color=auto");
-    set_alias[6] = my_strdup("xzegrep=xzegrep --color=auto");
-    set_alias[7] = my_strdup("xzfgrep=xzfgrep --color=auto");
-    set_alias[8] = my_strdup("xzgrep=xzgrep --color=auto");
-    set_alias[9] = my_strdup("zegrep=zegrep --color=auto");
-    set_alias[10] = my_strdup("zfgrep=zfgrep --color=auto");
-    set_alias[11] = my_strdup("zgrep=zgrep --color=auto");
-    set_alias[12] = NULL;
-    return set_alias;
-}
-
 static void display_list_alias(shell_info_t *my_shell)
 {
     alias_t *current = NULL;
@@ -67,9 +45,10 @@ int exec_alias(shell_info_t *my_shell, char *args)
     char **cmd = NULL;
 
     while (current) {
+        if (alias_loop(args, my_shell) == 1)
+            return 1;
         if (my_strcmp(current->alias_cmd, args) == 0) {
-            cmd = my_str_to_word_array(current->real_cmd, " ");
-            exec_cmd(cmd, my_shell);
+            exec_alias_loop(my_shell, current, args);
             return 1;
         }
         current = current->next;
@@ -142,4 +121,26 @@ void my_alias(char **args, shell_info_t *my_shell)
         return;
     }
     my_shell->exit_status = 0;
+}
+
+void del_alias(char **args, shell_info_t *my_shell)
+{
+    alias_t *current = my_shell->list_alias;
+    alias_t *prev_node = my_shell->list_alias;
+
+    if (args[1] == NULL)
+        return;
+    if (current != NULL && strcmp(current->alias_cmd, args[1]) == 0) {
+        my_shell->list_alias = current->next;
+        free(current);
+        return;
+    }
+    while (current != NULL && strcmp(current->alias_cmd, args[1]) != 0) {
+        prev_node = current;
+        current = current->next;
+    }
+    if (current == NULL)
+        return;
+    prev_node->next = current->next;
+    free(current);
 }

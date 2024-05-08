@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 static char **get_element(char **env, char *element)
 {

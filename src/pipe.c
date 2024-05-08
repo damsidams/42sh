@@ -32,8 +32,14 @@ char **get_pipe_cmds(char *cmd)
 
 static void exec_last_cmd(char **cmd_args, shell_info_t *my_shell, int *pipefd)
 {
-    dup2(pipefd[0], STDIN_FILENO);
-    dup2(my_shell->stdout_cpy, STDOUT_FILENO);
+    if (dup2(pipefd[0], STDIN_FILENO) == SYS_ERROR) {
+        perror("exec_last_cmd change stdin dup2");
+        return;
+    }
+    if (dup2(my_shell->stdout_cpy, STDOUT_FILENO) == SYS_ERROR) {
+        perror("exec_last_cmd put back stdout dup2");
+        return;
+    }
     close(pipefd[1]);
     command_handling(my_shell, cmd_args);
 }

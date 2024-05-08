@@ -27,6 +27,9 @@ char **get_paths(char **env)
     while (env[i] && my_strncmp(env[i], "PATH", 4) != 0) {
         i++;
     }
+    if (env[i] == NULL) {
+        return NULL;
+    }
     return my_pimp_str_to_wa(env[i], ":=");
 }
 
@@ -59,6 +62,9 @@ void exec_cmd(char **args, shell_info_t *my_shell)
     pid_t child;
     int wstatus = 0;
 
+    if (!args || !args[0] || strcmp(args[0], MAGIC_STRING) == 0) {
+        return;
+    }
     child = fork();
     if (child == 0) {
         exec_paths(args, my_shell);
@@ -77,6 +83,7 @@ void command_handling(shell_info_t *my_shell, char **args)
         return;
     }
     args = check_redirect(args, my_shell);
+    exec_parentheses(my_shell, args);
     if (my_shell->exit_shell || !args) {
         free_str_array(args);
         return;

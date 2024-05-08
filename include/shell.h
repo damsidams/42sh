@@ -19,6 +19,7 @@
     #define BACKTICK_ERROR -1
     #define SYS_ERROR -1
     #define OPEN_ERROR -1
+    #define NOT_ALLOWED 1
     #define INVALID_NULL_COMMAND -1
     #define READ_SIZE 1000000
     #define EXIT_STATUS_ERROR 139
@@ -44,6 +45,7 @@
     #define MOVE_RIGHT "\033[1C"
     #define MOVE_UP "\033[1A"
     #define MOVE_DOWN "\033[1B"
+    #define MAGIC_STRING "(75787tokf.wzy:htuhiu)"
 
 // --> shell
 int my_sh(char **env);
@@ -116,6 +118,12 @@ char *get_current_time(void);
 char **replace_backtick(char **cmd, shell_info_t *my_shell);
 char *get_backtick_output(shell_info_t *shell_info, char *cmd);
 
+// --> parentheses
+bool exec_parentheses(shell_info_t *my_shell, char **cmd);
+bool parentheses_badly_placed(char const *cmd);
+bool check_parentheses_order(char const *str);
+bool par_around(char const *str);
+
 // --> and or
 bool check_and_or(char *cmd, shell_info_t *my_shell);
 
@@ -147,8 +155,10 @@ void globbing(char **commands, shell_info_t *my_shell);
 
 // --> alias
 void my_alias(char **args, shell_info_t *my_shell);
-alias_t *init_alias(void);
 int exec_alias(shell_info_t *my_shell, char *args);
+void del_alias(char **args, shell_info_t *my_shell);
+int exec_alias_loop(shell_info_t *my_shell, alias_t *list);
+int alias_loop(char *args, shell_info_t *my_shell);
 
 // --> gpt
 void gpt(char **args, shell_info_t *my_shell);

@@ -13,7 +13,7 @@ typedef struct alias_s {
     char *alias_cmd;
     char *real_cmd;
     struct alias_s *next;
-}alias_t;
+} alias_t;
 
 typedef struct local_s {
     char *name;

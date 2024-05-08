@@ -20,6 +20,7 @@ SRC	=	src/main.c								\
 		src/history/find_cmd.c	\
 		src/history/history_parser.c	\
 		src/history/find_cmd_str.c	\
+		src/history/get_historic.c	\
 		src/command_handling/command_type.c		\
 		src/command_handling/command_error.c	\
 		src/command_handling/command_exec.c		\
@@ -37,10 +38,13 @@ SRC	=	src/main.c								\
 		src/globbing.c							\
 		src/linked_list.c	\
 		src/shell_info.c	\
+		src/parentheses.c	\
 		src/aliases.c							\
 		src/local/set.c			\
 		src/local/unset.c		\
 		src/local/insert_var.c		\
+		src/test.c	\
+		src/alias_loop.c	\
 
 UT_SRC	=	tests/unit_tests.c						\
 			tests/globing.c	\
@@ -52,6 +56,7 @@ UT_SRC	=	tests/unit_tests.c						\
 			src/line_parsing/get_input_getline.c	\
 			src/line_parsing/input_manip.c			\
 			src/history/historic.c					\
+			src/history/get_historic.c	\
 			src/history/special_getnbr.c			\
 			src/history/time.c							\
 			src/history/display_hist.c				\
@@ -75,6 +80,7 @@ UT_SRC	=	tests/unit_tests.c						\
 			src/globbing.c							\
 			src/linked_list.c	\
 			src/shell_info.c	\
+			src/parentheses.c	\
 			src/aliases.c							\
 			src/return_value.c	\
 

@@ -77,17 +77,33 @@ static void set_exit(shell_info_t *my_shell)
     my_shell->exit_status = 0;
 }
 
+static int side_checks(char *user_input, shell_info_t *my_shell)
+{
+    if (!user_input) {
+        return ERROR;
+    }
+    if (!check_parentheses_order(user_input) ||
+        parentheses_badly_placed(user_input)) {
+        my_shell->exit_status = 1;
+        return ERROR;
+    }
+    user_input = check_if_historic(user_input, my_shell);
+    if (!user_input || no_cmd(user_input)) {
+        return ERROR;
+    }
+    add_command_to_save(user_input);
+    return SUCCESS;
+}
+
 char **get_args(shell_info_t *my_shell)
 {
     char *user_input = get_user_input(my_shell);
     char *user_input_cpy = my_strdup(user_input);
     char **args = NULL;
 
-    user_input = check_if_historic(user_input, my_shell);
-    if (!user_input || no_cmd(user_input)) {
+    if (side_checks(user_input, my_shell) == ERROR) {
         return NULL;
     }
-    add_command_to_save(user_input);
     if (my_strlen(user_input) != 0) {
         args = my_pimp_str_to_wa(user_input, ";");
     }

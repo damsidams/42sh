@@ -23,7 +23,7 @@ static int is_exception(char c)
     return (c == '\"' || c == '`' || c == '(' || c == ')');
 }
 
-static int get_word_nb(char *str, char *delim)
+static int get_word_nb(char const *str, char *delim)
 {
     int word_nb = 0;
     int in_exception = OUT;
@@ -40,7 +40,7 @@ static int get_word_nb(char *str, char *delim)
     return word_nb;
 }
 
-static int my_new_word_size(char *str, char *delim)
+static int my_new_word_size(char const *str, char *delim)
 {
     int i = 0;
     int in_exception = OUT;
@@ -77,7 +77,7 @@ static void remove_exception(char **str)
     *str = new_str;
 }
 
-static char *new_word(char *str, int start, char *delim)
+static char *new_word(char const *str, int start, char *delim)
 {
     char *new_word = malloc(sizeof(char) *
         (my_new_word_size(str + start, delim) + 1));
@@ -93,18 +93,18 @@ static char *new_word(char *str, int start, char *delim)
         inew++;
     }
     new_word[inew] = '\0';
-    if (is_exception(new_word[0]) && new_word[0] != '`')
+    if (is_exception(new_word[0]) && new_word[0] == '\"')
         remove_exception(&new_word);
     return new_word;
 }
 
-static void assist_func(char *str, int i, int *in_exception)
+static void assist_func(char const *str, int i, int *in_exception)
 {
     if (is_exception(str[i]))
             *in_exception *= -1;
 }
 
-char **my_pimp_str_to_wa(char *str, char *delim)
+char **my_pimp_str_to_wa(char const *str, char *delim)
 {
     char **array = malloc(sizeof(char *) * (get_word_nb(str, delim) + 1));
     int wc = 0;

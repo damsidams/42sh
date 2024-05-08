@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include "shell.h"
 
@@ -105,67 +106,21 @@ static char *format_line(char const *cmd, int prev_num)
     return msg;
 }
 
-int add_command_to_save(char const *cmd)
+static char *get_last_line(char *buffer)
 {
-    int fd = open_append(HISTORIC_FILENAME);
-    int prev_num = get_previous_cmd_num();
-    char *line = NULL;
+    char **array = my_pimp_str_to_wa(buffer, "\n");
+    char *cmd = NULL;
 
-    if (fd == ERROR || prev_num < 0) {
-        return ERROR;
-    }
-    line = format_line(cmd, prev_num + 1);
-    if (write(fd, line, my_strlen(line)) == SYS_ERROR) {
-        perror("Write to save file");
-        free(line);
-        return ERROR;
-    }
-    close(fd);
-    free(line);
-    return SUCCESS;
-}
-
-static linked_list_t *return_read_error(int fd)
-{
-    perror("Read error");
-    close(fd);
-    return NULL;
-}
-
-static linked_list_t *add_command_to_end(char *buffer, char *cmd)
-{
-    char **file_by_line = NULL;
-    char **final_array = NULL;
-
-    file_by_line = my_pimp_str_to_wa(buffer, "\n");
-    free(buffer);
-    if (file_by_line == NULL) {
+    if (array == NULL) {
+        free(buffer);
         return NULL;
     }
-    final_array = malloc(sizeof(char *) * (my_strstrlen(file_by_line) + 2));
-    if (final_array == NULL) {
-        free_str_array(file_by_line);
-        perror("add command to end malloc");
-        return NULL;
-    }
-    final_array = my_strstrcpy(final_array, file_by_line);
-    final_array[my_strstrlen(file_by_line)] = my_strdup(cmd);
-    final_array[my_strstrlen(file_by_line) + 1] = NULL;
-    free_str_array(file_by_line);
-    return create_list_from_array(final_array);
+    cmd = find_cmd_in_line(array[my_strstrlen(array) - 1]);
+    free_str_array(array);
+    return cmd;
 }
 
-static int check_buffer(char const *buffer, int fd)
-{
-    if (buffer == NULL) {
-        close(fd);
-        perror("get array from prev command malloc");
-        return ERROR;
-    }
-    return SUCCESS;
-}
-
-linked_list_t *get_array_from_prev_cmd(char *current_cmd)
+char *get_last_cmd(void)
 {
     int fd = read_history(HISTORIC_FILENAME);
     char *buffer = NULL;
@@ -181,9 +136,29 @@ linked_list_t *get_array_from_prev_cmd(char *current_cmd)
     }
     chars_read = read(fd, buffer, file_size - 1);
     if (chars_read == SYS_ERROR) {
-        return return_read_error(fd);
+        return NULL;
     }
     close(fd);
     buffer[chars_read] = '\0';
-    return add_command_to_end(buffer, current_cmd);
+    return get_last_line(buffer);
+}
+
+int add_command_to_save(char const *cmd)
+{
+    int fd = open_append(HISTORIC_FILENAME);
+    int prev_num = get_previous_cmd_num();
+    char *line = NULL;
+
+    if (fd == ERROR || prev_num < 0 || strcmp(cmd, get_last_cmd()) == 0) {
+        return ERROR;
+    }
+    line = format_line(cmd, prev_num + 1);
+    if (write(fd, line, my_strlen(line)) == SYS_ERROR) {
+        perror("Write to save file");
+        free(line);
+        return ERROR;
+    }
+    close(fd);
+    free(line);
+    return SUCCESS;
 }

@@ -12,7 +12,29 @@
 #include <termios.h>
 #include "shell.h"
 
-static void move_cursor(shell_input_t *user_input, char direction)
+static linked_list_t *get_history_cmd(shell_input_t *user_input,
+    linked_list_t *historic, int direction)
+{
+    if (historic && !historic->next && user_input->input) {
+        historic->value = strdup(user_input->input);
+        delete_string(user_input);
+        insert_string(user_input, historic->value);
+    }
+    if (direction == UP && historic->prev) {
+        historic = historic->prev;
+        delete_string(user_input);
+        insert_string(user_input, historic->value);
+    }
+    if (direction == DOWN && historic->next) {
+        historic = historic->next;
+        delete_string(user_input);
+        insert_string(user_input, historic->value);
+    }
+    return historic;
+}
+
+static linked_list_t *move_cursor(shell_input_t *user_input, char direction,
+    linked_list_t *historic)
 {
     if (direction == 'D' && user_input->cursor > 0) {
         printf("%s", MOVE_LEFT);
@@ -23,49 +45,12 @@ static void move_cursor(shell_input_t *user_input, char direction)
         printf("%s", MOVE_RIGHT);
     }
     if (direction == 'A') {
-        printf("history not implemented\n");
+        return get_history_cmd(user_input, historic, UP);
     }
     if (direction == 'B') {
-        printf("history not implemented\n");
+        return get_history_cmd(user_input, historic, DOWN);
     }
-}
-
-static void delete_char(shell_input_t *user_input)
-{
-    if (user_input->index > 0 && user_input->cursor > 0) {
-        memmove(&(user_input->input[user_input->cursor - 1]),
-            &(user_input->input[user_input->cursor]),
-            user_input->index - user_input->cursor + 1);
-        user_input->index--;
-        user_input->cursor--;
-        printf("\033[D\033[P");
-        for (int i = user_input->cursor; i < user_input->index; i++) {
-            printf("%c", user_input->input[i]);
-        }
-        putchar(' ');
-        for (int i = user_input->index + 1; i > user_input->cursor; i--) {
-            printf("%s", MOVE_LEFT);
-        }
-    }
-}
-
-static void insert_char(shell_input_t *user_input, char c)
-{
-    if (user_input->index < MAX_LENGTH - 1) {
-        memmove(&(user_input->input[user_input->cursor + 1]),
-            &(user_input->input[user_input->cursor]),
-            user_input->index - user_input->cursor + 1);
-        user_input->input[user_input->cursor] = c;
-        user_input->index++;
-        user_input->cursor++;
-        putchar(c);
-        for (int i = user_input->cursor; i < user_input->index; i++) {
-            putchar(user_input->input[i]);
-        }
-        for (int i = user_input->index; i > user_input->cursor; i--) {
-            printf("%s", MOVE_LEFT);
-        }
-    }
+    return historic;
 }
 
 static struct termios init_shell_settings(void)
@@ -83,19 +68,20 @@ static struct termios init_shell_settings(void)
     return initial_settings;
 }
 
-static void check_opening_char(shell_input_t *user_input, char c)
+static void check_opening_char(shell_input_t *user_input, char c,
+    linked_list_t *historic)
 {
     if (c == '"' || c == '(' || c == '\'' || c == '`') {
         if (c == '(')
             insert_char(user_input, ')');
         else
             insert_char(user_input, c);
-        move_cursor(user_input, 'D');
+        move_cursor(user_input, 'D', historic);
     }
 }
 
 static void check_input(shell_input_t *user_input, char c,
-    shell_info_t *my_shell)
+    shell_info_t *my_shell, linked_list_t *historic)
 {
     if (c == '\t') {
         auto_complete(user_input, my_shell);
@@ -104,7 +90,7 @@ static void check_input(shell_input_t *user_input, char c,
         user_input->input = malloc(sizeof(char) * MAX_LENGTH);
         user_input->input[0] = '\0';
     }
-    check_opening_char(user_input, c);
+    check_opening_char(user_input, c, historic);
     if (c == DEL || c == '\b') {
         delete_char(user_input);
     } else if (c != DEL && c != '\b' && c != '\t'){
@@ -118,23 +104,7 @@ static char *finish_input(shell_input_t *user_input,
     tcsetattr(STDIN_FILENO, TCSANOW, initial_settings);
     if (last_char == EOT)
         return "EOT";
-    if (user_input->input)
-        add_command_to_save(user_input->input);
     return user_input->input;
-}
-
-void insert_string(shell_input_t *user_input, char *to_insert)
-{
-    for (int i = 0; to_insert[i] != '\0'; i++) {
-        insert_char(user_input, to_insert[i]);
-    }
-}
-
-void delete_string(shell_input_t *user_input)
-{
-    while (my_strlen(user_input->input) != 0) {
-        delete_char(user_input);
-    }
 }
 
 char *get_prompt(shell_info_t *my_shell)
@@ -142,14 +112,15 @@ char *get_prompt(shell_info_t *my_shell)
     shell_input_t user_input = {0, 0, NULL};
     char c;
     struct termios initial_settings = init_shell_settings();
+    linked_list_t *historic = get_array_from_prev_cmd(strdup(""));
 
     c = getchar();
     while (c != '\n' && c != EOT) {
         if (c == ESC) {
             getchar();
-            move_cursor(&user_input, getchar());
+            historic = move_cursor(&user_input, getchar(), historic);
         } else {
-            check_input(&user_input, c, my_shell);
+            check_input(&user_input, c, my_shell, historic);
         }
         c = getchar();
     }

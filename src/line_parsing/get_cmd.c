@@ -20,7 +20,11 @@ char *get_user_input(shell_info_t *my_shell)
 {
     char *user_input = NULL;
 
-    putchar('\n');
+    if (my_shell->is_a_tty) {
+        user_input = get_prompt(my_shell);
+        putchar('\n');
+    } else
+        user_input = no_entry_input(my_shell);
     if (!user_input)
         return NULL;
     if (strcmp(user_input, "EOT") == 0) {
@@ -66,22 +70,29 @@ static bool no_cmd(char *user_input)
     return true;
 }
 
+static void set_exit(shell_info_t *my_shell)
+{
+    printf("exit\n");
+    my_shell->exit_shell = true;
+    my_shell->exit_status = 0;
+}
+
 char **get_args(shell_info_t *my_shell)
 {
     char *user_input = get_user_input(my_shell);
     char *user_input_cpy = my_strdup(user_input);
     char **args = NULL;
 
+    user_input = check_if_historic(user_input, my_shell);
     if (!user_input || no_cmd(user_input)) {
         return NULL;
     }
+    add_command_to_save(user_input);
     if (my_strlen(user_input) != 0) {
         args = my_pimp_str_to_wa(user_input, ";");
     }
     if (my_strcmp(args[0], "exit") == 0) {
-        printf("exit\n");
-        my_shell->exit_shell = true;
-        my_shell->exit_status = 0;
+        set_exit(my_shell);
         args = NULL;
     }
     my_free_n_str(2, user_input, user_input_cpy);

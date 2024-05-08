@@ -27,6 +27,9 @@ char **get_paths(char **env)
     while (env[i] && my_strncmp(env[i], "PATH", 4) != 0) {
         i++;
     }
+    if (env[i] == NULL) {
+        return NULL;
+    }
     return my_pimp_str_to_wa(env[i], ":=");
 }
 

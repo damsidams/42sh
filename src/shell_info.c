@@ -59,6 +59,6 @@ shell_info_t *init_shell_info_t(char **env)
         my_shell->is_a_tty = false;
     my_shell->stdin_cpy = dup(STDIN_FILENO);
     my_shell->stdout_cpy = dup(STDOUT_FILENO);
-    my_shell->list_alias = init_alias();
+    my_shell->list_alias = NULL;
     return set_shell_info(my_shell);
 }

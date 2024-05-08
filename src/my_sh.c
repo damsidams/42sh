@@ -16,21 +16,6 @@
 #include "shell.h"
 #include "struct.h"
 
-static shell_info_t *set_shell_info(shell_info_t *my_shell)
-{
-    my_shell->last_path = NULL;
-    my_shell->exit_status = 0;
-    my_shell->exit_shell = false;
-    my_shell->color = malloc(sizeof(int) * 2);
-    if (my_shell->color == NULL) {
-        perror("shell color malloc");
-    } else {
-        my_shell->color[0] = valid_color(DEFAULT_SUCCESS_COLOR);
-        my_shell->color[1] = valid_color(DEFAULT_ERROR_COLOR);
-    }
-    return my_shell;
-}
-
 static char *get_path_to_display(char *actual_dir, int index)
 {
     int len = 0;

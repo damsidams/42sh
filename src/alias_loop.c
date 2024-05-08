@@ -57,7 +57,7 @@ int alias_loop(char *args, shell_info_t *my_shell)
     return 0;
 }
 
-int exec_alias_loop(shell_info_t *my_shell, alias_t *list, char *args)
+int exec_alias_loop(shell_info_t *my_shell, alias_t *list)
 {
     alias_t *current = my_shell->list_alias;
     char **cmd = NULL;

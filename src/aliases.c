@@ -42,36 +42,17 @@ static void display_list_alias(shell_info_t *my_shell)
 int exec_alias(shell_info_t *my_shell, char *args)
 {
     alias_t *current = my_shell->list_alias;
-    char **cmd = NULL;
 
     while (current) {
         if (alias_loop(args, my_shell) == 1)
             return 1;
         if (my_strcmp(current->alias_cmd, args) == 0) {
-            exec_alias_loop(my_shell, current, args);
+            exec_alias_loop(my_shell, current);
             return 1;
         }
         current = current->next;
     }
     return 0;
-}
-
-alias_t *init_alias(void)
-{
-    alias_t *init_alias = NULL;
-    char **set_command = set_alias();
-    char **args = NULL;
-
-    for (int i = 0; i != 12; i++) {
-        args = my_str_to_word_array(set_command[i], "=");
-        init_alias = add_alias(args[0], args[1], init_alias);
-        free_str_array(args);
-    }
-    for (int i = 0; set_command[i]; i++) {
-        free(set_command[i]);
-    }
-    free(set_command);
-    return init_alias;
 }
 
 char *set_buffer(char *buffer, int fd, alias_t *current)

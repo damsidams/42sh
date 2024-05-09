@@ -72,16 +72,23 @@ static int get_len(char *arg, int index)
 
 static char *cat_new_var(char *var, char *arg, int index, int var_len)
 {
+    char *final = NULL;
+    char *arg_cpy = strdup(arg);
+
     if (!var) {
         return NULL;
     }
     for (int i = 0; i != index + var_len; i++) {
-        arg++;
+        arg_cpy++;
     }
-    if (arg[0] == '\0') {
+    if (arg[0] != '$') {
+        final = strndup(arg, index + 1);
+        var = my_strcat(final, var);
+    }
+    if (arg_cpy[0] == '\0') {
         return var;
     }
-    var = my_strcat(var, arg);
+    var = my_strcat(var, arg_cpy);
     return var;
 }
 
@@ -96,6 +103,7 @@ static char *replace_dollar(char *arg, int index, shell_info_t *my_shell)
         size++;
     }
     var[size] = '\0';
+    var_len = my_strlen(var);
     var = return_value(var, my_shell);
     return cat_new_var(var, arg, index, var_len);
 }

@@ -68,19 +68,25 @@ static void exec_pipe(char **args, shell_info_t *my_shell, int i, int *pipefd)
     }
 }
 
-static bool check_null_cmd(char *cmd, char **pipe_sep)
+static void check_null_cmd_setup(char **pipe_sep, char **pipe_sep_cpy,
+    char *cmd, int *pipe_cpt)
 {
-    int pipe_cpt = 0;
-    char **pipe_sep_cpy = my_str_array_dup(pipe_sep);
-
     if (my_strstrlen(pipe_sep) == 1) {
         free_str_array(pipe_sep_cpy);
         pipe_sep_cpy = my_str_to_word_array(pipe_sep[0], "|");
     }
     for (int i = 0; cmd[i] != '\0'; i++) {
         if (cmd[i] == '|')
-            pipe_cpt++;
+            (*pipe_cpt)++;
     }
+}
+
+static bool check_null_cmd(char *cmd, char **pipe_sep)
+{
+    int pipe_cpt = 0;
+    char **pipe_sep_cpy = my_str_array_dup(pipe_sep);
+
+    check_null_cmd_setup(pipe_sep, pipe_sep_cpy, cmd, &pipe_cpt);
     if (pipe_cpt == 0) {
         free_str_array(pipe_sep_cpy);
         return false;

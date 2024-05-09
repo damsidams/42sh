@@ -98,6 +98,7 @@ bool job_exist(int process_nb, shell_info_t *my_shell);
 process_t *get_job_from_id(int nb, shell_info_t *my_shell);
 process_t *get_job_from_pid(int pid, shell_info_t *my_shell);
 void sig_handler(int signum);
+void end_job_control(shell_info_t *my_shell);
 void sigstp_handler(int signum);
 
 // --> time

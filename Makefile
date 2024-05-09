@@ -35,6 +35,7 @@ SRC	=	src/main.c								\
 		src/job_control.c						\
 		src/background.c 						\
 		src/foreground.c 						\
+		src/job_control_utils.c 				\
 
 UT_SRC	=	tests/unit_tests.c						\
 			src/env/disp_env.c						\

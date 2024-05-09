@@ -5,7 +5,6 @@
 ** job control for the shell
 */
 
-#include <signal.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <sys/wait.h>
@@ -57,41 +56,17 @@ void remove_job(int pid, shell_info_t *my_shell)
     free(element);
 }
 
-bool job_exist(int process_nb, shell_info_t *my_shell)
+void end_job_control(shell_info_t *my_shell)
 {
-    for (process_t *temp = my_shell->jobs; temp; temp = temp->next) {
-        if (process_nb == temp->nb)
-            return true;
-        temp = temp->next;
+    process_t *next = NULL;
+
+    if (my_shell->last_cmd)
+        free(my_shell->last_cmd);
+    for (process_t *i = my_shell->jobs; i;) {
+        next = i->next;
+        if (i->cmd)
+            free(i->cmd);
+        free(i);
+        i = next;
     }
-    return false;
-}
-
-void wait_for_pid(int pid, shell_info_t *my_shell)
-{
-    int wstatus = 0;
-
-    signal_child(pid, 0, NULL);
-    tcsetpgrp(STDIN_FILENO, -pid);
-    waitpid(pid, &wstatus, WUNTRACED);
-    tcsetpgrp(STDIN_FILENO, my_shell->shell_pgid);
-    check_seg_fault(wstatus, my_shell);
-}
-
-process_t *get_job_from_pid(int pid, shell_info_t *my_shell)
-{
-    for (process_t *temp = my_shell->jobs; temp; temp = temp->next) {
-        if (temp->pid == pid)
-            return temp;
-    }
-    return NULL;
-}
-
-process_t *get_job_from_id(int nb, shell_info_t *my_shell)
-{
-    for (process_t *temp = my_shell->jobs; temp; temp = temp->next) {
-        if (temp->nb == nb)
-            return temp;
-    }
-    return NULL;
 }

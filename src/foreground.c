@@ -46,7 +46,6 @@ static bool stopped_basic_fg(process_t *process, bool good,
     int pid = my_shell->stopped_pid;
 
     if (pid != my_shell->shell_pgid) {
-        printf("stopped fg: %d\n", pid);
         process = get_job_from_pid(pid, my_shell);
         puts(process->cmd);
         setpgid(pid, pid);
@@ -69,7 +68,6 @@ static void basic_fg(shell_info_t *my_shell)
         kill(my_shell->stopped_pid, SIGCONT);
     good = stopped_basic_fg(process, good, my_shell);
     if (my_shell->jobs && !good) {
-        printf("last fg: %d\n", pid);
         puts(my_shell->jobs->cmd);
         setpgid(pid, pid);
         wait_for_pid(pid, my_shell);

@@ -34,6 +34,7 @@ static int end_shell(shell_info_t *my_shell)
         my_shell->list_alias = my_shell->list_alias->next;
         free(tmp);
     }
+    end_job_control(my_shell);
     return_value = my_shell->exit_status;
     free(my_shell);
     return return_value;

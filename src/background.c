@@ -40,7 +40,6 @@ void background_process(char **args, shell_info_t *my_shell)
     process_t *process = 0;
 
     if (len == 1 && my_shell->stopped_pid != my_shell->shell_pgid) {
-        printf("bg : %d\n", my_shell->stopped_pid);
         signal_child(my_shell->stopped_pid, 0, NULL);
         kill(my_shell->stopped_pid, SIGCONT);
         process = get_job_from_pid(my_shell->stopped_pid, my_shell);

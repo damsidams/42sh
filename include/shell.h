@@ -54,6 +54,7 @@ int end_shell(shell_info_t *my_shell);
 
 // --> init
 shell_info_t *init_shell_info_t(char **env);
+void disp_actual_dir(shell_info_t *my_shell);
 
 // --> env
 void set_env(char **args, shell_info_t *my_shell);
@@ -72,6 +73,7 @@ int exec_alias(shell_info_t *my_shell, char *args);
 // --> color
 void set_color(char **args, shell_info_t *my_shell);
 int valid_color(char *color);
+void disp_color_help(void);
 
 // --> redirections
 char **check_redirect(char **args, shell_info_t *my_shell);

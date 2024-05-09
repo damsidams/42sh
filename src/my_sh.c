@@ -59,7 +59,7 @@ static void set_index(char const *actual_dir, int *index)
     *index += 1;
 }
 
-static void disp_actual_dir(shell_info_t *my_shell)
+void disp_actual_dir(shell_info_t *my_shell)
 {
     char *actual_dir = NULL;
     char *path = NULL;

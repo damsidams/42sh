@@ -75,7 +75,6 @@ static bool check_null_cmd(char *cmd, char **pipe_sep)
 
     if (my_strstrlen(pipe_sep) == 1) {
         free_str_array(pipe_sep_cpy);
-        free_str_array(pipe_sep_cpy);
         pipe_sep_cpy = my_str_to_word_array(pipe_sep[0], "|");
     }
     for (int i = 0; cmd[i] != '\0'; i++) {

@@ -76,7 +76,6 @@ static local_t *set_existing_var(char **var, local_t *local)
 {
     local_t *temp = local;
 
-    print_str_array(var);
     while (temp) {
         if (strcmp(var[0], temp->name) == 0 && temp->name) {
             free(temp->value);

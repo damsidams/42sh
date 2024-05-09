@@ -146,5 +146,4 @@ void exec_no_pipe(char *cmd, shell_info_t *my_shell)
     char **args = my_pimp_str_to_wa(cmd, " \t");
 
     command_handling(my_shell, args);
-    free_str_array(args);
 }

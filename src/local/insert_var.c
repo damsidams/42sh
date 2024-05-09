@@ -82,7 +82,7 @@ static char *cat_new_var(char *var, char *arg, int index, int var_len)
         arg_cpy++;
     }
     if (arg[0] != '$') {
-        final = strndup(arg, index + 1);
+        final = strndup(arg, index - 1);
         var = my_strcat(final, var);
     }
     if (arg_cpy[0] == '\0') {

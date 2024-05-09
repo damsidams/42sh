@@ -20,12 +20,12 @@ static linked_list_t *get_history_cmd(shell_input_t *user_input,
         delete_string(user_input);
         insert_string(user_input, historic->value);
     }
-    if (direction == UP && historic->prev) {
+    if (direction == UP && historic && historic->prev) {
         historic = historic->prev;
         delete_string(user_input);
         insert_string(user_input, historic->value);
     }
-    if (direction == DOWN && historic->next) {
+    if (direction == DOWN && historic && historic->next) {
         historic = historic->next;
         delete_string(user_input);
         insert_string(user_input, historic->value);

@@ -104,6 +104,18 @@ static void fill_structs(char **commands, glob_t *globbing_buffer)
     }
 }
 
+static void free_globs(glob_t *globbing_buffer, char **commands)
+{
+    int command_params = 0;
+
+    for (int i = 0; commands[i]; i++) {
+        if (count_globbing(commands[i]) == 0) {
+            free(globbing_buffer->gl_pathv[command_params]);
+            command_params++;
+        }
+    }
+}
+
 void globbing(char **commands, shell_info_t *my_shell)
 {
     glob_t globbing_buffer;
@@ -121,6 +133,8 @@ void globbing(char **commands, shell_info_t *my_shell)
         } else {
             wait(NULL);
             my_shell->exit_status = 0;
+            free_globs(&globbing_buffer, commands);
+            globfree(&globbing_buffer);
         }
     }
 }

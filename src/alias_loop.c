@@ -80,10 +80,11 @@ int exec_alias_loop(shell_info_t *my_shell, alias_t *list)
             cmd = my_str_to_word_array(current->real_cmd, " ");
             exec_cmd(cmd, my_shell);
             return 1;
-            }
+        }
         current = current->next;
     }
-        cmd = my_str_to_word_array(list->real_cmd, " ");
-        exec_cmd(cmd, my_shell);
+    cmd = my_str_to_word_array(list->real_cmd, " ");
+    exec_cmd(cmd, my_shell);
+    free_str_array(cmd);
     return 0;
 }

@@ -103,7 +103,7 @@ static char *finish_input(shell_input_t *user_input,
 {
     tcsetattr(STDIN_FILENO, TCSANOW, initial_settings);
     if (last_char == EOT)
-        return "EOT";
+        return strdup("EOT");
     return user_input->input;
 }
 
@@ -124,5 +124,6 @@ char *get_prompt(shell_info_t *my_shell)
         }
         c = getchar();
     }
+    free_list(historic);
     return finish_input(&user_input, &initial_settings, c);
 }

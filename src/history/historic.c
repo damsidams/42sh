@@ -117,6 +117,7 @@ static char *get_last_line(char *buffer)
     }
     cmd = find_cmd_in_line(array[my_strstrlen(array) - 1]);
     free_str_array(array);
+    free(buffer);
     return cmd;
 }
 
@@ -147,9 +148,10 @@ int add_command_to_save(char const *cmd)
 {
     int fd = open_append(HISTORIC_FILENAME);
     int prev_num = get_previous_cmd_num();
+    char *last_cmd = get_last_cmd();
     char *line = NULL;
 
-    if (fd == ERROR || prev_num < 0 || strcmp(cmd, get_last_cmd()) == 0) {
+    if (fd == ERROR || prev_num < 0 || strcmp(cmd, last_cmd) == 0) {
         return ERROR;
     }
     line = format_line(cmd, prev_num + 1);
@@ -160,5 +162,6 @@ int add_command_to_save(char const *cmd)
     }
     close(fd);
     free(line);
+    free(last_cmd);
     return SUCCESS;
 }

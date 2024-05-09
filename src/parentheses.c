@@ -90,6 +90,7 @@ static bool p_check(char const *cmd)
         return true;
     }
     if (my_strstrlen(line) <= 1) {
+        free_str_array(line);
         return false;
     }
     for (unsigned int i = 1; line[i]; i++) {

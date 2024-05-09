@@ -27,6 +27,7 @@ char **get_pipe_cmds(char *cmd)
         return NULL;
     }
     free(cmd_cpy);
+    free_str_array(pipe_sep_no_quote);
     return pipe_sep;
 }
 
@@ -74,6 +75,7 @@ static bool check_null_cmd(char *cmd, char **pipe_sep)
 
     if (my_strstrlen(pipe_sep) == 1) {
         free_str_array(pipe_sep_cpy);
+        free_str_array(pipe_sep_cpy);
         pipe_sep_cpy = my_str_to_word_array(pipe_sep[0], "|");
     }
     for (int i = 0; cmd[i] != '\0'; i++) {
@@ -81,11 +83,14 @@ static bool check_null_cmd(char *cmd, char **pipe_sep)
             pipe_cpt++;
     }
     if (pipe_cpt == 0) {
+        free_str_array(pipe_sep_cpy);
         return false;
     }
     if (pipe_cpt != my_strstrlen(pipe_sep_cpy) - 1) {
+        free_str_array(pipe_sep_cpy);
         return true;
     }
+    free_str_array(pipe_sep_cpy);
     return false;
 }
 
@@ -102,6 +107,7 @@ bool check_pipe(char *cmd, shell_info_t *my_shell)
     if (check_null_cmd(cmd, pipe_sep)) {
         my_putstr_err("Invalid null command.\n");
         my_shell->exit_status = 1;
+        free_str_array(pipe_sep);
         return true;
     }
     exec_pipe(pipe_sep, my_shell, 0, pipefd);

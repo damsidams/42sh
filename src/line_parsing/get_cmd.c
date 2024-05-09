@@ -29,6 +29,7 @@ char *get_user_input(shell_info_t *my_shell)
         return NULL;
     if (strcmp(user_input, "EOT") == 0) {
         my_shell->exit_shell = true;
+        free(user_input);
         return NULL;
     }
     if (my_strlen(user_input) == 0) {
@@ -102,6 +103,7 @@ char **get_args(shell_info_t *my_shell)
     char **args = NULL;
 
     if (side_checks(user_input, my_shell) == ERROR) {
+        my_free_n_str(2, user_input, user_input_cpy);
         return NULL;
     }
     if (my_strlen(user_input) != 0) {

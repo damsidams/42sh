@@ -17,7 +17,8 @@ void free_list(linked_list_t *list)
     linked_list_t *next = NULL;
 
     while (list != NULL) {
-        free(list->value);
+        if (list->value)
+            free(list->value);
         next = list->next;
         free(list);
         list = next;
@@ -48,10 +49,11 @@ linked_list_t *create_list_from_array(char **array)
     linked_list_t *node = NULL;
 
     if (my_strstrlen(array) <= 0) {
+        free_str_array(array);
         return NULL;
     }
     for (unsigned int i = 0; array[i]; i++) {
-        node = create_node(array[i], prev);
+        node = create_node(strdup(array[i]), prev);
         if (node == NULL) {
             free_str_array(array);
             return NULL;
@@ -61,5 +63,6 @@ linked_list_t *create_list_from_array(char **array)
         }
         prev = node;
     }
+    free_str_array(array);
     return node;
 }

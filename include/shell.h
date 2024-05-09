@@ -106,6 +106,7 @@ int check_buffer(char const *buffer, int fd);
 
 // --> linked_list
 linked_list_t *create_list_from_array(char **array);
+void free_list(linked_list_t *list);
 
 // --> file
 int get_file_size(char const *filename);

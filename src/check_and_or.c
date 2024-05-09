@@ -68,6 +68,7 @@ static bool no_more(char **args)
         free_str_array(args);
         return true;
     }
+    free_str_array(args);
     return false;
 }
 

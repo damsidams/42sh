@@ -185,6 +185,5 @@ char **check_redirect(char **args, shell_info_t *my_shell)
     args = my_str_array_dup_ban_str(args, "<<");
     args = my_str_array_dup_ban_str(args, "<");
     args = my_str_array_dup_ban_str(args, ">");
-    args = my_str_array_dup_ban_str(args, ">>");
     return args;
 }

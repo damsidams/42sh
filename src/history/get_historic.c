@@ -26,12 +26,14 @@ static linked_list_t *add_command_to_end(char *buffer, char *cmd)
     file_by_line = my_pimp_str_to_wa(buffer, "\n");
     free(buffer);
     if (file_by_line == NULL) {
+        free(cmd);
         return NULL;
     }
     final_array = malloc(sizeof(char *) * (my_strstrlen(file_by_line) + 2));
     if (final_array == NULL) {
         free_str_array(file_by_line);
         perror("add command to end malloc");
+        free(cmd);
         return NULL;
     }
     final_array = my_strstrcpy(final_array, file_by_line);
@@ -59,14 +61,17 @@ linked_list_t *get_array_from_prev_cmd(char *current_cmd)
     int chars_read = 0;
 
     if (fd == ERROR || file_size <= 0) {
+        free(current_cmd);
         return NULL;
     }
     buffer = malloc(sizeof(char) * (file_size + 1));
     if (check_buffer(buffer, fd) == ERROR) {
+        free(current_cmd);
         return NULL;
     }
     chars_read = read(fd, buffer, file_size - 1);
     if (chars_read == SYS_ERROR) {
+        free(current_cmd);
         return return_read_error(fd);
     }
     close(fd);

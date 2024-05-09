@@ -36,6 +36,16 @@ Test(unit_test, set_stuct_with_env_null, .init=redirect_all_stdout)
     cr_assert_eq(get_file_size("not existing file"), OPEN_ERROR);
 }
 
+/* display prompt */
+
+Test(unit_test, display_prompt, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=~/delivery/Project/42sh", "HOST=nicolo", "test=ops", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+
+    disp_actual_dir(my_shell);
+}
+
 /* execution */
 
 Test(unit_test, command_handling, .init=redirect_all_stdout)
@@ -75,6 +85,12 @@ Test(unit_test, set_color, .init=redirect_all_stdout)
     cr_assert_eq(my_shell->color[0], 34);
     cr_assert_eq(my_shell->color[1], 33);
 }
+
+Test(unit_test, color_help, .init=redirect_all_stdout)
+{
+    disp_color_help();
+}
+
 
 /* historic */
 
@@ -123,4 +139,96 @@ Test(unit_test, check_if_cmd_needs_to_be_replaced, .init=redirect_all_stdout)
     
     cr_assert_str_eq(check_if_historic(strdup("ls -l"), my_shell), "ls -l");
     cr_assert_str_eq(check_if_historic(strdup("ls -la"), my_shell), "ls -la");
+}
+
+/* pipe */
+
+Test(unit_test, simple_pipe_command, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo", "test=ops", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char *cmd = my_strdup("ls tests/test_dir | cat -e");
+
+    check_pipe(cmd, my_shell);
+    cr_assert_stdout_eq_str("file$\n");
+    free(cmd);
+    free_str_array(env);
+}
+
+/* local variables */
+
+Test(unit_test, set_new_var, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo", "test=ops", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args = create_strstr("set", "name=nicolas", "no_value", "empty=");
+
+    set_local(args, my_shell);
+}
+
+Test(unit_test, set_existing_var, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo", "test=ops", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **set = create_strstr("set", "name=nicolas", "no_value", "empty=");
+    char **new_set = create_strstr("set", "name=nunney", "no_value", "empty");
+
+    set_local(set, my_shell);
+    set_local(new_set, my_shell);
+}
+
+Test(unit_test, disp_local, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo", "test=ops", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **set = create_strstr("set", "name=nicolas", "no_value", "empty=");
+    char **new_set = create_strstr("set", "name=nunney", "no_value", "empty");
+    char **disp = malloc(sizeof(char *) * 2);
+
+    disp[0] = my_strdup("set");
+    disp[1] = NULL;
+
+    set_local(set, my_shell);
+    set_local(new_set, my_shell);
+    set_local(disp, my_shell);
+}
+
+Test(unit_test, unset_new_var, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo", "test=ops", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **set = create_strstr("set", "name=nicolas", "no_value", "empty=");
+    char **unset = create_strstr("unset", "name", "no_value", "empty");
+
+    set_local(set, my_shell);
+    unset_local(unset, my_shell);
+}
+
+/* redirects */
+
+Test(unit_test, redirects, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo", "test=ops", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **simple_right = create_strstr("ls", ">", "test", NULL);
+    char **double_right = create_strstr("ls", ">>", "test", NULL);
+    char **simple_left = create_strstr("ls", "<", "test", NULL);
+    char **double_left = create_strstr("ls", "<<", "test", NULL);
+
+    check_redirect(simple_left, my_shell);
+    check_redirect(double_left, my_shell);
+    check_redirect(simple_right, my_shell);
+    check_redirect(double_right, my_shell);
+}
+
+/* cd */
+
+Test(unit_test, cd_to_a_dir, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args = create_strstr("cd", "test_dir", NULL, NULL);
+
+    change_dir(args, my_shell);
 }

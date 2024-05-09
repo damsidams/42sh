@@ -18,6 +18,9 @@ typedef struct alias_s {
 typedef struct process_t_s {
     int nb;
     int pid;
+    char *cmd;
+    bool is_background;
+    struct process_t_s *next;
 }process_t;
 
 typedef struct shell_info_t_s {
@@ -33,6 +36,7 @@ typedef struct shell_info_t_s {
     process_t *jobs;
     int shell_pgid;
     int stopped_pid;
+    char *last_cmd;
 } shell_info_t;
 
 typedef struct linked_list_s {

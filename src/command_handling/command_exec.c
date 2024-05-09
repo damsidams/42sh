@@ -80,22 +80,40 @@ static void exec_paths(char **args, shell_info_t *my_shell)
     free_paths(cmd_path, paths);
 }
 
+static void foreground_background_handle(pid_t child, bool ampersand,
+    char **args, shell_info_t *my_shell)
+{
+    process_t *process = NULL;
+
+    setpgid(child, child);
+    if (!ampersand) {
+        wait_for_pid(child, my_shell);
+    } else {
+        process = add_job(child, my_shell, args[0]);
+        process->is_background = true;
+    }
+}
+
 void exec_cmd(char **args, shell_info_t *my_shell)
 {
     pid_t child;
     bool ampersand = is_ampersand(args);
 
+    if (my_shell->last_cmd) {
+        free(my_shell->last_cmd);
+        my_shell->last_cmd = NULL;
+    }
+    my_shell->last_cmd = strdup(args[0]);
     if (ampersand)
         args = my_word_array_delete(args, "&");
     child = fork();
     if (child == 0) {
+        setpgid(getpid(), getpid());
+        if (!ampersand)
+            tcsetpgrp(STDIN_FILENO, -getpid());
         exec_paths(args, my_shell);
     } else {
-        if (!ampersand) {
-            wait_for_pid(child, my_shell);
-        } else {
-            add_job(child, my_shell, false);
-        }
+        foreground_background_handle(child, ampersand, args, my_shell);
     }
     free_str_array(args);
 }

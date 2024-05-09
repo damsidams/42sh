@@ -91,8 +91,12 @@ char *get_file_content(char const *filename);
 void background_process(char **args, shell_info_t *my_shell);
 void foreground_process(char **args, shell_info_t *my_shell);
 void signal_child(int pid, int signal, shell_info_t *my_shell);
-void add_job(int pid, shell_info_t *my_shell, bool suspended);
+process_t *add_job(int pid, shell_info_t *my_shell, char *cmd);
+void remove_job(int pid, shell_info_t *my_shell);
 void wait_for_pid(int pid, shell_info_t *my_shell);
+bool job_exist(int process_nb, shell_info_t *my_shell);
+process_t *get_job_from_id(int nb, shell_info_t *my_shell);
+process_t *get_job_from_pid(int pid, shell_info_t *my_shell);
 void sig_handler(int signum);
 void sigstp_handler(int signum);
 

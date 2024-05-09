@@ -6,6 +6,7 @@
 */
 
 #include <stdbool.h>
+#include <termios.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
@@ -40,15 +41,8 @@ static int end_shell(shell_info_t *my_shell)
 
 void set_shell_pgid(shell_info_t *my_shell)
 {
-    int shell_terminal = STDIN_FILENO;
-
-    my_shell->shell_pgid = getpgrp();
     if (!my_shell->is_a_tty) {
         return;
-    }
-    while (tcgetpgrp(shell_terminal) != my_shell->shell_pgid) {
-        kill(-my_shell->shell_pgid, SIGTTIN);
-        my_shell->shell_pgid = getpgrp();
     }
     signal(SIGINT, sig_handler);
     signal(SIGQUIT, SIG_IGN);
@@ -58,7 +52,7 @@ void set_shell_pgid(shell_info_t *my_shell)
     signal(SIGCHLD, SIG_IGN);
     my_shell->shell_pgid = getpid();
     setpgid(my_shell->shell_pgid, my_shell->shell_pgid);
-    tcsetpgrp(shell_terminal, my_shell->shell_pgid);
+    tcsetpgrp(STDIN_FILENO, my_shell->shell_pgid);
     signal_child(my_shell->shell_pgid, 0, my_shell);
 }
 
@@ -70,10 +64,9 @@ static shell_info_t *set_shell_info(shell_info_t *my_shell)
     my_shell->exit_status = 0;
     my_shell->exit_shell = false;
     my_shell->color = malloc(sizeof(int) * 2);
-    my_shell->stopped_pid = -1;
     set_shell_pgid(my_shell);
-    my_shell->jobs = malloc(sizeof(process_t));
-    my_shell->jobs[0].nb = -1;
+    my_shell->stopped_pid = my_shell->shell_pgid;
+    my_shell->jobs = NULL;
     if (my_shell->color == NULL) {
         perror("shell color malloc");
     } else {

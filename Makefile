@@ -33,6 +33,8 @@ SRC	=	src/main.c								\
 		src/aliases.c							\
 		src/linked_list.c						\
 		src/job_control.c						\
+		src/background.c 						\
+		src/foreground.c 						\
 
 UT_SRC	=	tests/unit_tests.c						\
 			src/env/disp_env.c						\

@@ -173,5 +173,8 @@ void set_local(char **args, shell_info_t *my_shell);
 void unset_local(char **args, shell_info_t *my_shell);
 char **replace_var(char **args, shell_info_t *my_shell);
 
+// --> tests
+char **create_strstr(char *s1, char *s2, char *s3, char *s4);
+
 
 #endif

@@ -47,6 +47,7 @@ SRC	=	src/main.c								\
 		src/alias_loop.c	\
 
 UT_SRC	=	tests/unit_tests.c						\
+			src/test.c								\
 			src/env/disp_env.c						\
 			src/env/unsetenv.c						\
 			src/env/setenv.c						\
@@ -81,8 +82,9 @@ UT_SRC	=	tests/unit_tests.c						\
 			src/shell_info.c	\
 			src/parentheses.c	\
 			src/aliases.c							\
-			src/return_value.c	\
-			src/test.c	\
+			src/local/insert_var.c	\
+			src/local/set.c			\
+			src/local/unset.c		\
 			src/alias_loop.c	\
 
 OBJ	=	$(SRC:.c=.o)

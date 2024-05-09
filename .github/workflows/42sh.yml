@@ -1,0 +1,48 @@
+name: 42actions
+
+env:
+    EXECUTABLES: "42sh"
+
+on:
+    push:
+        branches-ignore: ["ga-ignore-*"]
+    pull_request:
+        branches-ignore: ["ga-ignore-*"]
+
+jobs:
+    check_program_compilation:
+        runs-on: ubuntu-latest
+        container:
+            image: epitechcontent/epitest-docker
+        steps:
+            - uses: actions/checkout@v4
+            - name: compile project
+              timeout-minutes: 2
+              run:  make
+            
+            - name: clean repo
+              run: make clean
+
+            - name: executable here
+              run: |
+                IFS=',' read -r -a executables <<< ${{ env.EXECUTABLES }}
+                for exe in "${executables[@]}"; do
+                    if [ -x "./$exe" ]; then
+                        echo "$exe is present."
+                    else
+                        echo "$exe is not present."
+                        exit 1
+                    fi
+                done
+
+    run_tests:
+        needs: check_program_compilation
+        runs-on: ubuntu-latest
+        container:
+            image: epitechcontent/epitest-docker
+        steps:
+            - uses: actions/checkout@v4
+            - name: run tests
+              run:  make tests_run
+              
+

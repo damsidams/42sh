@@ -69,6 +69,8 @@ char *get_name(char **env, int index);
 void my_alias(char **args, shell_info_t *my_shell);
 alias_t *init_alias(void);
 int exec_alias(shell_info_t *my_shell, char *args);
+alias_t *change_alias_cmd(char **args, shell_info_t *my_shell);
+int alias_loop_check(shell_info_t *my_shell, char *args);
 
 // --> color
 void set_color(char **args, shell_info_t *my_shell);

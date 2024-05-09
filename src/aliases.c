@@ -95,7 +95,11 @@ void my_alias(char **args, shell_info_t *my_shell)
         display_list_alias(my_shell);
         return;
     }
-    if (args[1] != NULL) {
+    if (args[1] != NULL && args[2] != NULL) {
+        if (alias_loop_check(my_shell, args[1]) == 1) {
+        my_shell->list_alias = change_alias_cmd(args, my_shell);
+            return;
+        }
         my_shell->list_alias = add_alias(args[1], args[2],
             my_shell->list_alias);
         create_42rc(my_shell);

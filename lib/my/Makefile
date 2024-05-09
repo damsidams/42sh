@@ -66,7 +66,7 @@ OBJ	=	$(SRC:.c=.o)
 
 NAME	=	libmy.a
 
-CFLAGS	=	-Wall -Wextra -g3
+CFLAGS	=	-Wall -Wextra
 
 HFILE	=	my.h
 

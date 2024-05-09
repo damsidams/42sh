@@ -31,8 +31,9 @@ char *get_name(char **env, int index)
         perror("get_name malloc failed");
         return NULL;
     }
-    for (int j = 0; env[index][j] != '='; j++)
+    for (int j = 0; env[index][j] != '='; j++) {
         name[j] = env[index][j];
+    }
     name[get_name_len(env, index)] = '\0';
     return name;
 }

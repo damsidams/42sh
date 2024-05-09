@@ -129,15 +129,15 @@ void set_env_no_disp(char **args, shell_info_t *my_shell)
     my_shell->exit_status = 0;
 }
 
-static bool is_valid_arg(char *arg)
+bool is_valid_arg(char *arg, char *cmd)
 {
-    if (!my_str_isalpha(arg)) {
-        my_putstr_err("setenv: Variable name must contain ");
-        my_putstr_err("alphanumeric characters.\n");
+    if ((arg[0] < 65 || arg[0] > 91) && ((arg[0] < 97 || arg[0] > 122))) {
+        dprintf(2, "%s: Variable name must begin with a letter.\n", cmd);
         return false;
     }
-    if ((arg[0] < 65 || arg[0] > 91) && ((arg[0] < 97 || arg[0] > 122))) {
-        my_putstr_err("setenv: Variable name must begin with a letter.\n");
+    if (!my_str_isalpha(arg)) {
+        dprintf(2, "%s: Variable name must contain ", cmd);
+        dprintf(2, "alphanumeric characters.\n");
         return false;
     }
     return true;
@@ -149,10 +149,10 @@ static bool arg_error(char **args)
         my_putstr_err("setenv: Too many arguments.\n");
         return true;
     }
-    if (my_strstrlen(args) == 2 && !is_valid_arg(args[1])) {
+    if (my_strstrlen(args) == 2 && !is_valid_arg(args[1], "setenv")) {
         return true;
     }
-    if (my_strstrlen(args) == 3 && !is_valid_arg(args[1])) {
+    if (my_strstrlen(args) == 3 && !is_valid_arg(args[1], "setenv")) {
         return true;
     }
     return false;

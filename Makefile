@@ -11,10 +11,16 @@ SRC	=	src/main.c								\
 		src/env/setenv.c						\
 		src/line_parsing/get_cmd.c				\
 		src/line_parsing/get_input.c			\
+		src/line_parsing/get_input_getline.c	\
+		src/line_parsing/input_manip.c			\
 		src/history/historic.c					\
 		src/history/special_getnbr.c			\
 		src/history/time.c						\
 		src/history/display_hist.c				\
+		src/history/find_cmd.c	\
+		src/history/history_parser.c	\
+		src/history/find_cmd_str.c	\
+		src/history/get_historic.c	\
 		src/command_handling/command_type.c		\
 		src/command_handling/command_error.c	\
 		src/command_handling/command_exec.c		\
@@ -27,40 +33,64 @@ SRC	=	src/main.c								\
 		src/auto_complete.c						\
 		src/signal.c							\
 		src/file.c								\
-		src/backtick.c							\
+		src/backtick/backtick.c							\
+		src/backtick/get_output.c							\
 		src/check_and_or.c						\
 		src/globbing.c							\
+		src/linked_list.c	\
+		src/shell_info.c	\
+		src/parentheses.c	\
 		src/aliases.c							\
-		src/linked_list.c						\
+		src/local/set.c			\
+		src/local/unset.c		\
+		src/local/insert_var.c		\
+		src/test.c	\
+		src/alias_loop.c	\
 		src/job_control.c						\
 		src/background.c 						\
 		src/foreground.c 						\
 		src/job_control_utils.c 				\
 
 UT_SRC	=	tests/unit_tests.c						\
+			src/test.c								\
 			src/env/disp_env.c						\
 			src/env/unsetenv.c						\
 			src/env/setenv.c						\
 			src/line_parsing/get_cmd.c				\
 			src/line_parsing/get_input.c			\
+			src/line_parsing/get_input_getline.c	\
+			src/line_parsing/input_manip.c			\
 			src/history/historic.c					\
 			src/history/special_getnbr.c			\
-			src/history/time.c						\
+			src/history/time.c							\
 			src/history/display_hist.c				\
+			src/history/find_cmd.c	\
+			src/history/history_parser.c	\
+			src/history/find_cmd_str.c	\
+			src/history/get_historic.c	\
 			src/command_handling/command_type.c		\
 			src/command_handling/command_error.c	\
 			src/command_handling/command_exec.c		\
+			src/command_handling/built_in_command.c	\
 			src/cd.c								\
 			src/pipe.c								\
 			src/redirect.c							\
 			src/set_color.c							\
-			src/my_sh.c								\
+			src/my_sh.c					\
+			src/auto_complete.c								\
 			src/file.c								\
-			src/built_in_command.c	 				\
-			src/backtick.c							\
+			src/backtick/backtick.c							\
+			src/backtick/get_output.c							\
 			src/check_and_or.c						\
 			src/globbing.c							\
 			src/linked_list.c	\
+			src/shell_info.c	\
+			src/parentheses.c	\
+			src/aliases.c							\
+			src/local/insert_var.c	\
+			src/local/set.c			\
+			src/local/unset.c		\
+			src/alias_loop.c	\
 
 OBJ	=	$(SRC:.c=.o)
 
@@ -131,7 +161,8 @@ coding_style:	fclean
 	make fclean  > /dev/null 2>&1
 
 tests_run:
-	$(CC) -I include/ -L ./lib/my -o $(UT_BIN) $(UT_SRC) $(UT_FLAGS) -lmy
+	$(MAKE) all -C lib/my
+	$(CC) -I include/ -L lib/my -o $(UT_BIN) $(UT_SRC) $(UT_FLAGS) -lmy
 	./$(UT_BIN)
 
 coverage:

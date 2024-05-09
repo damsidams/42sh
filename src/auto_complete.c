@@ -51,18 +51,6 @@ static char *search_file(char *cmd_path, char *cmd)
     return NULL;
 }
 
-static int args_len(char **args)
-{
-    int len = 0;
-
-    for (int i = 0; args[i]; i++) {
-        for (int j = 0; args[i][j] != '\0'; j++) {
-            len++;
-        }
-    }
-    return len;
-}
-
 static void replace_user_input(shell_input_t *user_input, char **args)
 {
     delete_string(user_input);
@@ -88,4 +76,5 @@ void auto_complete(shell_input_t *user_input, shell_info_t *my_shell)
     }
     args[0] = new_cmd;
     replace_user_input(user_input, args);
+    free_str_array(args);
 }

@@ -13,7 +13,13 @@ typedef struct alias_s {
     char *alias_cmd;
     char *real_cmd;
     struct alias_s *next;
-}alias_t;
+} alias_t;
+
+typedef struct local_s {
+    char *name;
+    char *value;
+    struct local_s *next;
+} local_t;
 
 typedef struct process_t_s {
     int nb;
@@ -23,8 +29,9 @@ typedef struct process_t_s {
     struct process_t_s *next;
 }process_t;
 
-typedef struct shell_info_t_s {
+typedef struct shell_info_s {
     char **env;
+    local_t *local;
     char *last_path;
     int exit_status;
     int *color;
@@ -55,6 +62,11 @@ enum sep_type {
     And,
     Or,
     End
+};
+
+enum historic_direction {
+    UP,
+    DOWN
 };
 
 #endif

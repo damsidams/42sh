@@ -8,15 +8,16 @@
 
 #include <stdlib.h>
 #include <stddef.h>
+#include <string.h>
 #include "my.h"
 
 char **my_strstrcpy(char **dest, char **src)
 {
     for (unsigned int i = 0; src[i] != NULL; i++) {
-        dest[i] = malloc(sizeof(char) * my_strlen(src[i]));
+        dest[i] = malloc(sizeof(char) * my_strlen(src[i]) + 1);
         if (dest[i] == NULL)
             return NULL;
-        dest[i] = my_strcpy(dest[i], src[i]);
+        dest[i] = strcpy(dest[i], src[i]);
     }
     return dest;
 }

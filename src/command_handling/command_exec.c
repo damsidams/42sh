@@ -27,6 +27,9 @@ char **get_paths(char **env)
     while (env[i] && my_strncmp(env[i], "PATH", 4) != 0) {
         i++;
     }
+    if (env[i] == NULL) {
+        return NULL;
+    }
     return my_pimp_str_to_wa(env[i], ":=");
 }
 
@@ -94,11 +97,9 @@ static void foreground_background_handle(pid_t child, bool ampersand,
     }
 }
 
-void exec_cmd(char **args, shell_info_t *my_shell)
+static void job_control_setup(char **args, bool ampersand,
+    shell_info_t *my_shell)
 {
-    pid_t child;
-    bool ampersand = is_ampersand(args);
-
     if (my_shell->last_cmd) {
         free(my_shell->last_cmd);
         my_shell->last_cmd = NULL;
@@ -106,6 +107,17 @@ void exec_cmd(char **args, shell_info_t *my_shell)
     my_shell->last_cmd = strdup(args[0]);
     if (ampersand)
         args = my_word_array_delete(args, "&");
+}
+
+void exec_cmd(char **args, shell_info_t *my_shell)
+{
+    pid_t child;
+    bool ampersand = is_ampersand(args);
+
+    if (!args || !args[0] || strcmp(args[0], MAGIC_STRING) == 0) {
+        return;
+    }
+    job_control_setup(args, ampersand, my_shell);
     child = fork();
     if (child == 0) {
         setpgid(getpid(), getpid());
@@ -120,7 +132,13 @@ void exec_cmd(char **args, shell_info_t *my_shell)
 
 void command_handling(shell_info_t *my_shell, char **args)
 {
+    args = replace_var(args, my_shell);
+    if (!args) {
+        my_shell->exit_status = 1;
+        return;
+    }
     args = check_redirect(args, my_shell);
+    exec_parentheses(my_shell, args);
     if (my_shell->exit_shell || !args) {
         free_str_array(args);
         return;
@@ -135,6 +153,5 @@ void exec_no_pipe(char *cmd, shell_info_t *my_shell)
 {
     char **args = my_pimp_str_to_wa(cmd, " \t");
 
-    replace_backtick(args, my_shell);
     command_handling(my_shell, args);
 }

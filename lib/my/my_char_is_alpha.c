@@ -10,7 +10,8 @@
 
 bool my_char_is_alpha(char c)
 {
-    if ((c > 47 && c < 58) || (c > 40 && c < 91) || (c > 96 && c < 123))
+    if (c == '_' || (c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') ||
+        (c >= 'A' && c <= 'Z'))
         return true;
     return false;
 }

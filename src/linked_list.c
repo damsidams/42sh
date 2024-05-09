@@ -17,7 +17,8 @@ void free_list(linked_list_t *list)
     linked_list_t *next = NULL;
 
     while (list != NULL) {
-        free(list->value);
+        if (list->value)
+            free(list->value);
         next = list->next;
         free(list);
         list = next;
@@ -32,7 +33,11 @@ static linked_list_t *create_node(char *value, linked_list_t *prev)
         perror("create_node malloc failed");
         return NULL;
     }
-    element->value = strdup(value);
+    if (strcmp(value, "") == 0) {
+        element->value = value;
+    } else {
+        element->value = find_cmd_in_line(value);
+    }
     element->prev = prev;
     element->next = NULL;
     return element;
@@ -44,16 +49,20 @@ linked_list_t *create_list_from_array(char **array)
     linked_list_t *node = NULL;
 
     if (my_strstrlen(array) <= 0) {
+        free_str_array(array);
         return NULL;
     }
     for (unsigned int i = 0; array[i]; i++) {
-        node = create_node(array[i], prev);
+        node = create_node(strdup(array[i]), prev);
         if (node == NULL) {
             free_str_array(array);
             return NULL;
         }
-        prev->next = node;
+        if (prev) {
+            prev->next = node;
+        }
         prev = node;
     }
+    free_str_array(array);
     return node;
 }

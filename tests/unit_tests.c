@@ -123,4 +123,5 @@ Test(unit_test, check_if_cmd_needs_to_be_replaced, .init=redirect_all_stdout)
     
     cr_assert_str_eq(check_if_historic(strdup("ls -l"), my_shell), "ls -l");
     cr_assert_str_eq(check_if_historic(strdup("ls -la"), my_shell), "ls -la");
+    cr_assert_str_neq(check_if_historic(strdup("!!"), my_shell), "!!");
 }

@@ -27,8 +27,6 @@ static void signal_child_suspend(int signal, int current_pid,
         if (get_job_from_pid(current_pid, shell) == NULL) {
             add_job(current_pid, shell, shell->last_cmd);
         }
-        free(shell->last_cmd);
-        shell->last_cmd = NULL;
     }
 }
 

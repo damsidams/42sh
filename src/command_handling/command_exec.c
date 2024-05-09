@@ -86,27 +86,21 @@ static void exec_paths(char **args, shell_info_t *my_shell)
 static void foreground_background_handle(pid_t child, bool ampersand,
     char **args, shell_info_t *my_shell)
 {
-    process_t *process = NULL;
-
     setpgid(child, child);
     if (!ampersand) {
         wait_for_pid(child, my_shell);
     } else {
-        process = add_job(child, my_shell, args[0]);
-        process->is_background = true;
+        add_job(child, my_shell, args[0]);
+        my_shell->jobs->is_background = true;
     }
 }
 
-static void job_control_setup(char **args, bool ampersand,
+static void job_control_setup(char ***args, bool ampersand,
     shell_info_t *my_shell)
 {
-    if (my_shell->last_cmd) {
-        free(my_shell->last_cmd);
-        my_shell->last_cmd = NULL;
-    }
-    my_shell->last_cmd = strdup(args[0]);
+    my_shell->last_cmd = (*args)[0];
     if (ampersand)
-        args = my_word_array_delete(args, "&");
+        *args = my_word_array_delete(*args, "&");
 }
 
 void exec_cmd(char **args, shell_info_t *my_shell)
@@ -117,7 +111,7 @@ void exec_cmd(char **args, shell_info_t *my_shell)
     if (!args || !args[0] || strcmp(args[0], MAGIC_STRING) == 0) {
         return;
     }
-    job_control_setup(args, ampersand, my_shell);
+    job_control_setup(&args, ampersand, my_shell);
     child = fork();
     if (child == 0) {
         setpgid(getpid(), getpid());
@@ -127,7 +121,6 @@ void exec_cmd(char **args, shell_info_t *my_shell)
     } else {
         foreground_background_handle(child, ampersand, args, my_shell);
     }
-    free_str_array(args);
 }
 
 void command_handling(shell_info_t *my_shell, char **args)
@@ -140,7 +133,6 @@ void command_handling(shell_info_t *my_shell, char **args)
     args = check_redirect(args, my_shell);
     exec_parentheses(my_shell, args);
     if (my_shell->exit_shell || !args) {
-        free_str_array(args);
         return;
     }
     if (built_in_command(args, my_shell) || exec_alias(my_shell, args[0])) {
@@ -154,4 +146,5 @@ void exec_no_pipe(char *cmd, shell_info_t *my_shell)
     char **args = my_pimp_str_to_wa(cmd, " \t");
 
     command_handling(my_shell, args);
+    free_str_array(args);
 }

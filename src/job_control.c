@@ -25,8 +25,7 @@ process_t *add_job(int pid, shell_info_t *my_shell, char *cmd)
     process->pid = pid;
     process->next = my_shell->jobs;
     process->is_background = false;
-    if (cmd)
-        process->cmd = strdup(cmd);
+    process->cmd = strdup(cmd);
     my_shell->jobs = process;
     printf("[%d] %d\n", nb_jobs, pid);
     return my_shell->jobs;
@@ -39,8 +38,7 @@ void remove_job(int pid, shell_info_t *my_shell)
 
     if (element != NULL && element->pid == pid) {
         my_shell->jobs = element->next;
-        if (element->cmd)
-            free(element->cmd);
+        free(element->cmd);
         free(element);
         return;
     }
@@ -62,8 +60,6 @@ void end_job_control(shell_info_t *my_shell)
 
     if (!my_shell->jobs)
         return;
-    if (my_shell->last_cmd)
-        free(my_shell->last_cmd);
     for (process_t *i = my_shell->jobs; i;) {
         next = i->next;
         if (i->cmd)

@@ -15,9 +15,17 @@
 int end_shell(shell_info_t *my_shell)
 {
     int return_value = 0;
+    alias_t *next = NULL;
 
     if (my_shell->env) {
         free_str_array(my_shell->env);
+    }
+    while (my_shell->list_alias) {
+        next = my_shell->list_alias->next;
+        free(my_shell->list_alias->alias_cmd);
+        free(my_shell->list_alias->real_cmd);
+        free(my_shell->list_alias);
+        my_shell->list_alias = next;
     }
     free(my_shell->last_path);
     free(my_shell->color);

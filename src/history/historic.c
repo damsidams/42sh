@@ -152,12 +152,14 @@ int add_command_to_save(char const *cmd)
     char *line = NULL;
 
     if (fd == ERROR || prev_num < 0 || strcmp(cmd, last_cmd) == 0) {
+        free(last_cmd);
         return ERROR;
     }
     line = format_line(cmd, prev_num + 1);
     if (write(fd, line, my_strlen(line)) == SYS_ERROR) {
         perror("Write to save file");
         free(line);
+        free(last_cmd);
         return ERROR;
     }
     close(fd);

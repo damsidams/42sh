@@ -86,6 +86,8 @@ void goto_root(shell_info_t *my_shell)
     }
     set_pwd(my_shell);
     my_shell->exit_status = 0;
+    if (home)
+        free(home);
 }
 
 void goto_dir(shell_info_t *my_shell, char const *path)

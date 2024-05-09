@@ -15,8 +15,17 @@
 void free_list(linked_list_t *list)
 {
     linked_list_t *next = NULL;
+    linked_list_t *prev = NULL;
+    linked_list_t *cpy = list->prev;
 
-    while (list != NULL) {
+    while (cpy) {
+        prev = cpy->prev;
+        if (cpy->value)
+            free(cpy->value);
+        free(cpy);
+        cpy = prev;
+    }
+    while (list) {
         if (list->value)
             free(list->value);
         next = list->next;

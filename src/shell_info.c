@@ -42,6 +42,7 @@ void set_shell_pgid(shell_info_t *my_shell)
     setpgid(my_shell->shell_pgid, my_shell->shell_pgid);
     tcsetpgrp(STDIN_FILENO, my_shell->shell_pgid);
     signal_child(my_shell->shell_pgid, 0, my_shell);
+    my_shell->last_cmd = NULL;
 }
 
 static shell_info_t *set_shell_info(shell_info_t *my_shell)

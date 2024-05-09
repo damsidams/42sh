@@ -46,7 +46,7 @@ static void default_signals(void)
 static bool is_ampersand(char **args)
 {
     for (int i = 0; args[i]; i++) {
-        if (my_strcmp(args[i], "&") == 0) {
+        if (my_strcmp(args[i], "&") == 0 && i != 0) {
             return true;
         }
     }

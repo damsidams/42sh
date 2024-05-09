@@ -60,6 +60,8 @@ void end_job_control(shell_info_t *my_shell)
 {
     process_t *next = NULL;
 
+    if (!my_shell->jobs)
+        return;
     if (my_shell->last_cmd)
         free(my_shell->last_cmd);
     for (process_t *i = my_shell->jobs; i;) {

@@ -69,5 +69,7 @@ char **my_strstrcpy(char **dest, char **src);
 char *my_nb_to_str(int nb);
 char **my_tuned_str_to_wa(char *str, char **delim);
 bool my_char_is_alpha(char c);
+void free_str_array(char **array);
+char **my_word_array_delete(char **word_array, char *word);
 
 #endif /*MY_H*/

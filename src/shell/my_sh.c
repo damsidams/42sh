@@ -6,9 +6,9 @@
 */
 
 #include <stdbool.h>
+#include <termios.h>
 #include <unistd.h>
 #include <sys/wait.h>
-#include <signal.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -81,21 +81,12 @@ void disp_actual_dir(shell_info_t *my_shell)
     free(actual_dir);
 }
 
-void sig_handler(int signum)
-{
-    (void)signum;
-    write(0, "\n", 1);
-    disp_actual_dir(NULL);
-    return;
-}
-
 int my_sh(char **env)
 {
     shell_info_t *my_shell = init_shell_info_t(env);
     int stdout_cpy = dup(STDOUT_FILENO);
     int stdin_cpy = dup(STDIN_FILENO);
 
-    signal(SIGINT, sig_handler);
     while (!my_shell->exit_shell) {
         if (my_shell->is_a_tty) {
             disp_actual_dir(my_shell);

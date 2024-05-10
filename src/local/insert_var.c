@@ -70,14 +70,28 @@ static int get_len(char *arg, int index)
     return len;
 }
 
+static char *cat_new_var_final(char *var_ptr, char *arg_cpy,
+    char *final, char *var)
+{
+    if (arg_cpy[0] == '\0') {
+        free(final);
+        return var;
+    }
+    var = my_strcat(var, arg_cpy);
+    free(var_ptr);
+    free(final);
+    return var;
+}
+
 static char *cat_new_var(char *var, char *arg, int index, int var_len)
 {
     char *final = NULL;
     char *arg_cpy = strdup(arg);
+    char *cpy = arg_cpy;
     char *var_ptr = var;
+    char *return_var = NULL;
 
     if (!var) {
-        free(arg_cpy);
         return NULL;
     }
     for (int i = 0; i != index + var_len; i++) {
@@ -88,14 +102,9 @@ static char *cat_new_var(char *var, char *arg, int index, int var_len)
         var = my_strcat(final, var);
         var_ptr = var;
     }
-    if (arg_cpy[0] == '\0') {
-        free(final);
-        return var;
-    }
-    var = my_strcat(var, arg_cpy);
-    free(var_ptr);
-    free(final);
-    return var;
+    return_var = cat_new_var_final(var_ptr, arg_cpy, final, var);
+    free(cpy);
+    return return_var;
 }
 
 static char *replace_dollar(char *arg, int index, shell_info_t *my_shell)
@@ -130,15 +139,18 @@ char *parse_arg(char *arg, shell_info_t *my_shell)
 
 char **replace_var(char **args, shell_info_t *my_shell)
 {
+    char *word = NULL;
+
     if (!args) {
         return args;
     }
     for (int i = 0; args[i]; i++) {
         if (my_char_in_str('$', args[i])) {
+            word = args[i];
             args[i] = parse_arg(args[i], my_shell);
+            free(word);
         }
         if (!args[i]) {
-            free_str_array(args);
             return NULL;
         }
     }

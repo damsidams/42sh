@@ -29,7 +29,7 @@ static int command_loop_check(char *args, shell_info_t *my_shell)
     return 0;
 }
 
-static int alias_loop_check(shell_info_t *my_shell, char *args)
+int alias_loop_check(shell_info_t *my_shell, char *args)
 {
     alias_t *current = my_shell->list_alias;
 
@@ -40,6 +40,18 @@ static int alias_loop_check(shell_info_t *my_shell, char *args)
         current = current->next;
     }
     return 0;
+}
+
+alias_t *change_alias_cmd(char **args, shell_info_t *my_shell)
+{
+    while (my_shell->list_alias) {
+        if (strcmp(my_shell->list_alias->alias_cmd, args[1]) == 0) {
+            my_shell->list_alias->real_cmd = args[2];
+            return my_shell->list_alias;
+        }
+        my_shell->list_alias = my_shell->list_alias->next;
+    }
+    return my_shell->list_alias;
 }
 
 int alias_loop(char *args, shell_info_t *my_shell)
@@ -68,10 +80,11 @@ int exec_alias_loop(shell_info_t *my_shell, alias_t *list)
             cmd = my_str_to_word_array(current->real_cmd, " ");
             exec_cmd(cmd, my_shell);
             return 1;
-            }
+        }
         current = current->next;
     }
-        cmd = my_str_to_word_array(list->real_cmd, " ");
-        exec_cmd(cmd, my_shell);
+    cmd = my_str_to_word_array(list->real_cmd, " ");
+    exec_cmd(cmd, my_shell);
+    free_str_array(cmd);
     return 0;
 }

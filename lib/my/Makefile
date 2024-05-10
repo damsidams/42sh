@@ -61,6 +61,7 @@ SRC	=	my_showmem.c				\
 		my_strstrcpy.c	\
 		my_nb_to_str.c	\
 		my_tuned_str_to_wa.c	\
+		my_word_array_delete.c \
 
 OBJ	=	$(SRC:.c=.o)
 

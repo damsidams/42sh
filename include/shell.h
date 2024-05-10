@@ -51,6 +51,7 @@
 // --> shell
 int my_sh(char **env);
 int end_shell(shell_info_t *my_shell);
+void disp_actual_dir(shell_info_t *my_shell);
 
 // --> init
 shell_info_t *init_shell_info_t(char **env);
@@ -69,6 +70,8 @@ char *get_name(char **env, int index);
 void my_alias(char **args, shell_info_t *my_shell);
 alias_t *init_alias(void);
 int exec_alias(shell_info_t *my_shell, char *args);
+alias_t *change_alias_cmd(char **args, shell_info_t *my_shell);
+int alias_loop_check(shell_info_t *my_shell, char *args);
 
 // --> color
 void set_color(char **args, shell_info_t *my_shell);
@@ -115,6 +118,20 @@ int get_file_size(char const *filename);
 int open_append(char const *filename);
 int read_open(char const *filename);
 char *get_file_content(char const *filename);
+
+// --> job control
+void background_process(char **args, shell_info_t *my_shell);
+void foreground_process(char **args, shell_info_t *my_shell);
+void signal_child(int pid, int signal, shell_info_t *my_shell);
+process_t *add_job(int pid, shell_info_t *my_shell, char *cmd);
+void remove_job(int pid, shell_info_t *my_shell);
+void wait_for_pid(int pid, shell_info_t *my_shell);
+bool job_exist(int process_nb, shell_info_t *my_shell);
+process_t *get_job_from_id(int nb, shell_info_t *my_shell);
+process_t *get_job_from_pid(int pid, shell_info_t *my_shell);
+void sig_handler(int signum);
+void end_job_control(shell_info_t *my_shell);
+void sigstp_handler(int signum);
 
 // --> time
 char *get_current_time(void);

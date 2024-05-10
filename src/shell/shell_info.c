@@ -9,20 +9,48 @@
 #include <stddef.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <signal.h>
 #include "shell.h"
 
 int end_shell(shell_info_t *my_shell)
 {
     int return_value = 0;
+    alias_t *next = NULL;
 
     if (my_shell->env) {
         free_str_array(my_shell->env);
     }
+    while (my_shell->list_alias) {
+        next = my_shell->list_alias->next;
+        free(my_shell->list_alias->alias_cmd);
+        free(my_shell->list_alias->real_cmd);
+        free(my_shell->list_alias);
+        my_shell->list_alias = next;
+    }
     free(my_shell->last_path);
     free(my_shell->color);
+    end_job_control(my_shell);
     return_value = my_shell->exit_status;
     free(my_shell);
     return return_value;
+}
+
+void set_shell_pgid(shell_info_t *my_shell)
+{
+    if (!my_shell->is_a_tty) {
+        return;
+    }
+    signal(SIGINT, sig_handler);
+    signal(SIGQUIT, SIG_IGN);
+    signal(SIGTSTP, sigstp_handler);
+    signal(SIGTTIN, SIG_IGN);
+    signal(SIGTTOU, SIG_IGN);
+    signal(SIGCHLD, SIG_IGN);
+    my_shell->shell_pgid = getpid();
+    setpgid(my_shell->shell_pgid, my_shell->shell_pgid);
+    tcsetpgrp(STDIN_FILENO, my_shell->shell_pgid);
+    signal_child(my_shell->shell_pgid, 0, my_shell);
+    my_shell->last_cmd = NULL;
 }
 
 static shell_info_t *set_shell_info(shell_info_t *my_shell)
@@ -30,7 +58,12 @@ static shell_info_t *set_shell_info(shell_info_t *my_shell)
     my_shell->last_path = NULL;
     my_shell->exit_status = 0;
     my_shell->exit_shell = false;
+    my_shell->jobs = NULL;
+    my_shell->shell_pgid = 0;
     my_shell->color = malloc(sizeof(int) * 2);
+    set_shell_pgid(my_shell);
+    my_shell->stopped_pid = my_shell->shell_pgid;
+    my_shell->jobs = NULL;
     if (my_shell->color == NULL) {
         perror("shell color malloc");
     } else {

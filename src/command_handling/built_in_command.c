@@ -13,10 +13,11 @@ bool built_in_command(char **args, shell_info_t *my_shell)
     char *flags_array[] =
         {"env", "cd", "setenv", "unsetenv", "color"
         , "history", "alias",
-        "unalias", "set", "unset", NULL};
+        "unalias", "set", "unset", "fg", "bg", NULL};
     void (*fptr_array[])() =
         {disp_env, change_dir, set_env, unset_env, set_color
-        , display_historic, my_alias, del_alias, set_local, unset_local};
+        , display_historic, my_alias, del_alias, set_local,
+        unset_local, foreground_process, background_process};
 
     if (args[0] == NULL)
         return false;

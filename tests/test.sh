@@ -371,3 +371,33 @@ fi
         else
             echo -e "\e[31m[TEST 53] Simple parentheses 4 Test NOT PASSED\e[0m"
         fi
+
+        ##Alias infinite loop
+        mkdir tnum/54 -p
+        echo "alias p pwd || alias pwd p || pwd || p" | ./42sh > tnum/54/output
+        echo "alias p pwd || alias pwd p || pwd || p" | tcsh  > tnum/54/desired
+        if diff -q tnum/54/desired tnum/54/output; then
+            echo -e "\e[32m[TEST 54] Alias infinite loop Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 54] Alias infinite loop Test NOT PASSED\e[0m"
+        fi
+
+        ##Change alias command
+        mkdir tnum/55 -p
+        echo "alias p pwd || alias p ls || p" | ./42sh > tnum/55/output
+        echo "alias p pwd || alias p ls || p" | tcsh  > tnum/55/desired
+        if diff -q tnum/55/desired tnum/55/output; then
+            echo -e "\e[32m[TEST 55] Change alias command Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 55] Change alias command Test NOT PASSED\e[0m"
+        fi
+
+        ##Unalias
+        mkdir tnum/56 -p
+        echo "alias p pwd || unalias p || p" | ./42sh > tnum/56/output
+        echo "alias p pwd || unalias p || p" | tcsh  > tnum/56/desired
+        if diff -q tnum/56/desired tnum/56/output; then
+            echo -e "\e[32m[TEST 56] Unalias Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 56] Unalias Test NOT PASSED\e[0m"
+        fi

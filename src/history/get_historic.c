@@ -10,12 +10,21 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "shell.h"
+#include "struct.h"
 
 static linked_list_t *return_read_error(int fd)
 {
     perror("Read error");
     close(fd);
     return NULL;
+}
+
+static void setup_final_array(char **final_array, char **file_by_line,
+    char *cmd)
+{
+    final_array = my_strstrcpy(final_array, file_by_line);
+    final_array[my_strstrlen(file_by_line)] = my_strdup(cmd);
+    final_array[my_strstrlen(file_by_line) + 1] = NULL;
 }
 
 static linked_list_t *add_command_to_end(char *buffer, char *cmd)
@@ -36,9 +45,7 @@ static linked_list_t *add_command_to_end(char *buffer, char *cmd)
         free(cmd);
         return NULL;
     }
-    final_array = my_strstrcpy(final_array, file_by_line);
-    final_array[my_strstrlen(file_by_line)] = my_strdup(cmd);
-    final_array[my_strstrlen(file_by_line) + 1] = NULL;
+    setup_final_array(final_array, file_by_line, cmd);
     free_str_array(file_by_line);
     return create_list_from_array(final_array);
 }
@@ -53,12 +60,26 @@ int check_buffer(char const *buffer, int fd)
     return SUCCESS;
 }
 
+static linked_list_t *prev_cmd_end(int fd, char *buffer,
+    char *current_cmd, int file_size)
+{
+    int chars_read = 0;
+
+    chars_read = read(fd, buffer, file_size - 1);
+    if (chars_read == SYS_ERROR) {
+        free(current_cmd);
+        return return_read_error(fd);
+    }
+    close(fd);
+    buffer[chars_read] = '\0';
+    return add_command_to_end(buffer, current_cmd);
+}
+
 linked_list_t *get_array_from_prev_cmd(char *current_cmd)
 {
     int fd = read_history(HISTORIC_FILENAME);
     char *buffer = NULL;
     int file_size = get_file_size(HISTORIC_FILENAME);
-    int chars_read = 0;
 
     if (fd == ERROR || file_size <= 0) {
         free(current_cmd);
@@ -69,12 +90,5 @@ linked_list_t *get_array_from_prev_cmd(char *current_cmd)
         free(current_cmd);
         return NULL;
     }
-    chars_read = read(fd, buffer, file_size - 1);
-    if (chars_read == SYS_ERROR) {
-        free(current_cmd);
-        return return_read_error(fd);
-    }
-    close(fd);
-    buffer[chars_read] = '\0';
-    return add_command_to_end(buffer, current_cmd);
+    return prev_cmd_end(fd, buffer, current_cmd, file_size);
 }

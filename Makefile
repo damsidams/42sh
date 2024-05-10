@@ -49,12 +49,11 @@ SRC	=	src/main.c								\
 		src/parentheses.c	\
 		src/pipe.c								\
 		src/redirect.c							\
-		src/auto_complete.c						\
-		src/auto_complete_cmd.c 				\
-		src/auto_complete_paths.c				\
+		src/auto_completion/auto_complete.c						\
+		src/auto_completion/auto_complete_cmd.c 				\
+		src/auto_completion/auto_complete_paths.c				\
 
 UT_SRC	=	tests/unit_tests.c						\
-			src/test.c								\
 			src/env/disp_env.c						\
 			src/env/unsetenv.c						\
 			src/env/setenv.c						\
@@ -91,13 +90,16 @@ UT_SRC	=	tests/unit_tests.c						\
 			src/local/set.c			\
 			src/local/unset.c		\
 			src/local/insert_var.c		\
+			src/test.c	\
 			src/cd.c								\
 			src/check_and_or.c						\
 			src/globbing.c							\
 			src/parentheses.c	\
 			src/pipe.c								\
 			src/redirect.c							\
-			src/auto_complete.c						\
+			src/auto_completion/auto_complete.c						\
+			src/auto_completion/auto_complete_cmd.c 				\
+			src/auto_completion/auto_complete_paths.c				\
 
 OBJ	=	$(SRC:.c=.o)
 

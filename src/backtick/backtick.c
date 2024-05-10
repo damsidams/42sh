@@ -98,9 +98,6 @@ static char *replace_backtick_str(char *cmd, shell_info_t *my_shell)
 
 char **replace_backtick(char **cmd, shell_info_t *my_shell)
 {
-    if (cmd == NULL) {
-        return NULL;
-    }
     for (unsigned int i = 0; cmd[i]; i++) {
         cmd[i] = replace_backtick_str(cmd[i], my_shell);
     }

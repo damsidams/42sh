@@ -71,11 +71,13 @@ static char *find_cmd_by_event(char **lines, int cmd_nb)
             cmd = create_str_from_strstr(args + 2);
             free_str_array(args);
             remove_from_file(lines, i);
+            free_str_array(lines);
             return cmd;
         }
         free_str_array(args);
     }
     dprintf(2, "%d: Event not found.\n", cmd_nb);
+    free_str_array(lines);
     return NULL;
 }
 
@@ -90,6 +92,7 @@ static char *get_n_previous_cmd(char **lines, int cmd_nb, char const *hist)
     char *cmd = NULL;
 
     if (my_strstrlen(lines) < cmd_nb * -1) {
+        free_str_array(lines);  
         return not_found_error(hist);
     }
     cmd = find_cmd_in_line(lines[my_strstrlen(lines) + cmd_nb]);
@@ -108,6 +111,7 @@ char *get_the_n_cmd(char *history_arg)
         return not_found_error(history_arg + 1);
     }
     lines = my_pimp_str_to_wa(buffer, "\n");
+    free(buffer);
     if (cmd_nb < 0) {
         return get_n_previous_cmd(lines, cmd_nb, history_arg);
     }

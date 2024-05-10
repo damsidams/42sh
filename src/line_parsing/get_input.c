@@ -112,8 +112,7 @@ char *get_prompt(shell_info_t *my_shell)
     shell_input_t user_input = {0, 0, NULL};
     char c = 0;
     struct termios initial_settings = init_shell_settings();
-    char *empty_str = strdup("");
-    linked_list_t *historic = get_array_from_prev_cmd(empty_str);
+    linked_list_t *historic = get_array_from_prev_cmd(strdup(""));
 
     c = getchar();
     while (c != '\n' && c != EOT) {

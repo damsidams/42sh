@@ -139,16 +139,12 @@ char *parse_arg(char *arg, shell_info_t *my_shell)
 
 char **replace_var(char **args, shell_info_t *my_shell)
 {
-    char *word = NULL;
-
     if (!args) {
         return args;
     }
     for (int i = 0; args[i]; i++) {
         if (my_char_in_str('$', args[i])) {
-            word = args[i];
             args[i] = parse_arg(args[i], my_shell);
-            free(word);
         }
         if (!args[i]) {
             return NULL;

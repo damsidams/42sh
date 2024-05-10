@@ -100,7 +100,7 @@ int add_command_to_save(char const *cmd);
 linked_list_t *get_array_from_prev_cmd(char *current_cmd);
 int my_special_getnbr(char const *str);
 int read_history(char const *filename);
-char *check_if_historic(char *cmd, shell_info_t *my_shell);
+char *check_if_historic(char **cmd, shell_info_t *my_shell);
 char *find_last_cmd(void);
 char *get_the_n_cmd(char *str);
 void remove_from_file(char **, unsigned int);

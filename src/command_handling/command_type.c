@@ -21,7 +21,7 @@ static void exec_good_type(char *cmd, shell_info_t *my_shell)
 {
     bool exec_status = check_and_or(cmd, my_shell);
     char **word_array = my_str_to_word_array(cmd, " ");
-
+    
     if (!exec_status) {
         exec_status = check_pipe(cmd, my_shell);
     }
@@ -40,11 +40,12 @@ static void exec_good_type(char *cmd, shell_info_t *my_shell)
 void check_cmd_type(shell_info_t *my_shell)
 {
     char **cmds = get_args(my_shell);
-    char **copy = cmds;
 
+    if (cmds == NULL) {
+        return;
+    }
     cmds = replace_backtick(cmds, my_shell);
     if (cmds == NULL) {
-        free_str_array(copy);
         return;
     }
     if (!valid_redirect(cmds)) {
@@ -62,7 +63,7 @@ void check_given_cmd_type(shell_info_t *my_shell, char *cmd)
 {
     char **cmds = NULL;
 
-    cmd = check_if_historic(cmd, my_shell);
+    cmd = check_if_historic(&cmd, my_shell);
     if (cmd == NULL) {
         return;
     }

@@ -12,25 +12,30 @@
 #include "shell.h"
 #include "struct.h"
 
-void free_list(linked_list_t *list)
+static void free_next_list(linked_list_t *list)
 {
     linked_list_t *next = NULL;
-    linked_list_t *prev = NULL;
-    linked_list_t *cpy = list->prev;
 
-    while (cpy) {
-        prev = cpy->prev;
-        if (cpy->value)
-            free(cpy->value);
-        free(cpy);
-        cpy = prev;
-    }
-    while (list) {
-        if (list->value)
-            free(list->value);
+    while (list != NULL) {
         next = list->next;
+        free(list->value);
         free(list);
         list = next;
+    }
+}
+
+void free_list(linked_list_t *list)
+{
+    linked_list_t *prev = NULL;
+
+    if (list != NULL && list->next != NULL) {
+        free_next_list(list->next);
+    }
+    while (list) {
+        prev = list->prev;
+        free(list->value);
+        free(list);
+        list = prev;
     }
 }
 
@@ -43,7 +48,7 @@ static linked_list_t *create_node(char *value, linked_list_t *prev)
         return NULL;
     }
     if (strcmp(value, "") == 0) {
-        element->value = value;
+        element->value = strdup(value);
     } else {
         element->value = find_cmd_in_line(value);
     }
@@ -95,7 +100,7 @@ linked_list_t *create_list_from_array(char **array)
         return NULL;
     }
     for (unsigned int i = 0; array[i]; i++) {
-        node = create_node(strdup(array[i]), prev);
+        node = create_node(array[i], prev);
         if (node == NULL) {
             free_str_array(array);
             return NULL;

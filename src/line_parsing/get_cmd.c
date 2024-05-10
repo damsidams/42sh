@@ -78,21 +78,21 @@ static void set_exit(shell_info_t *my_shell)
     my_shell->exit_status = 0;
 }
 
-static int side_checks(char *user_input, shell_info_t *my_shell)
+static int side_checks(char **user_input, shell_info_t *my_shell)
 {
-    if (!user_input) {
+    if (*user_input == NULL) {
         return ERROR;
     }
-    if (!check_parentheses_order(user_input) ||
-        parentheses_badly_placed(user_input)) {
+    if (!check_parentheses_order(*user_input) ||
+        parentheses_badly_placed(*user_input)) {
         my_shell->exit_status = 1;
         return ERROR;
     }
-    user_input = check_if_historic(user_input, my_shell);
-    if (!user_input || no_cmd(user_input)) {
+    *user_input = check_if_historic(user_input, my_shell);
+    if (*user_input == NULL || no_cmd(*user_input)) {
         return ERROR;
     }
-    add_command_to_save(user_input);
+    add_command_to_save(*user_input);
     return SUCCESS;
 }
 
@@ -102,7 +102,7 @@ char **get_args(shell_info_t *my_shell)
     char *user_input_cpy = my_strdup(user_input);
     char **args = NULL;
 
-    if (side_checks(user_input, my_shell) == ERROR) {
+    if (side_checks(&user_input, my_shell) == ERROR) {
         my_free_n_str(2, user_input, user_input_cpy);
         return NULL;
     }
@@ -111,7 +111,8 @@ char **get_args(shell_info_t *my_shell)
     }
     if (my_strcmp(args[0], "exit") == 0) {
         set_exit(my_shell);
-        args = NULL;
+        free(user_input);
+        free_str_array(args);
     }
     my_free_n_str(2, user_input, user_input_cpy);
     return args;

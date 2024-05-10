@@ -47,7 +47,7 @@ alias_t *change_alias_cmd(char **args, shell_info_t *my_shell)
     while (my_shell->list_alias) {
         if (strcmp(my_shell->list_alias->alias_cmd, args[1]) == 0) {
             my_shell->list_alias->real_cmd = args[2];
-            return;
+            return my_shell->list_alias;
         }
         my_shell->list_alias = my_shell->list_alias->next;
     }

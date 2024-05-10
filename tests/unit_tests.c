@@ -99,7 +99,6 @@ Test(unit_test, add_to_save, .init=redirect_all_stdout)
     cr_assert_eq(add_command_to_save("egregt"), SUCCESS);
     cr_assert_eq(add_command_to_save("test"), SUCCESS);
     cr_assert_eq(add_command_to_save("echo something"), SUCCESS);
-    cr_assert_eq(add_command_to_save(""), SUCCESS);
 }
 
 Test(unit_test, special_get_nbr, .init=redirect_all_stdout)

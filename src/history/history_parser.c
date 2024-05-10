@@ -31,6 +31,7 @@ static char *remove_historic(char *str)
 
     if (new_str == NULL) {
         perror("remove_backtick calloc failed");
+        free(str);
         return NULL;
     }
     for (unsigned int i = 1; str[i]; i++) {
@@ -69,7 +70,7 @@ static char *get_good_string(char *cmd,
 
 static bool history_sign(char const *str)
 {
-    if (str == NULL) {
+    if (str == NULL || strlen(str) <= 1) {
         return false;
     }
     for (unsigned int i = 0; str[i]; i++) {
@@ -113,21 +114,25 @@ static char *parse_cmd(char *cmd, bool *change)
     return cmd;
 }
 
-char *check_if_historic(char *cmd, shell_info_t *my_shell)
+char *check_if_historic(char **cmd, shell_info_t *my_shell)
 {
     bool change = false;
+    char *new = NULL;
 
-    if (!history_sign(cmd)) {
-        return cmd;
+    if (!history_sign(*cmd)) {
+        return *cmd;
     }
-    cmd = parse_cmd(cmd, &change);
-    if (cmd == NULL) {
+    new = parse_cmd(*cmd, &change);
+    if (new == NULL) {
+        free(*cmd);
         my_shell->exit_status = 1;
         return NULL;
     }
     my_shell->exit_status = 0;
     if (change) {
-        printf("%s\n", cmd);
+        printf("%s\n", new);
+        free(*cmd);
+        *cmd = new;
     }
-    return cmd;
+    return *cmd;
 }

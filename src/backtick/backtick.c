@@ -64,6 +64,7 @@ static char *get_good_string(shell_info_t *my_shell, char *cmd
     new_str = strcat(new_str, to_replace);
     new_str = strcat(new_str, cmd + first_backtick + next_backtick);
     free(to_replace);
+    free(cmd);
     return new_str;
 }
 
@@ -98,9 +99,6 @@ static char *replace_backtick_str(char *cmd, shell_info_t *my_shell)
 
 char **replace_backtick(char **cmd, shell_info_t *my_shell)
 {
-    if (cmd == NULL) {
-        return NULL;
-    }
     for (unsigned int i = 0; cmd[i]; i++) {
         cmd[i] = replace_backtick_str(cmd[i], my_shell);
     }

@@ -194,7 +194,6 @@ void auto_complete_paths(char **args, shell_input_t *user_input,
 int nb_ch_match(char *file, char *cmd);
 char *get_element(linked_list_t *match, shell_info_t *my_shell);
 void replace_user_input(shell_input_t *user_input, char **args);
-void free_auto_complete(char *word, char **args);
 void auto_complete_cmd(char **args, shell_input_t *user_input,
     shell_info_t *my_shell);
 

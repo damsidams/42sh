@@ -39,8 +39,9 @@ static char *search_file(char *cmd_path, char *cmd, shell_info_t *my_shell)
     linked_list_t *match = NULL;
     char *word = NULL;
 
-    if (my_shell->base_auto_completion != NULL)
+    if (my_shell->base_auto_completion != NULL) {
         cmd = my_shell->base_auto_completion;
+    }
     if (!bin_dir)
         return NULL;
     create_match_list(&match, bin_dir, cmd);
@@ -53,6 +54,14 @@ static char *search_file(char *cmd_path, char *cmd, shell_info_t *my_shell)
     }
     free_basic_list(match);
     return NULL;
+}
+
+static void free_auto_complete(char *word, char **args)
+{
+    free(word);
+    for (int i = 0; args[i]; i++) {
+        free(args[i]);
+    }
 }
 
 void auto_complete_cmd(char **args, shell_input_t *user_input,
@@ -71,4 +80,5 @@ void auto_complete_cmd(char **args, shell_input_t *user_input,
     args[0] = new_cmd;
     replace_user_input(user_input, args);
     free_auto_complete(word, args);
+    free_str_array(paths);
 }

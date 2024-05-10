@@ -65,14 +65,6 @@ void replace_user_input(shell_input_t *user_input, char **args)
     }
 }
 
-void free_auto_complete(char *word, char **args)
-{
-    free(word);
-    for (int i = 1; args[i]; i++) {
-        free(args[i]);
-    }
-}
-
 static void set_base_auto_completion_paths(shell_info_t *my_shell,
     shell_input_t *user_input)
 {

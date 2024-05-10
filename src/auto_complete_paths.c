@@ -52,14 +52,24 @@ static char *get_last_path_word(char **args, int len)
 static DIR *open_dir(char **args, char *cwd, int len)
 {
     char *path = get_clean_path(args, len);
+    char *cpy = path;
     DIR *dir = NULL;
 
     if (path[0] != '/') {
         path = my_str_append(my_strcat(cwd, "/"), path);
+        free(cpy);
     }
     dir = opendir(path);
     free(path);
     return dir;
+}
+
+static void free_auto_complete(char *word, char **args)
+{
+    free(word);
+    for (int i = 0; args[i]; i++) {
+        free(args[i]);
+    }
 }
 
 static void auto_complete_paths_end(char **args, shell_input_t *user_input,
@@ -89,19 +99,22 @@ static void search_match(char **args, char *cmd, struct dirent *cur_file,
 {
     char *final = get_clean_path(args, my_strstrlen(args));
     char *word = get_last_path_word(args, my_strstrlen(args));
+    char *str = my_strcat(final, cur_file->d_name);
     bool good = false;
 
     if (strcmp(final, args[my_strstrlen(args) - 1]) == 0)
         good = true;
     if (final[strlen(final) - 1] == '/' && cmd[strlen(cmd) - 1] == '/') {
-        push_to_list(match, my_strcat(final, cur_file->d_name));
+        push_to_list(match, str);
     }
     if (nb_ch_match(cur_file->d_name, word) == my_strlen(word) && !good) {
-        push_to_list(match, my_strcat(final, cur_file->d_name));
+        push_to_list(match, str);
     }
     if (nb_ch_match(cur_file->d_name, cmd) == my_strlen(cmd) && good) {
-        push_to_list(match, strdup(cur_file->d_name));
+        push_to_list(match, cur_file->d_name);
     }
+    free(str);
+    free(final);
 }
 
 static void create_match_list_paths(linked_list_t **match, DIR *bin_dir,
@@ -133,8 +146,10 @@ void auto_complete_paths(char **args, shell_input_t *user_input,
 
     if (len <= 1)
         return;
-    if (my_shell->base_auto_completion != NULL)
+    if (my_shell->base_auto_completion != NULL) {
+        free(word);
         word = strdup(my_shell->base_auto_completion);
+    }
     cwd = getcwd(cwd, BUFSIZ);
     dir = open_dir(args, cwd, len);
     if (dir == NULL)
@@ -142,4 +157,5 @@ void auto_complete_paths(char **args, shell_input_t *user_input,
     create_match_list_paths(&match, dir, word, args);
     auto_complete_paths_end(args, user_input, match, my_shell);
     free(word);
+    free(cwd);
 }

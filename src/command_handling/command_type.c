@@ -21,7 +21,7 @@ static void exec_good_type(char *cmd, shell_info_t *my_shell)
 {
     bool exec_status = check_and_or(cmd, my_shell);
     char **word_array = my_str_to_word_array(cmd, " ");
-    
+
     if (!exec_status) {
         exec_status = check_pipe(cmd, my_shell);
     }

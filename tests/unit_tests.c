@@ -60,6 +60,16 @@ Test(unit_test, command_handling, .init=redirect_all_stdout)
     command_handling(my_shell, args);
 }
 
+Test(unit_test, command_type, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char *cmd = my_strdup("ls -l && pwd");
+
+    check_given_cmd_type(my_shell, cmd);
+}
+
 /* color*/
 
 Test(unit_test, valid_color, .init=redirect_all_stdout)
@@ -91,9 +101,7 @@ Test(unit_test, color_help, .init=redirect_all_stdout)
     disp_color_help();
 }
 
-/* historic */
-
-Test(unit_test, disp_historic, .init=redirect_all_stdout)
+Test(unit_test, change_color, .init=redirect_all_stdout)
 {
     char **env = create_strstr("PATH=~/delivery/Project/42sh", "HOST=nicolo", "test=ops", "NB=lo");
     shell_info_t *my_shell = init_shell_info_t(env);
@@ -106,6 +114,8 @@ Test(unit_test, disp_historic, .init=redirect_all_stdout)
     command_handling(my_shell, args);
     cr_assert_eq(my_shell->exit_status, SUCCESS);
 }
+
+/* historic */
 
 Test(unit_test, add_to_save, .init=redirect_all_stdout)
 {
@@ -124,6 +134,40 @@ Test(unit_test, special_get_nbr, .init=redirect_all_stdout)
     cr_assert_eq(my_special_getnbr("-e124to"), 124);
     cr_assert_eq(my_special_getnbr("e-1to"), -1);
     cr_assert_eq(my_special_getnbr("eto"), 0);
+}
+
+Test(unit_test, check_if_history, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char *cmd = my_strdup("! 5");
+
+    check_if_historic(cmd, my_shell);
+}
+
+Test(unit_test, getcmd_with_str, .init=redirect_all_stdout)
+{
+    char *cmd = my_strdup("ls -l test_dir");
+
+    get_cmd_with_str(cmd);
+}
+
+Test(unit_test, add_cmd_to_historic, .init=redirect_all_stdout)
+{
+    char *cmd = my_strdup("ls -l test_dir");
+
+    cr_assert_not_null(get_array_from_prev_cmd(cmd));
+}
+
+Test(unit_test, create_list, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args1 = create_strstr("1 09:54 cd", "1 09:54 cd", "1 09:54 cd", "1 09:54 cd");
+
+    cr_assert_not_null(create_list_from_array(args1));
 }
 
 Test(unit_test, read_history, .init=redirect_all_stdout)
@@ -152,6 +196,16 @@ Test(unit_test, simple_pipe_command, .init=redirect_all_stdout)
     cr_assert_stdout_eq_str("file$\n");
     free(cmd);
     free_str_array(env);
+}
+
+Test(unit_test, disp_historic, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args1 = create_strstr("1 09:54 cd", "1 09:54 cd", "1 09:54 cd", "1 09:54 cd");
+
+    display_historic(args1, my_shell);
 }
 
 /* local variables */
@@ -254,38 +308,31 @@ Test(unit_test, cd_to_last_dir, .init=redirect_all_stdout)
     change_dir(args2, my_shell);
 }
 
-/* ! history */
+/* var insertion */
 
-Test(unit_test, check_if_history, .init=redirect_all_stdout)
+Test(unit_test, replace_var, .init=redirect_all_stdout)
 {
     char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
-        "HOME=/home/", "NB=lo");
+        "HOME=/home/", "TEST=toto");
     shell_info_t *my_shell = init_shell_info_t(env);
-    char *cmd = my_strdup("! 5");
+    char **args1 = create_strstr("cd", "$HOME/delivery", "$TEST", NULL);
+    char **args2 = create_strstr("cd", "$HOME/delivery", "$toto", NULL);
 
-    check_if_historic(cmd, my_shell);
+    replace_var(args1, my_shell);
+    replace_var(args2, my_shell);
 }
 
-Test(unit_test, getcmd_with_str, .init=redirect_all_stdout)
-{
-    char *cmd = my_strdup("ls -l test_dir");
+/* globbing */
 
-    get_cmd_with_str(cmd);
-}
-
-Test(unit_test, add_cmd_to_historic, .init=redirect_all_stdout)
-{
-    char *cmd = my_strdup("ls -l test_dir");
-
-    get_array_from_prev_cmd(cmd);
-}
-
-Test(unit_test, create_list, .init=redirect_all_stdout)
+Test(unit_test, globbing, .init=redirect_all_stdout)
 {
     char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
-        "HOME=/home/", "NB=lo");
+        "HOME=/home/", "TEST=toto");
     shell_info_t *my_shell = init_shell_info_t(env);
-    char **args1 = create_strstr("1 09:54 cd", "1 09:54 cd", "1 09:54 cd", "1 09:54 cd");
+    char **args1 = create_strstr("ls", "*-l", NULL, NULL);
+    char **args2 = create_strstr("ls", "??sh", NULL, NULL);
 
-    cr_assert_not_null(create_list_from_array(args1));
+    globbing(args1, my_shell);
+    globbing(args2, my_shell);
 }
+

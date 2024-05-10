@@ -185,6 +185,11 @@ Test(unit_test, check_if_cmd_needs_to_be_replaced, .init=redirect_all_stdout)
     cr_assert_str_eq(check_if_historic(args2, my_shell), "ls -la");
 }
 
+Test(unit_test, find_last_cmd, .init=redirect_all_stdout)
+{
+    cr_assert_not_null(find_last_cmd());
+}
+
 /* pipe */
 
 Test(unit_test, simple_pipe_command, .init=redirect_all_stdout)
@@ -279,6 +284,29 @@ Test(unit_test, redirects, .init=redirect_all_stdout)
     cr_assert_eq(my_strstrlen(double_left), 1);
 }
 
+Test(unit_test, redirects_bad_args, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo", "test=ops", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **simple_right1 = create_strstr(">", "test", NULL, NULL);
+    char **double_right1 = create_strstr("ls", ">>", NULL, NULL);
+    char **simple_left1 = create_strstr("<", "toto", NULL, NULL);
+    char **double_left1 = create_strstr("ls", "<<", NULL, NULL);
+    char **simple_right2 = create_strstr("ls", ">", NULL, NULL);
+    char **double_right2 = create_strstr(">>", "test", NULL, NULL);
+    char **simple_left2 = create_strstr("ls", "<", NULL, NULL);
+    char **double_left2 = create_strstr("<<", "tata", NULL, NULL);
+
+    simple_left1 = check_redirect(simple_left1, my_shell);
+    double_left1 = check_redirect(double_left1, my_shell);
+    simple_right1 = check_redirect(simple_right1, my_shell);
+    double_right1 = check_redirect(double_right1, my_shell);
+    simple_left2 = check_redirect(simple_left2, my_shell);
+    double_left2 = check_redirect(double_left2, my_shell);
+    simple_right2 = check_redirect(simple_right2, my_shell);
+    double_right2 = check_redirect(double_right2, my_shell);
+}
+
 /* cd */
 
 Test(unit_test, cd_to_a_dir, .init=redirect_all_stdout)
@@ -299,6 +327,11 @@ Test(unit_test, cd_to_root, .init=redirect_all_stdout)
     char **args = create_strstr("cd", NULL, NULL, NULL);
 
     change_dir(args, my_shell);
+    my_shell->env = NULL;
+    change_dir(args, my_shell);
+    my_shell->env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "TOTO=tata", "NB=lo");
+    change_dir(args, my_shell);
 }
 
 Test(unit_test, cd_to_last_dir, .init=redirect_all_stdout)
@@ -306,11 +339,22 @@ Test(unit_test, cd_to_last_dir, .init=redirect_all_stdout)
     char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
         "HOME=/home/", "NB=lo");
     shell_info_t *my_shell = init_shell_info_t(env);
-    char **args1 = create_strstr("cd", "test_dir", NULL, NULL);
+    char **args1 = create_strstr("cd", "/tmp", NULL, NULL);
     char **args2 = create_strstr("cd", "-", NULL, NULL);
 
     change_dir(args1, my_shell);
+    my_shell->last_path = my_strdup("/home");
     change_dir(args2, my_shell);
+}
+
+Test(unit_test, cd_bad_args, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args1 = create_strstr("cd", "/tmp", "/dev", NULL);
+
+    change_dir(args1, my_shell);
 }
 
 /* var insertion */
@@ -422,4 +466,87 @@ Test(unit_test, unset_env_no_args, .init=redirect_all_stdout)
     cr_assert_str_eq(my_shell->env[my_strstrlen(my_shell->env) - 1], "TEST=toto");
 }
 
+/* alias */
 
+Test(unit_test, create_alias, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "TEST=toto");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args = create_strstr("alias", "ll", "ls -l", NULL);
+
+    my_alias(args, my_shell);
+    cr_assert_str_eq(my_shell->list_alias->alias_cmd, "ll");
+    cr_assert_str_eq(my_shell->list_alias->real_cmd, "ls -l");
+}
+
+Test(unit_test, remove_alias, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "TEST=toto");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args = create_strstr("alias", "ll", "ls -l", NULL);
+    char **args2 = create_strstr("alias", "toto", "pwd", NULL);
+    char **args3 = create_strstr("unalias", "toto", NULL, NULL);
+
+    my_alias(args, my_shell);
+    my_alias(args2, my_shell);
+    del_alias(args3, my_shell);
+    cr_assert_str_eq(my_shell->list_alias->alias_cmd, "ll");
+    cr_assert_null(my_shell->list_alias->next);
+}
+
+Test(unit_test, alias_loop, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "TEST=toto");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args = create_strstr("alias", "ll", "ls -l", NULL);
+    char **args2 = create_strstr("alias", "toto", "pwd", NULL);
+    char **args3 = create_strstr("alias", "tata", "cd", NULL);
+
+    my_alias(args, my_shell);
+    my_alias(args2, my_shell);
+    my_alias(args3, my_shell);
+    exec_alias_loop(my_shell, my_shell->list_alias);
+}
+
+/* backtick */
+
+Test(unit_test, backtick, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "TEST=toto");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char *output = get_backtick_output(my_shell, my_strdup("echo toto"));
+
+    cr_assert_str_eq(output, "toto ");
+}
+
+/* parentheses */
+
+Test(unit_test, parentheses_order, .init=redirect_all_stdout)
+{
+    cr_assert_eq(check_parentheses_order("(ls)"), true);
+    cr_assert_eq(check_parentheses_order("(ls"), false);
+    cr_assert_eq(check_parentheses_order(")ls("), false);
+    cr_assert_eq(check_parentheses_order(")ls((())"), false);
+}
+
+Test(unit_test, parentheses_badly_placed, .init=redirect_all_stdout)
+{
+    cr_assert_eq(parentheses_badly_placed("(ls)"), false);
+    cr_assert_eq(parentheses_badly_placed("(ls"), false);
+    cr_assert_eq(parentheses_badly_placed(")ls("), false);
+    cr_assert_eq(parentheses_badly_placed(")ls((())"), false);
+}
+
+Test(unit_test, exec_parentheses, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "TEST=toto");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args = create_strstr("(ls)", NULL, NULL, NULL);
+
+    cr_assert_eq(exec_parentheses(my_shell, args), true);
+}

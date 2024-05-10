@@ -140,7 +140,7 @@ Test(unit_test, check_if_history, .init=redirect_all_stdout)
     char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
         "HOME=/home/", "NB=lo");
     shell_info_t *my_shell = init_shell_info_t(env);
-    char *cmd = my_strdup("! 5");
+    char **cmd = create_strstr("!", "5", NULL, NULL);
 
     check_if_historic(cmd, my_shell);
 }
@@ -178,9 +178,11 @@ Test(unit_test, check_if_cmd_needs_to_be_replaced, .init=redirect_all_stdout)
 {
     char **env = create_strstr("PATH=~/delivery/Project/42sh", "HOST=nicolo", "test=ops", "NB=lo");
     shell_info_t *my_shell = init_shell_info_t(env);
-    
-    cr_assert_str_eq(check_if_historic(strdup("ls -l"), my_shell), "ls -l");
-    cr_assert_str_eq(check_if_historic(strdup("ls -la"), my_shell), "ls -la");
+    char **args1 = create_strstr("ls -l", NULL, NULL, NULL);
+    char **args2 = create_strstr("ls -la", NULL, NULL, NULL);
+
+    cr_assert_str_eq(check_if_historic(args1, my_shell), "ls -l");
+    cr_assert_str_eq(check_if_historic(args2, my_shell), "ls -la");
 }
 
 /* pipe */
@@ -267,10 +269,14 @@ Test(unit_test, redirects, .init=redirect_all_stdout)
     char **simple_left = create_strstr("ls", "<", "test", NULL);
     char **double_left = create_strstr("ls", "<<", "test", NULL);
 
-    check_redirect(simple_left, my_shell);
-    check_redirect(double_left, my_shell);
-    check_redirect(simple_right, my_shell);
-    check_redirect(double_right, my_shell);
+    simple_left = check_redirect(simple_left, my_shell);
+    double_left = check_redirect(double_left, my_shell);
+    simple_right = check_redirect(simple_right, my_shell);
+    double_right = check_redirect(double_right, my_shell);
+    cr_assert_eq(my_strstrlen(simple_left), 1);
+    cr_assert_eq(my_strstrlen(simple_right), 1);
+    cr_assert_eq(my_strstrlen(double_right), 1);
+    cr_assert_eq(my_strstrlen(double_left), 1);
 }
 
 /* cd */
@@ -317,8 +323,11 @@ Test(unit_test, replace_var, .init=redirect_all_stdout)
     char **args1 = create_strstr("cd", "$HOME/delivery", "$TEST", NULL);
     char **args2 = create_strstr("cd", "$HOME/delivery", "$toto", NULL);
 
-    replace_var(args1, my_shell);
-    replace_var(args2, my_shell);
+    args1 = replace_var(args1, my_shell);
+    args2 = replace_var(args2, my_shell);
+    cr_assert_str_eq(args1[1], "/home//delivery");
+    cr_assert_str_eq(args1[2], "toto");
+    cr_assert_null(args2);
 }
 
 /* globbing */
@@ -334,4 +343,83 @@ Test(unit_test, globbing, .init=redirect_all_stdout)
     globbing(args1, my_shell);
     globbing(args2, my_shell);
 }
+
+
+/* env variables */
+
+Test(unit_test, setenv_basic, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "TEST=toto");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args1 = create_strstr("setenv", "toto", "tata", NULL);
+    char **args2 = create_strstr("setenv", "tutu", NULL, NULL);
+    char **args3 = create_strstr("setenv", NULL, NULL, NULL);
+
+    set_env(args1, my_shell);
+    cr_assert_str_eq(my_shell->env[my_strstrlen(my_shell->env) - 1], "toto=tata");
+    set_env(args2, my_shell);
+    cr_assert_str_eq(my_shell->env[my_strstrlen(my_shell->env) - 1], "tutu=");
+    set_env(args3, my_shell);
+}
+
+Test(unit_test, setenv_bad_args, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "TEST=toto");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args1 = create_strstr("setenv", "toto", "tata", "NULL");
+    char **args2 = create_strstr("setenv", "1tutu", NULL, NULL);
+    char **args3 = create_strstr("setenv", "toto-tata", NULL, NULL);
+
+    set_env(args1, my_shell);
+    cr_assert_str_eq(my_shell->env[my_strstrlen(my_shell->env) - 1], "TEST=toto");
+    set_env(args2, my_shell);
+    cr_assert_str_eq(my_shell->env[my_strstrlen(my_shell->env) - 1], "TEST=toto");
+    set_env(args3, my_shell);
+    cr_assert_str_eq(my_shell->env[my_strstrlen(my_shell->env) - 1], "TEST=toto");
+}
+
+Test(unit_test, setenv_no_disp_basic, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "TEST=toto");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args1 = create_strstr("setenv", "toto", "tata", NULL);
+    char **args2 = create_strstr("setenv", "tutu", NULL, NULL);
+    char **args3 = create_strstr("setenv", NULL, NULL, NULL);
+
+    set_env_no_disp(args1, my_shell);
+    cr_assert_str_eq(my_shell->env[my_strstrlen(my_shell->env) - 1], "toto=tata");
+    set_env_no_disp(args2, my_shell);
+    cr_assert_str_eq(my_shell->env[my_strstrlen(my_shell->env) - 1], "tutu=");
+    set_env_no_disp(args3, my_shell);
+}
+
+Test(unit_test, unset_env_basic, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "TEST=toto");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **setenv = create_strstr("setenv", "toto", "tata", NULL);
+    char **setenv2 = create_strstr("setenv", "tutu", NULL, NULL);
+    char **unsetenv = create_strstr("unsetenv", "toto", "tutu", NULL);
+
+    set_env(setenv, my_shell);
+    set_env(setenv2, my_shell);
+    unset_env(unsetenv, my_shell);
+    cr_assert_str_eq(my_shell->env[my_strstrlen(my_shell->env) - 1], "TEST=toto");
+}
+
+Test(unit_test, unset_env_no_args, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "TEST=toto");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **unsetenv = create_strstr("unsetenv", NULL, NULL, NULL);
+
+    unset_env(unsetenv, my_shell);
+    cr_assert_str_eq(my_shell->env[my_strstrlen(my_shell->env) - 1], "TEST=toto");
+}
+
 

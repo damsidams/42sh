@@ -321,8 +321,8 @@ fi
 
         ##setenv variable
         mkdir tnum/32 -p
-        echo "setenv test1 && setenv test2=test3 && setenv test4=test2 && setenv test1=test4" | ./42sh &> tnum/32/output
-        echo "setenv test1 && setenv test2=test3 && setenv test4=test2 && setenv test1=test4" | tcsh  &> tnum/32/desired
+        echo "setenv test1 && setenv test2 test3 && setenv test4 test2 && setenv test1 test4" | ./42sh &> tnum/32/output
+        echo "setenv test1 && setenv test2 test3 && setenv test4 test2 && setenv test1 test4" | tcsh  &> tnum/32/desired
         if diff -q tnum/32/desired tnum/32/output; then
             echo -e "\e[32m[TEST 32] setenv variable Test PASSED\e[0m"
         else

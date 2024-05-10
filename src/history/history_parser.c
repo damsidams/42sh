@@ -31,6 +31,7 @@ static char *remove_historic(char *str)
 
     if (new_str == NULL) {
         perror("remove_backtick calloc failed");
+        free(str);
         return NULL;
     }
     for (unsigned int i = 1; str[i]; i++) {

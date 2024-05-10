@@ -23,7 +23,7 @@ static void setup_final_array(char **final_array, char **file_by_line,
     char *cmd)
 {
     final_array = my_strstrcpy(final_array, file_by_line);
-    final_array[my_strstrlen(file_by_line)] = my_strdup(cmd);
+    final_array[my_strstrlen(file_by_line)] = cmd;
     final_array[my_strstrlen(file_by_line) + 1] = NULL;
 }
 

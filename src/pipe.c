@@ -43,15 +43,16 @@ static void exec_last_cmd(char **cmd_args, shell_info_t *my_shell, int *pipefd)
     }
     close(pipefd[1]);
     command_handling(my_shell, cmd_args);
+    free_str_array(cmd_args);
 }
 
 static void exec_pipe(char **args, shell_info_t *my_shell, int i, int *pipefd)
 {
     char **cmd_args = my_pimp_str_to_wa(args[i], " ");
 
-    if (i == my_strstrlen(args) - 1)
+    if (i == my_strstrlen(args) - 1) {
         exec_last_cmd(cmd_args, my_shell, pipefd);
-    else {
+    } else {
         pipe(pipefd);
         if (fork() == 0) {
             close(pipefd[0]);

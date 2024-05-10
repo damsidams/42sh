@@ -50,6 +50,8 @@ SRC	=	src/main.c								\
 		src/pipe.c								\
 		src/redirect.c							\
 		src/auto_complete.c						\
+		src/auto_complete_cmd.c 				\
+		src/auto_complete_paths.c				\
 
 UT_SRC	=	tests/unit_tests.c						\
 			src/test.c								\

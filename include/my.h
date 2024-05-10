@@ -71,5 +71,6 @@ char **my_tuned_str_to_wa(char *str, char **delim);
 void free_str_array(char **array);
 char **my_word_array_delete(char **word_array, char *word);
 bool my_char_is_alpha(char c);
+char *my_str_append(char *dst, char *src);
 
 #endif /*MY_H*/

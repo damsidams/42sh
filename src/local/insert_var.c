@@ -86,7 +86,7 @@ static char *cat_new_var_final(char *var_ptr, char *arg_cpy,
 static char *cat_new_var(char *var, char *arg, int index, int var_len)
 {
     char *final = NULL;
-    char *arg_cpy = strdup(arg);
+    char *arg_cpy = arg;
     char *cpy = arg_cpy;
     char *var_ptr = var;
     char *return_var = NULL;
@@ -139,16 +139,12 @@ char *parse_arg(char *arg, shell_info_t *my_shell)
 
 char **replace_var(char **args, shell_info_t *my_shell)
 {
-    char *word = NULL;
-
     if (!args) {
         return args;
     }
     for (int i = 0; args[i]; i++) {
         if (my_char_in_str('$', args[i])) {
-            word = args[i];
             args[i] = parse_arg(args[i], my_shell);
-            free(word);
         }
         if (!args[i]) {
             return NULL;

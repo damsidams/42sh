@@ -40,11 +40,12 @@ static void exec_good_type(char *cmd, shell_info_t *my_shell)
 void check_cmd_type(shell_info_t *my_shell)
 {
     char **cmds = get_args(my_shell);
-    char **copy = cmds;
 
+    if (cmds == NULL) {
+        return;
+    }
     cmds = replace_backtick(cmds, my_shell);
     if (cmds == NULL) {
-        free_str_array(copy);
         return;
     }
     if (!valid_redirect(cmds)) {

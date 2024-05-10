@@ -8,6 +8,7 @@
 #ifndef SHELL
     #define SHELL
 
+    #include <dirent.h>
     #include "struct.h"
     #include "my.h"
 
@@ -111,7 +112,10 @@ int check_buffer(char const *buffer, int fd);
 
 // --> linked_list
 linked_list_t *create_list_from_array(char **array);
+void push_to_list(linked_list_t **list, char *data);
+int list_size(linked_list_t *list);
 void free_list(linked_list_t *list);
+void free_basic_list(linked_list_t *list);
 
 // --> file
 int get_file_size(char const *filename);
@@ -187,6 +191,13 @@ void gpt(char **args, shell_info_t *my_shell);
 
 // --> auto-complete
 void auto_complete(shell_input_t *user_input, shell_info_t *my_shell);
+void auto_complete_paths(char **args, shell_input_t *user_input,
+    shell_info_t *my_shell);
+int nb_ch_match(char *file, char *cmd);
+char *get_element(linked_list_t *match, shell_info_t *my_shell);
+void replace_user_input(shell_input_t *user_input, char **args);
+void auto_complete_cmd(char **args, shell_input_t *user_input,
+    shell_info_t *my_shell);
 
 // --> local varaiables
 void set_local(char **args, shell_info_t *my_shell);

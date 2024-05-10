@@ -44,6 +44,8 @@ typedef struct shell_info_s {
     int shell_pgid;
     int stopped_pid;
     char *last_cmd;
+    int auto_completion_offset;
+    char *base_auto_completion;
 } shell_info_t;
 
 typedef struct linked_list_s {

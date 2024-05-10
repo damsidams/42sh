@@ -111,7 +111,8 @@ char **get_args(shell_info_t *my_shell)
     }
     if (my_strcmp(args[0], "exit") == 0) {
         set_exit(my_shell);
-        args = NULL;
+        free(user_input);
+        free_str_array(args);
     }
     my_free_n_str(2, user_input, user_input_cpy);
     return args;

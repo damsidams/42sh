@@ -9,13 +9,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <string.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include "struct.h"
 #include "shell.h"
 #include "my.h"
 
-static int nb_ch_match(char *file, char *cmd)
+int nb_ch_match(char *file, char *cmd)
 {
     int i = 0;
 
@@ -28,53 +29,78 @@ static int nb_ch_match(char *file, char *cmd)
     return i;
 }
 
-static char *search_file(char *cmd_path, char *cmd)
+static void set_base_auto_completion_cmd(shell_info_t *my_shell,
+    shell_input_t *user_input)
 {
-    DIR *bin_dir = opendir(cmd_path);
-    struct dirent *cur_file = NULL;
+    char **args = my_pimp_str_to_wa(user_input->input, " \t");
 
-    if (!bin_dir)
-        return NULL;
-    cur_file = readdir(bin_dir);
-    while (cur_file != NULL) {
-        if (my_strcmp(cur_file->d_name, ".") == 0 ||
-            my_strcmp(cur_file->d_name, "..") == 0) {
-            cur_file = readdir(bin_dir);
-            continue;
-        }
-        if (nb_ch_match(cur_file->d_name, cmd) == my_strlen(cmd)) {
-            return cur_file->d_name;
-        }
-        cur_file = readdir(bin_dir);
-    }
-    closedir(bin_dir);
-    return NULL;
+    if (my_shell->base_auto_completion == NULL
+        && my_shell->auto_completion_offset == 1)
+        my_shell->base_auto_completion = strdup(args[0]);
+    free_str_array(args);
 }
 
-static void replace_user_input(shell_input_t *user_input, char **args)
+char *get_element(linked_list_t *match, shell_info_t *my_shell)
+{
+    char *word = NULL;
+    linked_list_t *match_ptr = match;
+
+    if (list_size(match) > 1) {
+        for (int i = 1; i < my_shell->auto_completion_offset
+        && match->next != NULL; i++) {
+            match = match->next;
+        }
+        word = strdup(match->value);
+    }
+    free_basic_list(match_ptr);
+    return word;
+}
+
+void replace_user_input(shell_input_t *user_input, char **args)
 {
     delete_string(user_input);
     for (int i = 0; args[i]; i++) {
         insert_string(user_input, args[i]);
+        insert_char(user_input, ' ');
     }
+}
+
+void free_auto_complete(char *word, char **args)
+{
+    free(word);
+    for (int i = 1; args[i]; i++) {
+        free(args[i]);
+    }
+}
+
+static void set_base_auto_completion_paths(shell_info_t *my_shell,
+    shell_input_t *user_input)
+{
+    char **args = my_pimp_str_to_wa(user_input->input, " \t");
+    int len = my_strstrlen(args);
+
+    if (my_shell->base_auto_completion == NULL
+        && my_shell->auto_completion_offset == 1)
+        my_shell->base_auto_completion = strdup(args[len - 1]);
+    free_str_array(args);
 }
 
 void auto_complete(shell_input_t *user_input, shell_info_t *my_shell)
 {
     char **args = NULL;
-    char *new_cmd = NULL;
-    char **paths = get_paths(my_shell->env);
+    int len = 0;
 
     if (!user_input->input)
         return;
-    user_input->input[my_strlen(user_input->input) - 1] = '\0';
+    user_input->input[my_strlen(user_input->input)] = '\0';
     args = my_pimp_str_to_wa(user_input->input, " \t");
-    for (int i = 1; paths && paths[i]; i++) {
-        new_cmd = search_file(paths[i], args[0]);
-        if (new_cmd)
-            break;
+    len = my_strstrlen(args);
+    if (len == 1) {
+        set_base_auto_completion_cmd(my_shell, user_input);
+        auto_complete_cmd(args, user_input, my_shell);
+        return;
+    } else {
+        set_base_auto_completion_paths(my_shell, user_input);
+        auto_complete_paths(args, user_input, my_shell);
     }
-    args[0] = new_cmd;
-    replace_user_input(user_input, args);
-    free_str_array(args);
 }

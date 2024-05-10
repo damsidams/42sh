@@ -52,6 +52,39 @@ static linked_list_t *create_node(char *value, linked_list_t *prev)
     return element;
 }
 
+void push_to_list(linked_list_t **list, char *data)
+{
+    linked_list_t *new_element = malloc(sizeof(linked_list_t));
+
+    new_element->value = strdup(data);
+    new_element->next = *list;
+    *list = new_element;
+}
+
+int list_size(linked_list_t *list)
+{
+    int i = 0;
+
+    for (; list; i++) {
+        list = list->next;
+    }
+    return i;
+}
+
+void free_basic_list(linked_list_t *list)
+{
+    linked_list_t *next = NULL;
+
+    if (!list)
+        return;
+    while (list) {
+        free(list->value);
+        next = list->next;
+        free(list);
+        list = next;
+    }
+}
+
 linked_list_t *create_list_from_array(char **array)
 {
     linked_list_t *prev = NULL;

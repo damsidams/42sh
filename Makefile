@@ -50,6 +50,8 @@ SRC	=	src/main.c								\
 		src/background.c 						\
 		src/foreground.c 						\
 		src/job_control_utils.c 				\
+		src/auto_complete_cmd.c 				\
+		src/auto_complete_paths.c				\
 
 UT_SRC	=	tests/unit_tests.c						\
 			src/test.c								\

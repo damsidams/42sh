@@ -64,6 +64,8 @@ static shell_info_t *set_shell_info(shell_info_t *my_shell)
     set_shell_pgid(my_shell);
     my_shell->stopped_pid = my_shell->shell_pgid;
     my_shell->jobs = NULL;
+    my_shell->auto_completion_offset = 0;
+    my_shell->base_auto_completion = NULL;
     if (my_shell->color == NULL) {
         perror("shell color malloc");
     } else {

@@ -80,10 +80,19 @@ static void check_opening_char(shell_input_t *user_input, char c,
     }
 }
 
+static void free_auto_complete_input(shell_info_t *my_shell)
+{
+    my_shell->auto_completion_offset = 0;
+    if (my_shell->base_auto_completion)
+        free(my_shell->base_auto_completion);
+    my_shell->base_auto_completion = NULL;
+}
+
 static void check_input(shell_input_t *user_input, char c,
     shell_info_t *my_shell, linked_list_t *historic)
 {
     if (c == '\t') {
+        my_shell->auto_completion_offset++;
         auto_complete(user_input, my_shell);
     }
     if (!user_input->input && c != '\t') {
@@ -92,6 +101,7 @@ static void check_input(shell_input_t *user_input, char c,
     }
     check_opening_char(user_input, c, historic);
     if (c == DEL || c == '\b') {
+        free_auto_complete_input(my_shell);
         delete_char(user_input);
     } else if (c != DEL && c != '\b' && c != '\t'){
         insert_char(user_input, c);
@@ -125,6 +135,7 @@ char *get_prompt(shell_info_t *my_shell)
         }
         c = getchar();
     }
+    free_auto_complete_input(my_shell);
     free_list(historic);
     free(empty_str);
     return finish_input(&user_input, &initial_settings, c);

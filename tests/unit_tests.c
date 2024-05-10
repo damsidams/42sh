@@ -231,3 +231,61 @@ Test(unit_test, cd_to_a_dir, .init=redirect_all_stdout)
 
     change_dir(args, my_shell);
 }
+
+Test(unit_test, cd_to_root, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args = create_strstr("cd", NULL, NULL, NULL);
+
+    change_dir(args, my_shell);
+}
+
+Test(unit_test, cd_to_last_dir, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args1 = create_strstr("cd", "test_dir", NULL, NULL);
+    char **args2 = create_strstr("cd", "-", NULL, NULL);
+
+    change_dir(args1, my_shell);
+    change_dir(args2, my_shell);
+}
+
+/* ! history */
+
+Test(unit_test, check_if_history, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char *cmd = my_strdup("! 5");
+
+    check_if_historic(cmd, my_shell);
+}
+
+Test(unit_test, getcmd_with_str, .init=redirect_all_stdout)
+{
+    char *cmd = my_strdup("ls -l test_dir");
+
+    get_cmd_with_str(cmd);
+}
+
+Test(unit_test, add_cmd_to_historic, .init=redirect_all_stdout)
+{
+    char *cmd = my_strdup("ls -l test_dir");
+
+    get_array_from_prev_cmd(cmd);
+}
+
+Test(unit_test, create_list, .init=redirect_all_stdout)
+{
+    char **env = create_strstr("PATH=/bin/", "HOST=nicolo",
+        "HOME=/home/", "NB=lo");
+    shell_info_t *my_shell = init_shell_info_t(env);
+    char **args1 = create_strstr("1 09:54 cd", "1 09:54 cd", "1 09:54 cd", "1 09:54 cd");
+
+    cr_assert_not_null(create_list_from_array(args1));
+}

@@ -20,7 +20,7 @@ static void free_next_list(linked_list_t *list)
         next = list->next;
         free(list->value);
         free(list);
-        list = next;    
+        list = next;
     }
 }
 

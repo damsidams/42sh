@@ -86,7 +86,7 @@ static char *cat_new_var_final(char *var_ptr, char *arg_cpy,
 static char *cat_new_var(char *var, char *arg, int index, int var_len)
 {
     char *final = NULL;
-    char *arg_cpy = strdup(arg);
+    char *arg_cpy = arg;
     char *cpy = arg_cpy;
     char *var_ptr = var;
     char *return_var = NULL;

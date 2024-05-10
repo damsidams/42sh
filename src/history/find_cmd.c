@@ -92,7 +92,7 @@ static char *get_n_previous_cmd(char **lines, int cmd_nb, char const *hist)
     char *cmd = NULL;
 
     if (my_strstrlen(lines) < cmd_nb * -1) {
-        free_str_array(lines);  
+        free_str_array(lines);
         return not_found_error(hist);
     }
     cmd = find_cmd_in_line(lines[my_strstrlen(lines) + cmd_nb]);

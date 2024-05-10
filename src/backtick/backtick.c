@@ -64,6 +64,7 @@ static char *get_good_string(shell_info_t *my_shell, char *cmd
     new_str = strcat(new_str, to_replace);
     new_str = strcat(new_str, cmd + first_backtick + next_backtick);
     free(to_replace);
+    free(cmd);
     return new_str;
 }
 

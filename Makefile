@@ -20,36 +20,36 @@ SRC	=	src/main.c								\
 		src/history/find_cmd.c	\
 		src/history/history_parser.c	\
 		src/history/find_cmd_str.c	\
+		src/history/file.c								\
 		src/history/get_historic.c	\
+		src/history/linked_list.c	\
 		src/command_handling/command_type.c		\
 		src/command_handling/command_error.c	\
 		src/command_handling/command_exec.c		\
 		src/command_handling/built_in_command.c	\
-		src/cd.c								\
-		src/pipe.c								\
-		src/redirect.c							\
-		src/set_color.c							\
-		src/my_sh.c								\
-		src/auto_complete.c						\
-		src/signal.c							\
-		src/file.c								\
+		src/shell/set_color.c							\
+		src/shell/my_sh.c								\
+		src/shell/shell_info.c	\
+		src/job_control/signal.c							\
+		src/job_control/job_control.c						\
+		src/job_control/background.c 						\
+		src/job_control/foreground.c 						\
+		src/job_control/job_control_utils.c 				\
 		src/backtick/backtick.c							\
 		src/backtick/get_output.c							\
-		src/check_and_or.c						\
-		src/globbing.c							\
-		src/linked_list.c	\
-		src/shell_info.c	\
-		src/parentheses.c	\
-		src/aliases.c							\
+		src/alias/aliases.c							\
+		src/alias/alias_loop.c	\
 		src/local/set.c			\
 		src/local/unset.c		\
 		src/local/insert_var.c		\
 		src/test.c	\
-		src/alias_loop.c	\
-		src/job_control.c						\
-		src/background.c 						\
-		src/foreground.c 						\
-		src/job_control_utils.c 				\
+		src/cd.c								\
+		src/check_and_or.c						\
+		src/globbing.c							\
+		src/parentheses.c	\
+		src/pipe.c								\
+		src/redirect.c							\
+		src/auto_complete.c						\
 
 UT_SRC	=	tests/unit_tests.c						\
 			src/test.c								\
@@ -62,40 +62,40 @@ UT_SRC	=	tests/unit_tests.c						\
 			src/line_parsing/input_manip.c			\
 			src/history/historic.c					\
 			src/history/special_getnbr.c			\
-			src/history/time.c							\
+			src/history/time.c						\
 			src/history/display_hist.c				\
 			src/history/find_cmd.c	\
 			src/history/history_parser.c	\
 			src/history/find_cmd_str.c	\
+			src/history/file.c								\
 			src/history/get_historic.c	\
+			src/history/linked_list.c	\
 			src/command_handling/command_type.c		\
 			src/command_handling/command_error.c	\
 			src/command_handling/command_exec.c		\
 			src/command_handling/built_in_command.c	\
-			src/cd.c								\
-			src/pipe.c								\
-			src/redirect.c							\
-			src/set_color.c							\
-			src/my_sh.c					\
-			src/auto_complete.c								\
-			src/file.c								\
+			src/shell/set_color.c							\
+			src/shell/my_sh.c								\
+			src/shell/shell_info.c	\
+			src/job_control/signal.c							\
+			src/job_control/job_control.c						\
+			src/job_control/background.c 						\
+			src/job_control/foreground.c 						\
+			src/job_control/job_control_utils.c 				\
 			src/backtick/backtick.c							\
 			src/backtick/get_output.c							\
-			src/check_and_or.c						\
-			src/globbing.c							\
-			src/linked_list.c	\
-			src/shell_info.c	\
-			src/parentheses.c	\
-			src/aliases.c							\
-			src/local/insert_var.c	\
+			src/alias/aliases.c							\
+			src/alias/alias_loop.c	\
 			src/local/set.c			\
 			src/local/unset.c		\
-			src/alias_loop.c	\
-			src/job_control.c						\
-			src/background.c 						\
-			src/foreground.c 						\
-			src/job_control_utils.c 				\
-			src/signal.c								\
+			src/local/insert_var.c		\
+			src/cd.c								\
+			src/check_and_or.c						\
+			src/globbing.c							\
+			src/parentheses.c	\
+			src/pipe.c								\
+			src/redirect.c							\
+			src/auto_complete.c						\
 
 OBJ	=	$(SRC:.c=.o)
 

@@ -126,6 +126,5 @@ char *get_prompt(shell_info_t *my_shell)
         c = getchar();
     }
     free_list(historic);
-    free(empty_str);
     return finish_input(&user_input, &initial_settings, c);
 }

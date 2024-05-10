@@ -12,12 +12,14 @@
 #include "shell.h"
 #include "struct.h"
 
-void free_list(linked_list_t *list)
+static void free_prev(linked_list_t *list)
 {
-    linked_list_t *next = NULL;
     linked_list_t *prev = NULL;
-    linked_list_t *cpy = list->prev;
+    linked_list_t *cpy = NULL;
 
+    if (list && list->prev) {
+        cpy = list->prev;
+    }
     while (cpy) {
         prev = cpy->prev;
         if (cpy->value)
@@ -25,6 +27,13 @@ void free_list(linked_list_t *list)
         free(cpy);
         cpy = prev;
     }
+}
+
+void free_list(linked_list_t *list)
+{
+    linked_list_t *next = NULL;
+
+    free_prev(list);
     while (list) {
         if (list->value)
             free(list->value);

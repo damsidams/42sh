@@ -91,6 +91,11 @@ UT_SRC	=	tests/unit_tests.c						\
 			src/local/set.c			\
 			src/local/unset.c		\
 			src/alias_loop.c	\
+			src/job_control.c						\
+			src/background.c 						\
+			src/foreground.c 						\
+			src/job_control_utils.c 				\
+			src/signal.c								\
 
 OBJ	=	$(SRC:.c=.o)
 

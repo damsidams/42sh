@@ -199,6 +199,16 @@ fi
             echo -e "\e[31m[TEST 19] Multiple commands with separator && and || 3 Test NOT PASSED\e[0m"
         fi
 
+        ##set local variable
+        mkdir tnum/20 -p
+        echo "set test1=test2 && set test3 && set test1=test4 test3=test5" | ./42sh &> tnum/20/output
+        echo "set test1=test2 && set test3 && set test1=test4 test3=test5" | tcsh  &> tnum/20/desired
+        if diff -q tnum/20/desired tnum/20/output; then
+            echo -e "\e[32m[TEST 20] set local variable Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 20] set local variable Test NOT PASSED\e[0m"
+        fi
+
         ##Multiple commands with separator && and || 4
         mkdir tnum/21 -p
         echo "fepf && fihifh && hferofhi && jfei && jofjf && echo ok && diehd && echo and" | ./42sh &> tnum/21/output
@@ -207,6 +217,16 @@ fi
             echo -e "\e[32m[TEST 21] Multiple commands with separator && and || 4 Test PASSED\e[0m"
         else
             echo -e "\e[31m[TEST 21] Multiple commands with separator && and || 4 Test NOT PASSED\e[0m"
+        fi
+
+        ##unset local variables
+        mkdir tnum/22 -p
+        echo "set test1 test2 test3 test4=test5 test 6 && unset test1 test2 test3 test4 test5" | ./42sh &> tnum/22/output
+        echo "set test1 test2 test3 test4=test5 test 6 && unset test1 test2 test3 test4 test5" | tcsh  &> tnum/22/desired
+        if diff -q tnum/22/desired tnum/22/output; then
+            echo -e "\e[32m[TEST 22] unset local variables Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 22] unset local variables Test NOT PASSED\e[0m"
         fi
 
         ##Multiple commands with separator && and || 5
@@ -219,6 +239,15 @@ fi
             echo -e "\e[31m[TEST 23] Multiple commands with separator && and || 5 Test NOT PASSED\e[0m"
         fi
 
+        ##unset undefined local variable
+        mkdir tnum/24 -p
+        echo "unset toto" | ./42sh &> tnum/24/output
+        echo "unset toto" | tcsh  &> tnum/24/desired
+        if diff -q tnum/24/desired tnum/24/output; then
+            echo -e "\e[32m[TEST 24] unset undefined local variable Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 24] unset undefined local variable Test NOT PASSED\e[0m"
+        fi
         
         ##Simple globbing 1
         mkdir tnum/25 -p
@@ -230,6 +259,15 @@ fi
             echo -e "\e[31m[TEST 25] Simple globbing 1 Test NOT PASSED\e[0m"
         fi
 
+        ##unset with not enough arguments
+        mkdir tnum/26 -p
+        echo "unset" | ./42sh &> tnum/26/output
+        echo "unset" | tcsh  &> tnum/26/desired
+        if diff -q tnum/26/desired tnum/26/output; then
+            echo -e "\e[32m[TEST 26] unset with not enough arguments Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 26] unset with not enough arguments Test NOT PASSED\e[0m"
+        fi
         
         ##Simple globbing 2
         mkdir tnum/27 -p
@@ -239,6 +277,16 @@ fi
             echo -e "\e[32m[TEST 27] Simple globbing 2 Test PASSED\e[0m"
         else
             echo -e "\e[31m[TEST 27] Simple globbing 2 Test NOT PASSED\e[0m"
+        fi
+
+        ##set local variable with bad format
+        mkdir tnum/28 -p
+        echo "set 1toto" | ./42sh &> tnum/28/output
+        echo "set 1toto" | tcsh  &> tnum/28/desired
+        if diff -q tnum/28/desired tnum/28/output; then
+            echo -e "\e[32m[TEST 28] set local variable with bad format Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 28] set local variable with bad format Test NOT PASSED\e[0m"
         fi
 
         ##Simple globbing 3
@@ -251,6 +299,16 @@ fi
             echo -e "\e[31m[TEST 29] Simple globbing 3 Test NOT PASSED\e[0m"
         fi
 
+        ##set local variable with bad format 2
+        mkdir tnum/30 -p
+        echo "set to-to" | ./42sh &> tnum/30/output
+        echo "set to-to" | tcsh  &> tnum/30/desired
+        if diff -q tnum/30/desired tnum/30/output; then
+            echo -e "\e[32m[TEST 30] set local variable with bad format 2 Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 30] set local variable with bad format 2 Test NOT PASSED\e[0m"
+        fi
+
         ##Globbing OR and redirect
         mkdir tnum/31 -p
         echo "echo ??.sh || ls | cat -e" | ./42sh &> tnum/31/output
@@ -259,6 +317,16 @@ fi
             echo -e "\e[32m[TEST 31] Globbing OR and redirect Test PASSED\e[0m"
         else
             echo -e "\e[31m[TEST 31] Globbing OR and redirect Test NOT PASSED\e[0m"
+        fi
+
+        ##setenv variable
+        mkdir tnum/32 -p
+        echo "setenv test1 && setenv test2=test3 && setenv test4=test2 && setenv test1=test4" | ./42sh &> tnum/32/output
+        echo "setenv test1 && setenv test2=test3 && setenv test4=test2 && setenv test1=test4" | tcsh  &> tnum/32/desired
+        if diff -q tnum/32/desired tnum/32/output; then
+            echo -e "\e[32m[TEST 32] setenv variable Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 32] setenv variable Test NOT PASSED\e[0m"
         fi
 
         ##Globbing OR and redirect 2
@@ -271,6 +339,16 @@ fi
             echo -e "\e[31m[TEST 33] Globbing OR and redirect 2 Test NOT PASSED\e[0m"
         fi
 
+        ##setenv with too many arguments
+        mkdir tnum/34 -p
+        echo "setenv test1 test2 test3 test4" | ./42sh &> tnum/34/output
+        echo "setenv test1 test2 test3 test4" | tcsh  &> tnum/34/desired
+        if diff -q tnum/34/desired tnum/34/output; then
+            echo -e "\e[32m[TEST 34] setenv with too many arguments Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 34] setenv with too many arguments Test NOT PASSED\e[0m"
+        fi
+
         ##Globbing OR and redirect 3
         mkdir tnum/35 -p
         echo "echo 4*.sh || ls | cat -e | grep test" | ./42sh &> tnum/35/output
@@ -279,6 +357,16 @@ fi
             echo -e "\e[32m[TEST 35] Globbing OR and redirect 3 Test PASSED\e[0m"
         else
             echo -e "\e[31m[TEST 35] Globbing OR and redirect 3 Test NOT PASSED\e[0m"
+        fi
+
+        ##setenv variable with bad format
+        mkdir tnum/36 -p
+        echo "setenv 1test" | ./42sh &> tnum/36/output
+        echo "setenv 1test" | tcsh  &> tnum/36/desired
+        if diff -q tnum/36/desired tnum/36/output; then
+            echo -e "\e[32m[TEST 36] setenv variable with bad format Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 36] setenv variable with bad format Test NOT PASSED\e[0m"
         fi
 
         ##Globbing [A-Z]*
@@ -291,7 +379,16 @@ fi
             echo -e "\e[31m[TEST 37] Globbing [A-Z]* Test NOT PASSED\e[0m"
         fi
 
-        
+        ##setenv variable with bad format 2
+        mkdir tnum/38 -p
+        echo "setenv test-toto" | ./42sh &> tnum/38/output
+        echo "setenv test-toto" | tcsh  &> tnum/38/desired
+        if diff -q tnum/38/desired tnum/38/output; then
+            echo -e "\e[32m[TEST 38] setenv variable with bad format 2 Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 38] setenv variable with bad format 2 Test NOT PASSED\e[0m"
+        fi
+
         ##Globbing [b-a]*
         mkdir tnum/39 -p
         echo "echo [b-a]*.sh" | ./42sh &> tnum/39/output
@@ -300,6 +397,16 @@ fi
             echo -e "\e[32m[TEST 39] Globbing [b-a]* Test PASSED\e[0m"
         else
             echo -e "\e[31m[TEST 39] Globbing [b-a]* Test NOT PASSED\e[0m"
+        fi
+
+        ##unsetenv variable
+        mkdir tnum/40 -p
+        echo "setenv test1 && setenv test2=test3 && unsetenv test1 && unsetenv test2" | ./42sh &> tnum/40/output
+        echo "setenv test1 && setenv test2=test3 && unsetenv test1 && unsetenv test2" | tcsh  &> tnum/40/desired
+        if diff -q tnum/40/desired tnum/40/output; then
+            echo -e "\e[32m[TEST 40] unsetenv variable Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 40] unsetenv variable Test NOT PASSED\e[0m"
         fi
 
         ##Globbing [a-b]*.sh
@@ -312,6 +419,16 @@ fi
             echo -e "\e[31m[TEST 41] Globbing [a-b]*.sh Test NOT PASSED\e[0m"
         fi
 
+        ##unsetenv unknown variable
+        mkdir tnum/42 -p
+        echo "unsetenv toto" | ./42sh &> tnum/42/output
+        echo "unsetenv toto" | tcsh  &> tnum/42/desired
+        if diff -q tnum/42/desired tnum/42/output; then
+            echo -e "\e[32m[TEST 42] unsetenv unknown variable Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 42] unsetenv unknown variable Test NOT PASSED\e[0m"
+        fi
+
         ##Globbing [a-b]???.sh
         mkdir tnum/43 -p
         echo "echo [a-b]???.sh" | ./42sh &> tnum/43/output
@@ -322,6 +439,16 @@ fi
             echo -e "\e[31m[TEST 43] Globbing [a-b]???.sh Test NOT PASSED\e[0m"
         fi
 
+        ##unsetenv with not enough arguments
+        mkdir tnum/44 -p
+        echo "unsetenv" | ./42sh &> tnum/44/output
+        echo "unsetenv" | tcsh  &> tnum/44/desired
+        if diff -q tnum/44/desired tnum/44/output; then
+            echo -e "\e[32m[TEST 44] unsetenv with not enough arguments Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 44] unsetenv with not enough arguments Test NOT PASSED\e[0m"
+        fi
+
         ##Globbing [a-z]???.sh
         mkdir tnum/45 -p
         echo "echo [a-z]???.sh" | ./42sh &> tnum/45/output
@@ -330,6 +457,16 @@ fi
             echo -e "\e[32m[TEST 45] Globbing [a-z]???.sh Test PASSED\e[0m"
         else
             echo -e "\e[31m[TEST 45] Globbing [a-z]???.sh Test NOT PASSED\e[0m"
+        fi
+
+        ##unsetenv multiple variables
+        mkdir tnum/46 -p
+        echo "setenv test1 && setenv test2 && unsetenv test1 test2" | ./42sh &> tnum/46/output
+        echo "setenv test1 && setenv test2 && unsetenv test1 test2" | tcsh  &> tnum/46/desired
+        if diff -q tnum/46/desired tnum/46/output; then
+            echo -e "\e[32m[TEST 46] unsetenv multiple variables Test PASSED\e[0m"
+        else
+            echo -e "\e[31m[TEST 46] unsetenv multiple variables Test NOT PASSED\e[0m"
         fi
 
         ##Simple parentheses

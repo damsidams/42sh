@@ -171,7 +171,7 @@ tests_run:
 	./$(UT_BIN)
 
 coverage:
-	gcovr --exclude tests/ --exclude src/useful_funcs
+	gcovr --exclude tests/ --exclude src/useful_funcs --gcov-ignore-parse-errors
 
 .PHONY:
 	all libb clean fclean re debug coding_style tests_run coverage

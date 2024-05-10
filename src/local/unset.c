@@ -15,7 +15,7 @@ static local_t *del_var(char *var, local_t *local)
 {
     local_t *temp = local;
 
-    if (strcmp(var, temp->name) == 0) {
+    if (temp && strcmp(var, temp->name) == 0) {
         local = local->next;
         return local;
     }

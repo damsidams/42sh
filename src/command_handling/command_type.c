@@ -63,7 +63,7 @@ void check_given_cmd_type(shell_info_t *my_shell, char *cmd)
 {
     char **cmds = NULL;
 
-    cmd = check_if_historic(cmd, my_shell);
+    cmd = check_if_historic(&cmd, my_shell);
     if (cmd == NULL) {
         return;
     }

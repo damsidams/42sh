@@ -25,6 +25,8 @@ This project objective is to replicate the functionalities of the tcsh shell. â€
 * **Language:** C
 * **Compilation:** Compile using Makefile (`make`).
 * **Execution:** Run the compiled executable (`./my_shell`).
+* **Group Size:** 5
+* **Project Duration:** 4 Weeks
 
 ## Epitech Project: ##
 
